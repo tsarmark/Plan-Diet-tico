@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -52,7 +53,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.data.AppTab
 import com.example.data.ClinicalCatalog
 import com.example.data.ShoppingCatalog
-import com.example.data.local.PlanDatabase
 import com.example.data.local.PlanRepository
 import com.example.ui.PlanUiState
 import com.example.ui.PlanViewModel
@@ -72,8 +72,7 @@ class MainActivity : ComponentActivity() {
         )
         super.onCreate(savedInstanceState)
 
-        val database = PlanDatabase.getInstance(applicationContext)
-        val repository = PlanRepository(database.planDao())
+        val repository = PlanRepository(applicationContext)
 
         setContent {
             MyApplicationTheme {
@@ -220,7 +219,14 @@ private fun ActiveTabContent(
             onToggleIrbesartan = viewModel::toggleIrbesartan,
             onToggleBisoprolol = viewModel::toggleBisoprolol,
             onToggleWorkout = viewModel::toggleWorkout,
-            onResetWeek = viewModel::resetWeeklyProgress
+            onResetWeek = viewModel::resetWeeklyProgress,
+            onCheckUpdate = {
+                openExternalUrl(
+                    context = context,
+                    url = "https://github.com/tsarmark/Plan-Diet-tico/releases/latest",
+                    onFailure = { viewModel.notifyMessage("No se pudo abrir el navegador") }
+                )
+            }
         )
     }
 }
@@ -374,4 +380,13 @@ private fun sharePlainText(context: Context, subject: String, text: String) {
         putExtra(Intent.EXTRA_TEXT, text)
     }
     context.startActivity(Intent.createChooser(sendIntent, subject))
+}
+
+private fun openExternalUrl(context: Context, url: String, onFailure: () -> Unit) {
+    try {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        context.startActivity(intent)
+    } catch (_: Exception) {
+        onFailure()
+    }
 }

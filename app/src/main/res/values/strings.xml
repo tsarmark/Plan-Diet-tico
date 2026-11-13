@@ -20,4 +20,5 @@
     <string name="copy_keep_btn">Copiar para Keep</string>
     <string name="reset_week_btn">Reiniciar Semana</string>
     <string name="reset_shop_btn">Desmarcar Todo</string>
+    <string name="check_update_btn">Buscar Actualización</string>
 </resources>
