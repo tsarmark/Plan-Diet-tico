@@ -1,0 +1,6 @@
+{
+  "name": "Plan Dietético",
+  "description": "Plan nutricional clínico semanal con 35 recetas detalladas, control de hidratación renal, medicación diaria y lista de compras marcable de Plaza Vea.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#064e3b" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Plan Clínico" />
+  <!-- Embedded Web App Manifest (display: standalone) for Android Native Fullscreen -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Plan Nutricional Clínico - Lic. Isabel Ríos","short_name":"Plan Clínico","start_url":".","display":"standalone","background_color":"#f8fafc","theme_color":"#064e3b","orientation":"portrait"}' />
+  <title>Plan Nutricional Clínico — Lic. Isabel Ríos</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: none;
+    }
+    h1, h2, h3, h4, .font-display {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .meal-card {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .meal-card:active {
+      transform: scale(0.985);
+    }
+    .modal-backdrop {
+      backdrop-filter: blur(6px);
+      background-color: rgba(15, 23, 42, 0.65);
+    }
+    @keyframes slideUpSheet {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .bottom-sheet-animate {
+      animation: slideUpSheet 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-100 text-slate-900 selection:bg-emerald-600 selection:text-white pb-24">
+
+  <!-- MOBILE-FIRST APP CONTAINER (Centered phone shell on desktop, full width on mobile) -->
+  <div class="w-full max-w-md mx-auto min-h-screen bg-slate-50 shadow-xl flex flex-col relative border-x border-slate-200/80">
+
+    <!-- TOP NATIVE APP BAR (CLEAN — NO DOWNLOAD BUTTONS) -->
+    <header class="bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 text-white px-4 pt-4 pb-3.5 sticky top-0 z-30 shadow-md">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0">
+            <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                Lic. Isabel Ríos
+              </span>
+              <span class="text-[10px] font-bold text-slate-300 bg-white/10 px-2 py-0.5 rounded-full">
+                123 → 81 kg
+              </span>
+            </div>
+            <h1 class="text-base font-extrabold tracking-tight text-white mt-0.5 leading-tight">
+              Plan Nutricional Clínico
+            </h1>
+          </div>
+        </div>
+
+        <!-- Weekly Progress Pill -->
+        <div class="text-right bg-slate-950/50 border border-white/10 px-2.5 py-1.5 rounded-2xl shrink-0">
+          <span class="text-[9px] uppercase tracking-wider text-slate-400 block font-bold">Semana</span>
+          <span id="header-progress-badge" class="text-xs font-extrabold text-emerald-400">0/35 listas</span>
+        </div>
+      </div>
+
+      <!-- Compact Clinical Status Bar -->
+      <div class="grid grid-cols-3 gap-1.5 mt-3 pt-2.5 border-t border-white/10 text-[10px]">
+        <div class="bg-white/5 rounded-xl px-2 py-1 flex items-center gap-1.5">
+          <i data-lucide="activity" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+          <span class="truncate"><strong>Insulina:</strong> 39.0</span>
+        </div>
+        <div class="bg-white/5 rounded-xl px-2 py-1 flex items-center gap-1.5">
+          <i data-lucide="Flame" class="w-3.5 h-3.5 text-rose-400 shrink-0"></i>
+          <span class="truncate"><strong>Úrico:</strong> 6.65 | <strong>TGP:</strong> 49.9</span>
+        </div>
+        <div class="bg-white/5 rounded-xl px-2 py-1 flex items-center gap-1.5">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>
+          <span class="truncate"><strong>Ayuno:</strong> 19h–08h</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- =================================================================== -->
+    <!-- TAB 1: HOY / PLAN SEMANAL (DEFAULT ACTIVE VIEW)                     -->
+    <!-- =================================================================== -->
+    <main id="tab-view-plan" class="flex-1 px-3.5 pt-3.5 pb-6 space-y-3.5">
+
+      <!-- Horizontal Day Selector Pills (Lunes Op 1 to Domingo Op 7) -->
+      <div class="bg-white rounded-2xl p-2 border border-slate-200/90 shadow-sm">
+        <div class="flex items-center justify-between px-1 mb-1.5">
+          <span class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Selecciona el Día (Opciones 1 a 7)</span>
+          <button onclick="toggleAllWeekCompact()" id="toggle-week-mode-btn" class="text-[11px] font-bold text-emerald-700 hover:underline flex items-center gap-1">
+            <i data-lucide="calendar-range" class="w-3.5 h-3.5"></i>
+            <span id="toggle-week-mode-label">Ver 7 días juntos</span>
+          </button>
+        </div>
+        <div id="day-pills-bar" class="grid grid-cols-7 gap-1">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Quick Daily Medication & Water Strip for Selected Day -->
+      <div id="daily-quick-strip" class="bg-white rounded-2xl p-3 border border-slate-200/90 shadow-sm space-y-2.5">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Search & Time Slot Filter Bar -->
+      <div class="space-y-2">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          <input
+            id="meal-search-input"
+            type="text"
+            oninput="handleSearchMeals(this.value)"
+            placeholder="Buscar comida o ingrediente (ej. atún, pavita, avena)..."
+            class="w-full pl-9 pr-8 py-2 text-xs bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
+          />
+          <button id="clear-meal-search" onclick="clearMealSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700">
+            <i data-lucide="x-circle" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Time Slot Filter Chips (08:00, 10:30, 14:00, 16:30, 19:00) -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+          <button onclick="setSlotFilter('all')" data-slot="all" class="slot-chip shrink-0 px-3 py-1.5 rounded-xl text-[11px] font-extrabold bg-slate-900 text-white shadow-sm">
+            Todas (5)
+          </button>
+          <button onclick="setSlotFilter('desayuno')" data-slot="desayuno" class="slot-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200">
+            08:00 Desayuno
+          </button>
+          <button onclick="setSlotFilter('media_manana')" data-slot="media_manana" class="slot-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200">
+            10:30 Pre-entreno
+          </button>
+          <button onclick="setSlotFilter('almuerzo')" data-slot="almuerzo" class="slot-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200">
+            14:00 Almuerzo
+          </button>
+          <button onclick="setSlotFilter('media_tarde')" data-slot="media_tarde" class="slot-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200">
+            16:30 Media Tarde
+          </button>
+          <button onclick="setSlotFilter('cena')" data-slot="cena" class="slot-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200">
+            19:00 Cena
+          </button>
+        </div>
+      </div>
+
+      <!-- Meals Feed Container -->
+      <div id="meals-feed-container" class="space-y-3">
+        <!-- Populated by JS -->
+      </div>
+
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- TAB 2: COMPRAS DESGLOSADAS (37 ÍTEMS INDIVIDUALES SIN PACKS)        -->
+    <!-- =================================================================== -->
+    <main id="tab-view-shop" class="hidden flex-1 px-3.5 pt-3.5 pb-6 space-y-3.5">
+
+      <!-- Budget & Google Keep Header Card -->
+      <div class="bg-gradient-to-br from-amber-50 via-white to-emerald-50 rounded-3xl border border-amber-200 p-4 shadow-sm space-y-3">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold uppercase">
+              37 Ítems Separados • Cero Packs
+            </span>
+            <h2 class="text-base font-extrabold text-slate-900 mt-1">
+              Lista de Compras para Google Keep
+            </h2>
+            <p class="text-[11px] text-slate-600 leading-snug mt-0.5">
+              Precios auditados en Plaza Vea Web (Nov 2026). Cada verdura, fruta, carne y abarrote está desglosado por unidad y peso exacto.
+            </p>
+          </div>
+        </div>
+
+        <!-- Dynamic Budget Progress Bar -->
+        <div class="bg-white rounded-2xl p-3 border border-slate-200 space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-slate-600">En tu carrito (<span id="shop-checked-count">0</span>/37 ítems):</span>
+            <span class="font-extrabold text-emerald-700"><span id="shop-checked-soles">S/ 0.00</span> / S/ 188.28</span>
+          </div>
+          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+            <div id="shop-budget-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-600 transition-all duration-300" style="width: 0%"></div>
+          </div>
+          <div class="flex items-center justify-between text-[10px] text-slate-500 pt-0.5">
+            <span>Semanal frescos: <strong>S/ 126.87</strong> (~S/ 105 en mercado)</span>
+            <span>Despensa 4 sem: <strong>S/ 61.41</strong></span>
+          </div>
+        </div>
+
+        <!-- Action Buttons: Copy for Google Keep & Open Keep -->
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="copyKeepNoteToClipboard()" class="py-2.5 px-3 rounded-2xl bg-slate-900 active:bg-emerald-700 text-white font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+            <i data-lucide="copy" class="w-4 h-4 text-emerald-400"></i>
+            <span id="copy-keep-btn-text">Copiar a Google Keep</span>
+          </button>
+          <button onclick="toggleKeepTextPreview()" class="py-2.5 px-3 rounded-2xl bg-amber-400/90 active:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-sm flex items-center justify-center gap-1.5">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            <span>Ver Nota Texto Keep</span>
+          </button>
+        </div>
+
+        <!-- Collapsible Plain Text Preview for Google Keep -->
+        <div id="keep-raw-preview-box" class="hidden pt-2 border-t border-amber-200 space-y-1.5">
+          <p class="text-[11px] font-bold text-amber-950">
+            Pega este texto en una nota de Google Keep → toca (⋮) → "Mostrar casillas":
+          </p>
+          <textarea
+            id="google-keep-textarea"
+            readonly
+            class="w-full h-48 p-2.5 text-[11px] font-mono bg-white rounded-xl border border-amber-300 text-slate-800 focus:outline-none leading-relaxed"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Search & Category Filter for the 37 Shopping Items -->
+      <div class="space-y-2">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          <input
+            id="shop-search-input"
+            type="text"
+            oninput="handleShopSearch(this.value)"
+            placeholder="Filtrar producto (ej. zanahoria, col, atún, pavita)..."
+            class="w-full pl-9 pr-8 py-2 text-xs bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
+          />
+        </div>
+
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+          <button onclick="setShopCatFilter('all')" data-cat="all" class="shop-cat-chip shrink-0 px-3 py-1.5 rounded-xl text-[11px] font-extrabold bg-slate-900 text-white">
+            Todos (37)
+          </button>
+          <button onclick="setShopCatFilter('1.')" data-cat="1." class="shop-cat-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200">
+            Carnes y Lácteos (9)
+          </button>
+          <button onclick="setShopCatFilter('2.')" data-cat="2." class="shop-cat-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200">
+            Abarrotes y Pan (10)
+          </button>
+          <button onclick="setShopCatFilter('3.')" data-cat="3." class="shop-cat-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200">
+            Frutas (5)
+          </button>
+          <button onclick="setShopCatFilter('4.')" data-cat="4." class="shop-cat-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200">
+            Verduras y Tubérculos (13)
+          </button>
+        </div>
+      </div>
+
+      <!-- Itemized 37 Products List Container -->
+      <div id="itemized-shopping-container" class="space-y-3">
+        <!-- Populated by JS -->
+      </div>
+
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- TAB 3: METAS / SALUD + HIDRATACIÓN (13 VASOS) Y MEDICACIÓN          -->
+    <!-- =================================================================== -->
+    <main id="tab-view-health" class="hidden flex-1 px-3.5 pt-3.5 pb-6 space-y-4">
+
+      <!-- 13 Glasses Water Counter Card (3.25 Liters) -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-4 shadow-sm space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center">
+              <i data-lucide="droplets" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h2 class="text-sm font-extrabold text-slate-900">Hidratación Renal Diaria</h2>
+              <p class="text-[11px] text-slate-500">Meta: 13 vasos de 250 ml = <strong>3.25 Litros</strong></p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="health-water-liters" class="text-base font-extrabold text-sky-700">0.00 L</span>
+            <span id="health-water-glasses" class="text-[10px] font-bold text-slate-400 block">0 / 13 vasos</span>
+          </div>
+        </div>
+
+        <!-- 13 Glasses Interactive Grid -->
+        <div id="health-water-grid" class="grid grid-cols-7 gap-1.5 pt-1">
+          <!-- Populated by JS -->
+        </div>
+
+        <p class="text-[11px] text-sky-900 bg-sky-50 px-3 py-2 rounded-xl border border-sky-200/70 leading-snug">
+          <strong>Por qué 3.25 L:</strong> Diluye tu creatinina urinaria (267 mg/dL), normaliza la microalbuminuria (27 mg/L) y arrastra el ácido úrico (6.65 mg/dL) sin sobrecargar el riñón.
+        </p>
+      </div>
+
+      <!-- Daily Medication & Training Synchronization Card -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-4 shadow-sm space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
+            <i data-lucide="pill" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h2 class="text-sm font-extrabold text-slate-900">Control Diario de Medicación y Entreno</h2>
+            <p class="text-[11px] text-slate-500">Sincronizado con tus nuevos horarios (08:00 y 14:00)</p>
+          </div>
+        </div>
+
+        <div id="health-meds-checklist" class="space-y-2">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Clinical Biomarkers & Targets (04/11/2026) -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-4 shadow-sm space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+              <i data-lucide="file-heart" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h2 class="text-sm font-extrabold text-slate-900">Tus Marcadores Clínicos y Metas</h2>
+              <p class="text-[11px] text-slate-500">Basal (04/11/2026) vs. Objetivo de Reversión</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="p-3 rounded-2xl bg-amber-50/70 border border-amber-200/80">
+            <span class="text-[10px] font-bold uppercase text-amber-800">Insulina Basal</span>
+            <p class="text-base font-extrabold text-slate-900 mt-0.5">39.0 <span class="text-xs font-normal">μU/mL</span></p>
+            <span class="text-[10px] font-bold text-emerald-700">Meta: &lt; 9.0 μU/mL</span>
+          </div>
+          <div class="p-3 rounded-2xl bg-amber-50/70 border border-amber-200/80">
+            <span class="text-[10px] font-bold uppercase text-amber-800">Índice HOMA-IR</span>
+            <p class="text-base font-extrabold text-slate-900 mt-0.5">9.73 <span class="text-xs font-normal">(Gluc: 101)</span></p>
+            <span class="text-[10px] font-bold text-emerald-700">Meta: &lt; 1.8</span>
+          </div>
+          <div class="p-3 rounded-2xl bg-rose-50/70 border border-rose-200/80">
+            <span class="text-[10px] font-bold uppercase text-rose-800">Hígado TGP (ALT)</span>
+            <p class="text-base font-extrabold text-slate-900 mt-0.5">49.9 <span class="text-xs font-normal">U/L</span></p>
+            <span class="text-[10px] font-bold text-emerald-700">Meta: &lt; 30 U/L</span>
+          </div>
+          <div class="p-3 rounded-2xl bg-rose-50/70 border border-rose-200/80">
+            <span class="text-[10px] font-bold uppercase text-rose-800">Ácido Úrico</span>
+            <p class="text-base font-extrabold text-slate-900 mt-0.5">6.65 <span class="text-xs font-normal">mg/dL</span></p>
+            <span class="text-[10px] font-bold text-emerald-700">Meta: &lt; 5.5 mg/dL</span>
+          </div>
+          <div class="p-3 rounded-2xl bg-sky-50/70 border border-sky-200/80">
+            <span class="text-[10px] font-bold uppercase text-sky-800">Colesterol LDL / HDL</span>
+            <p class="text-base font-extrabold text-slate-900 mt-0.5">124 / 45.4</p>
+            <span class="text-[10px] font-bold text-emerald-700">Meta: LDL &lt;100 | HDL &gt;50</span>
+          </div>
+          <div class="p-3 rounded-2xl bg-emerald-50/70 border border-emerald-200/80">
+            <span class="text-[10px] font-bold uppercase text-emerald-800">Relación Alb/Creat</span>
+            <p class="text-base font-extrabold text-slate-900 mt-0.5">10.11 <span class="text-xs font-normal">mg/g</span></p>
+            <span class="text-[10px] font-bold text-emerald-700">Normal (&lt;30) • Creat 0.70</span>
+          </div>
+        </div>
+
+        <!-- Reset Week Button -->
+        <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[11px] text-slate-500">Reiniciar marcas al comenzar nueva semana:</span>
+          <button onclick="resetWeeklyProgress()" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold flex items-center gap-1">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            <span>Reiniciar Semana</span>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- BOTTOM NAVIGATION BAR (STRICTLY 3 TABS — NO DOWNLOAD/INSTALL TAB)   -->
+    <!-- =================================================================== -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg">
+      <div class="max-w-md mx-auto grid grid-cols-3 h-16 px-2">
+        <button id="nav-btn-plan" onclick="switchBottomTab('plan')" class="flex flex-col items-center justify-center gap-1 text-emerald-700 font-extrabold transition-colors">
+          <div id="nav-pill-plan" class="px-4 py-1 rounded-full bg-emerald-100 flex items-center justify-center">
+            <i data-lucide="calendar-check-2" class="w-5 h-5"></i>
+          </div>
+          <span class="text-[11px]">Hoy / Plan</span>
+        </button>
+
+        <button id="nav-btn-shop" onclick="switchBottomTab('shop')" class="flex flex-col items-center justify-center gap-1 text-slate-500 font-semibold transition-colors">
+          <div id="nav-pill-shop" class="px-4 py-1 rounded-full flex items-center justify-center">
+            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          </div>
+          <span class="text-[11px]">Compras (37)</span>
+        </button>
+
+        <button id="nav-btn-health" onclick="switchBottomTab('health')" class="flex flex-col items-center justify-center gap-1 text-slate-500 font-semibold transition-colors">
+          <div id="nav-pill-health" class="px-4 py-1 rounded-full flex items-center justify-center">
+            <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+          </div>
+          <span class="text-[11px]">Metas / Salud</span>
+        </button>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDING BOTTOM SHEET MODAL FOR MEAL RECIPES              -->
+  <!-- ======================================================== -->
+  <div id="recipe-modal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-end sm:items-center justify-center" onclick="handleBackdropClick(event)">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col bottom-sheet-animate" onclick="event.stopPropagation()">
+
+      <!-- Mobile Drag Handle -->
+      <div class="bg-slate-900 pt-2.5 pb-1 flex justify-center">
+        <div class="w-12 h-1.5 rounded-full bg-white/30"></div>
+      </div>
+
+      <!-- Modal Top Header -->
+      <div class="px-4 pt-2 pb-4 bg-gradient-to-r from-slate-900 to-emerald-950 text-white relative">
+        <button onclick="closeRecipeModal()" class="absolute top-2 right-3 w-8 h-8 rounded-full bg-white/15 active:bg-white/30 text-white flex items-center justify-center" title="Cerrar">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+
+        <div class="flex flex-wrap items-center gap-1.5 pr-9">
+          <span id="modal-day-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-400/20 text-emerald-200 border border-emerald-400/30">
+            LUNES — OPCIÓN 1
+          </span>
+          <span id="modal-time-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/15 text-white flex items-center gap-1">
+            <i data-lucide="clock" class="w-3 h-3"></i>
+            <span>08:00 AM • Desayuno</span>
+          </span>
+        </div>
+
+        <h2 id="modal-title" class="text-base sm:text-lg font-extrabold text-white mt-2 leading-snug">
+          Título de la Receta
+        </h2>
+        <p id="modal-subtitle" class="text-[11px] text-emerald-100/90 mt-0.5">
+          Esquema Nutricional — Lic. Isabel Ríos
+        </p>
+
+        <div id="modal-med-badge" class="hidden mt-2 px-2.5 py-1 rounded-xl text-[11px] font-bold bg-sky-500/25 text-sky-100 border border-sky-300/40 flex items-center gap-1.5">
+          <i data-lucide="pill" class="w-3.5 h-3.5 shrink-0"></i>
+          <span id="modal-med-text">Tomar Irbesartán 150 mg al terminar</span>
+        </div>
+
+        <!-- Fitia Pro Macros Bar -->
+        <div class="grid grid-cols-5 gap-1.5 mt-3 bg-slate-950/50 p-2 rounded-2xl border border-white/10 text-center">
+          <div>
+            <span class="text-[9px] uppercase text-slate-300 block">Kcal</span>
+            <span id="modal-kcal" class="text-xs font-extrabold text-white">465</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-emerald-300 block">Prot</span>
+            <span id="modal-prot" class="text-xs font-extrabold text-emerald-300">37 g</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-amber-300 block">Carbos</span>
+            <span id="modal-carb" class="text-xs font-extrabold text-amber-300">46 g</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-sky-300 block">Grasas</span>
+            <span id="modal-fat" class="text-xs font-extrabold text-sky-300">11 g</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-teal-300 block">Fibra</span>
+            <span id="modal-fiber" class="text-xs font-extrabold text-teal-300">7 g</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Scrollable Body -->
+      <div class="p-4 overflow-y-auto space-y-4 flex-1">
+
+        <!-- Section 1: Ingredients -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-1.5">
+              <div class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+              </div>
+              <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wide">
+                Ingredientes Exactos (Fitia Pro)
+              </h3>
+            </div>
+            <button onclick="copyCurrentModalRecipe()" class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200 flex items-center gap-1">
+              <i data-lucide="copy" class="w-3 h-3"></i>
+              <span>Copiar</span>
+            </button>
+          </div>
+          <ul id="modal-ingredients-list" class="space-y-1.5">
+            <!-- Populated by JS -->
+          </ul>
+        </div>
+
+        <!-- Section 2: Step-by-Step Preparation -->
+        <div>
+          <div class="flex items-center gap-1.5 mb-2">
+            <div class="w-6 h-6 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+              <i data-lucide="chef-hat" class="w-3.5 h-3.5"></i>
+            </div>
+            <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wide">
+              Receta Clínica Paso a Paso
+            </h3>
+          </div>
+          <ol id="modal-steps-list" class="space-y-2">
+            <!-- Populated by JS -->
+          </ol>
+        </div>
+
+        <!-- Section 3: Clinical Note -->
+        <div class="bg-gradient-to-br from-emerald-50 to-sky-50 rounded-2xl p-3.5 border border-emerald-200">
+          <div class="flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5">
+              <i data-lucide="stethoscope" class="w-3.5 h-3.5"></i>
+            </div>
+            <div>
+              <h4 class="text-[11px] font-extrabold text-emerald-950 uppercase">
+                Protección Metabólica (Insulina 39.0 | Úrico 6.65)
+              </h4>
+              <p id="modal-clinical-note" class="text-xs text-slate-700 mt-0.5 leading-relaxed">
+                Nota clínica...
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5">
+          <button onclick="navigateModalMeal(-1)" class="p-2 rounded-xl bg-white text-slate-700 border border-slate-200 text-xs font-bold flex items-center">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+          </button>
+          <button onclick="navigateModalMeal(1)" class="p-2 rounded-xl bg-white text-slate-700 border border-slate-200 text-xs font-bold flex items-center">
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <button id="modal-complete-btn" onclick="toggleCurrentModalMealCompleted()" class="flex-1 py-2.5 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 bg-emerald-600 text-white shadow-sm">
+          <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+          <span>Marcar Comida Lista</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast-notification" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 hidden bg-slate-900 text-white px-4 py-2.5 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-2 text-xs font-bold w-max max-w-[90vw]">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+    <span id="toast-message">Guardado</span>
+  </div>
+
+  <!-- APPLICATION DATA & LOGIC -->
+  <script>
+    // =========================================================================
+    // 1. COMPLETE CLINICAL MEAL DATABASE (7 DAYS x 5 MEALS = 35 RECIPES)
+    // Exact Schedule: 08:00 AM, 10:30 AM, 14:00 (2:00 PM), 16:30 (4:30 PM), 19:00 (7:00 PM)
+    // =========================================================================
+    const DAYS_DATA = [
+      {
+        dayIndex: 0,
+        dayName: "Lunes",
+        shortName: "Lun",
+        optionLabel: "Opción 1 — Lic. Isabel Ríos",
+        focusTag: "Desinflamación e Inicio Semanal",
+        meals: [
+          {
+            id: "lun_desayuno",
+            slot: "desayuno",
+            time: "08:00 AM",
+            slotLabel: "Desayuno",
+            medAlert: "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
+            title: "Jugo de fresas con leche light con stevia + 1 pan con atún con tomate + 1 huevo duro",
+            shortDesc: "Batido antioxidante de fresa + sándwich integral de atún desalado al limón + 1 huevo duro.",
+            macros: { kcal: 465, prot: 37, carb: 46, fat: 11, fiber: 7 },
+            ingredients: [
+              "100 g de Fresa entera congelada Bell's / ARO",
+              "60 ml de Leche Evaporada Light Bell's + 180 ml de agua fría",
+              "3 gotas de Stevia líquida natural (sin maltodextrina)",
+              "1/2 lata (60 g escurridos) de Filete de Atún en Agua Bell's (guardar la otra mitad en táper para el viernes)",
+              "60 g de Tomate fresco picado en cubitos",
+              "2 rebanadas (55 g) de Pan de Molde Integral Bell's tostado",
+              "1 unidad (55 g) de Huevo Pardo Bell's duro (cocido 9 min)",
+              "Jugo de 1/2 limón sutil (10 ml), orégano seco y pimienta"
+            ],
+            steps: [
+              "Coloca la media lata de atún en un colador pequeño y enjuágala durante 10 segundos bajo el chorro de agua fría para eliminar hasta el 75% del sodio de la conserva.",
+              "Mezcla el atún bien escurrido con los 60 g de tomate en cubitos, el jugo de medio limón, orégano seco y pimienta negra. Rellena las 2 rebanadas de pan integral tostado.",
+              "En la licuadora, procesa los 100 g de fresas congeladas con los 60 ml de leche evaporada light, 180 ml de agua y 3 gotas de stevia por 30 segundos.",
+              "ORDEN DE INGESTA CLÍNICO: Come primero el huevo duro y el sándwich de atún con tomate; bebe el batido de fresa con leche al final para evitar picos de glucosa.",
+              "Toma tu pastilla de Irbesartán 150 mg con un vaso de agua pura al terminar y realiza 12 minutos de marcha suave en tu habitación a las 08:20 AM."
+            ],
+            clinicalNote: "El huevo duro aporta 145 mg de colina para exportar grasa del hígado (bajando tu TGP de 49.9 U/L), mientras que enjuagar el atún en agua protege tus riñones y potencia el efecto antihipertensivo del Irbesartán 150 mg."
+          },
+          {
+            id: "lun_mm",
+            slot: "media_manana",
+            time: "10:30 AM",
+            slotLabel: "Pre-entreno",
+            medAlert: "Entrenar en 2x2 m entre 11:00 AM y 13:00 PM (Valle del Bisoprolol — Escala RPE 6 a 8)",
+            title: "1 Manzana Israel mediana con cáscara + Hidratación pre-entreno",
+            shortDesc: "Fruta entera de bajo índice glucémico antes de tu rutina en habitación de 2x2 m.",
+            macros: { kcal: 68, prot: 0, carb: 18, fat: 0, fiber: 3 },
+            ingredients: [
+              "1 unidad mediana (130 g) de Manzana Israel fresca bien lavada (con cáscara)",
+              "400 ml de Agua pura a temperatura ambiente"
+            ],
+            steps: [
+              "Lava bien la manzana Israel y cómela en trozos conservando el 100% de la cáscara (allí se concentra la pectina y el ácido ursólico).",
+              "Bebe 400 ml de agua pura antes de iniciar tu rutina silenciosa de fuerza en tu habitación de 2x2 metros."
+            ],
+            clinicalNote: "La pectina de la cáscara de manzana libera energía gradual para tu entrenamiento de media mañana sin disparar la insulina basal (39.0 uU/mL)."
+          },
+          {
+            id: "lun_almuerzo",
+            slot: "almuerzo",
+            time: "14:00 (2:00 PM)",
+            slotLabel: "Almuerzo Principal",
+            medAlert: "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática (14:20)",
+            title: "2 Tazas de Ensalada Fresca + Pollo a las Hierbas (200 g) + 1 Taza de Arroz + 1 Mandarina",
+            shortDesc: "Pechuga jugosa al vapor/sartén sin aceite + arroz integral refrigerado + 2 tazas de ensalada.",
+            macros: { kcal: 545, prot: 52, carb: 61, fat: 7, fiber: 8 },
+            ingredients: [
+              "200 g en crudo de Filete de Pechuga de Pollo Fresca sin piel (tip: cocina 70 g extra para dejar listo tu pan del martes)",
+              "55 g en crudo de Arroz Integral Bell's (equivale exactamente a 1 taza / 150 g ya cocido y refrigerado 12 h)",
+              "100 g de Col blanca o Lechuga fresca picada fina (Ensalada Taza 1)",
+              "80 g de Pepinillo en rodajas con cáscara + 60 g de Tomate en gajos (Ensalada Taza 2)",
+              "Jugo de 1 limón sutil entero (20 ml), 1 diente de ajo chancado (4 g), 1 cdta de mostaza, comino, orégano y 1 pizca medida de sal",
+              "1 unidad mediana (100 g) de Mandarina W Murcott en gajos"
+            ],
+            steps: [
+              "Marina los 200 g de pechuga de pollo durante 10 minutos con el diente de ajo chancado, 1 cdta de mostaza, jugo de medio limón, comino, orégano y pimienta.",
+              "Calienta tu sartén antiadherente a fuego medio (CERO aceite vegetal). Coloca la pechuga con 2 cucharadas soperas de agua, tapa la sartén y cocina 4 minutos por lado hasta que quede dorada y jugosa.",
+              "Arma tus 2 tazas reglamentarias de ensalada con la col/lechuga, pepinillo con cáscara y tomate, aliñando con jugo de limón y orégano.",
+              "ORDEN DE INGESTA OBLIGATORIO: 1° Come las 2 tazas de ensalada fresca → 2° Come los 200 g de pollo → 3° Come la taza de arroz integral (previamente refrigerado 12 h y recalentado) y cierra con la mandarina.",
+              "Toma tu pastilla de Bisoprolol 2.5 mg al terminar de almorzar (14:15)."
+            ],
+            clinicalNote: "Al entrenar antes de las 14:00 y comer primero las 2 tazas de ensalada, tus músculos captan la glucosa de la taza de arroz mediante transportadores GLUT-4 sin exigir que tu páncreas secrete insulina extra."
+          },
+          {
+            id: "lun_mt",
+            slot: "media_tarde",
+            time: "16:30 (4:30 PM)",
+            slotLabel: "Media Tarde",
+            medAlert: null,
+            title: "1 Vaso de Yogurt Gloria Slim Triple Zero 0% con Canela",
+            shortDesc: "Aporte proteico ligero de media tarde sin azúcar ni grasa saturada.",
+            macros: { kcal: 75, prot: 8, carb: 9, fat: 0, fiber: 0 },
+            ingredients: [
+              "1 vaso (180 ml) de Yogurt Gloria Slim Triple Zero (0% grasa, 0% azúcar añadida, 0% lactosa)",
+              "1/2 cucharadita de Canela en polvo"
+            ],
+            steps: [
+              "Sirve los 180 ml de Yogurt Gloria Slim 0% frío en un vaso o bowl a las 16:30 y espolvorea media cucharadita de canela en polvo encima."
+            ],
+            clinicalNote: "Los lácteos desnatados sin azúcar contienen péptidos bioactivos (caseína y lactosuero) que promueven la excreción renal de ácido úrico (bajando tu nivel de 6.65 mg/dL)."
+          },
+          {
+            id: "lun_cena",
+            slot: "cena",
+            time: "19:00 (7:00 PM)",
+            slotLabel: "Cena Ligera",
+            medAlert: "Cierre de ventana nutricional a las 19:00 (13 horas de descanso insulínico nocturno hasta las 08:00 AM)",
+            title: "1 Lata de Atún al Limón + 1 Papa Sancochada (Almidón Resistente)",
+            shortDesc: "Atún en agua desalado con cebolla roja y perejil + papa blanca sancochada y enfriada.",
+            macros: { kcal: 275, prot: 31, carb: 32, fat: 2, fiber: 4 },
+            ingredients: [
+              "1 lata completa (120 g escurridos) de Filete de Atún en Agua Bell's",
+              "1 unidad mediana (150 g en crudo) de Papa Blanca Yungay sancochada con cáscara y refrigerada 12 horas",
+              "30 g de Cebolla roja picada muy fina y lavada",
+              "Jugo de 1/2 limón sutil (10 ml), orégano o perejil picado y pimienta"
+            ],
+            steps: [
+              "Abre la lata de Filete de Atún en Agua Bell's, vacíala en un colador y enjuágala 10 segundos bajo el caño para retirar el sodio de conserva.",
+              "Mezcla el atún con la cebolla roja picada fina, el jugo de medio limón, orégano y pimienta.",
+              "Corta en rodajas la papa sancochada (que estuvo refrigerada al menos 12 horas para cristalizar su almidón en almidón resistente tipo 3; puedes comerla tibia o fría) y sírvela con el atún encima."
+            ],
+            clinicalNote: "Cenar a las 19:00 con solo 2 g de grasa y papa retrogradada permite que tu insulina baje rápidamente a niveles basales durante la noche, activando la lipólisis hepática."
+          }
+        ]
+      },
+      {
+        dayIndex: 1,
+        dayName: "Martes",
+        shortName: "Mar",
+        optionLabel: "Opción 2 — Lic. Isabel Ríos",
+        focusTag: "Fibra Soluble y Control de LDL",
+        meals: [
+          {
+            id: "mar_desayuno",
+            slot: "desayuno",
+            time: "08:00 AM",
+            slotLabel: "Desayuno",
+            medAlert: "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
+            title: "1 Taza de leche sin lactosa/light + 2 Mandarinas + 1 Pan con pollo",
+            shortDesc: "Taza de leche tibia a la canela + sándwich integral de pollo deshilachado (70 g) + 2 mandarinas.",
+            macros: { kcal: 440, prot: 32, carb: 56, fat: 8, fiber: 7 },
+            ingredients: [
+              "60 ml de Leche Evaporada Light / Sin Lactosa Bell's + 180 ml de agua caliente con canela y clavo",
+              "70 g de Pechuga de pollo ya cocida y deshilachada (reservada del lunes)",
+              "20 g de Apio fresco picado muy chiquito",
+              "1 cucharada (15 g) de Yogurt Gloria Slim 0% (como reemplazo saludable de la mayonesa) + gotas de limón",
+              "2 rebanadas (55 g) de Pan de Molde Integral Bell's tostado",
+              "2 unidades medianas (180 g) de Mandarina W Murcott enteras en gajos"
+            ],
+            steps: [
+              "Mezcla los 70 g de pechuga deshilachada con el apio picado, 1 cucharada de yogurt natural 0%, gotas de limón, pimienta y orégano. Arma tu sándwich en el pan integral tostado.",
+              "Prepara tu taza de 240 ml de leche tibia diluyendo 60 ml de leche light en 180 ml de agua hervida con canela.",
+              "Come primero el pan con pollo, luego la taza de leche y termina con las 2 mandarinas en gajos enteros (nunca exprimidas en jugo). Toma tu Irbesartán 150 mg."
+            ],
+            clinicalNote: "Sustituir la mayonesa comercial por yogurt 0% con limón elimina 12 g de aceite de soya proinflamatorio y protege tu colesterol LDL (actualmente en 124 mg/dL, meta <100 mg/dL)."
+          },
+          {
+            id: "mar_mm",
+            slot: "media_manana",
+            time: "10:30 AM",
+            slotLabel: "Pre-entreno",
+            medAlert: "Entrenar entre 11:00 AM y 13:00 PM en tu espacio de 2x2 m",
+            title: "1/2 Plátano de seda pequeño (o 1 Manzana Israel)",
+            shortDesc: "Potasio biodisponible y energía controlada pre-entrenamiento.",
+            macros: { kcal: 55, prot: 1, carb: 14, fat: 0, fiber: 2 },
+            ingredients: [
+              "1/2 unidad (60 g) de Plátano de seda no muy maduro (o 1 manzana pequeña de 110 g)",
+              "400 ml de Agua pura"
+            ],
+            steps: [
+              "Consume el medio plátano de seda a las 10:30 AM antes de iniciar tu sesión de ejercicios en habitación."
+            ],
+            clinicalNote: "El plátano no excesivamente maduro conserva almidón resistente y aporta potasio natural para la contracción muscular sin disparar la glucemia."
+          },
+          {
+            id: "mar_almuerzo",
+            slot: "almuerzo",
+            time: "14:00 (2:00 PM)",
+            slotLabel: "Almuerzo Principal",
+            medAlert: "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática (14:20)",
+            title: "2 Tazas de Ensalada + Pavita a la Plancha (200 g) + 1 Taza de Lentejas + 1 Mandarina",
+            shortDesc: "Medallones magros de pavita San Fernando + lentejas despurinizadas por remojo + 2 tazas de ensalada.",
+            macros: { kcal: 585, prot: 61, carb: 64, fat: 6, fiber: 15 },
+            ingredients: [
+              "200 g en crudo de Pavita en trozos o medallones San Fernando (sin piel)",
+              "65 g en crudo de Lenteja Superior Bell's (remojada 12 h y escurrida; rinde 1 taza / 180 g cocida)",
+              "Aderezo al agua para lentejas: 30 g de Cebolla roja picada, 1 diente de ajo, 20 g de Zanahoria en cubitos, 1 hoja de laurel y comino (CERO tocino o embutidos)",
+              "Ensalada (2 tazas): 120 g de Col blanca picada muy fina, 70 g de Tomate en cubos, 50 g de Pepinillo y jugo de 1 limón sutil (20 ml)",
+              "1 unidad mediana (100 g) de Mandarina en gajos"
+            ],
+            steps: [
+              "REGLA ANTI-ÁCIDO ÚRICO: Deja las lentejas en remojo desde la noche anterior (12 h), bota el agua de remojo y enjuágalas bien (esto reduce oligosacáridos y purinas solubles).",
+              "En una olla pequeña, cocina la cebolla y el ajo con 3 cucharadas de agua (sin aceite) por 3 minutos; añade las lentejas, zanahoria en cubitos, laurel y agua limpia por 20 minutos.",
+              "Sazona los 200 g de pavita con ajo, orégano, comino, pimienta y gotas de limón, y dóralos en sartén antiadherente caliente.",
+              "Come primero las 2 tazas de ensalada al limón, luego los 200 g de pavita, después la taza de lentejas y finalmente la mandarina. Toma tu Bisoprolol 2.5 mg."
+            ],
+            clinicalNote: "Este plato entrega 15 g de fibra soluble viscosa que atrapa sales biliares de colesterol en el intestino, siendo tu herramienta #1 para bajar el LDL de 124 mg/dL a menos de 100 mg/dL."
+          },
+          {
+            id: "mar_mt",
+            slot: "media_tarde",
+            time: "16:30 (4:30 PM)",
+            slotLabel: "Media Tarde",
+            medAlert: null,
+            title: "20 g de Frutos Secos / Maní Tostado Natural Sin Sal",
+            shortDesc: "Grasas monoinsaturadas (ácido oleico) para elevar tu colesterol HDL.",
+            macros: { kcal: 115, prot: 5, carb: 3, fat: 10, fiber: 2 },
+            ingredients: [
+              "20 g (1 puñado pequeño pesado en balanza) de Maní Tostado Natural Sin Sal ni Aceite Villa Natura"
+            ],
+            steps: [
+              "Pesa exactamente 20 g en tu balanza de cocina a las 16:30 y mastícalos despacio acompañados de un vaso grande de agua."
+            ],
+            clinicalNote: "Sus 10 g de grasas monoinsaturadas sin sodio elevan directamente tu colesterol protector HDL (45.4 mg/dL) con impacto glucémico e insulínico igual a cero."
+          },
+          {
+            id: "mar_cena",
+            slot: "cena",
+            time: "19:00 (7:00 PM)",
+            slotLabel: "Cena Ligera",
+            medAlert: "Cierre de ventana nutricional a las 19:00",
+            title: "Ensalada Fresca (1.5 tazas) + Pollo a la Plancha (150 g) + 1 Choclo",
+            shortDesc: "Filete de pechuga a las finas hierbas + 1 taza de choclo sancochado + ensalada al limón.",
+            macros: { kcal: 335, prot: 38, carb: 31, fat: 5, fiber: 5 },
+            ingredients: [
+              "150 g en crudo de Filete de Pechuga de Pollo Fresca sin piel",
+              "1 taza (120 g) de Choclo Desgranado Bell's sancochado con anís",
+              "1.5 tazas de Ensalada fresca: 80 g de Col/Lechuga, 70 g de Pepinillo en rodajas, 50 g de Tomate",
+              "Jugo de 1/2 limón sutil, 1 diente de ajo, orégano seco y pimienta"
+            ],
+            steps: [
+              "Sazona los 150 g de filete de pechuga con ajo, orégano, pimienta y limón, y cocínalos en sartén antiadherente 4 minutos por lado sin aceite.",
+              "Sirve primero la ensalada fresca, luego la pechuga a la plancha y acompaña con el choclo sancochado."
+            ],
+            clinicalNote: "El grano entero de choclo peruano tiene una matriz fibrosa de digestión lenta que evita picos nocturnos de glucosa mientras los 38 g de proteína protegen tu masa muscular."
+          }
+        ]
+      },
+      {
+        dayIndex: 2,
+        dayName: "Miércoles",
+        shortName: "Mié",
+        optionLabel: "Opción 3 — Lic. Isabel Ríos",
+        focusTag: "Betaglucanos, Omega-3 y Pescado Blanco",
+        meals: [
+          {
+            id: "mie_desayuno",
+            slot: "desayuno",
+            time: "08:00 AM",
+            slotLabel: "Desayuno",
+            medAlert: "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
+            title: "1 Taza de avena con canela + 1/2 manzana, 1/2 plátano, 30 g arándanos, 1 cda chía + 2 huevos duros",
+            shortDesc: "Porridge alto en betaglucanos y Omega-3 con polifenoles de arándanos + 2 huevos duros.",
+            macros: { kcal: 485, prot: 21, carb: 58, fat: 18, fiber: 11 },
+            ingredients: [
+              "40 g en crudo (4 cucharadas soperas) de Avena Hojuela Entera Grano de Oro",
+              "250 ml de Agua + 1 cucharadita de Canela en polvo + 2 gotas de Stevia",
+              "1 cucharada sopera (10 g) de Semillas de Chía Negra Ecoandino",
+              "1/2 unidad (65 g) de Manzana Israel picada en cubitos con cáscara",
+              "1/2 unidad (55 g) de Plátano de seda en rodajas",
+              "30 g de Arándanos frescos lavados",
+              "2 unidades (110 g) de Huevos Pardos Bell's duros (cocidos 9 min)"
+            ],
+            steps: [
+              "ORDEN CLÍNICO ANTI-PICO DE INSULINA: Come PRIMERO los 2 huevos duros con una pizca de orégano antes de probar la avena con frutas.",
+              "En una olla pequeña, hierve los 40 g de avena en hojuelas con 250 ml de agua y canela durante 4 minutos revolviendo.",
+              "Apaga el fuego, agrega inmediatamente la cucharada (10 g) de semillas de chía para que forme su gel mucilaginoso, y decora encima con la media manzana, el medio plátano y los 30 g de arándanos.",
+              "Toma tu Irbesartán 150 mg al finalizar el desayuno."
+            ],
+            clinicalNote: "Comer primero los 2 huevos duros y sumar 10 g de chía a la avena reduce en un 38% la velocidad de absorción de las frutas, mientras las antocianinas de los arándanos mejoran directamente tu sensibilidad a la insulina (HOMA-IR)."
+          },
+          {
+            id: "mie_mm",
+            slot: "media_manana",
+            time: "10:30 AM",
+            slotLabel: "Pre-entreno",
+            medAlert: "Entrenar entre 11:00 AM y 13:00 PM en habitación 2x2 m",
+            title: "1 Mandarina W Murcott mediana en gajos",
+            shortDesc: "Vitamina C y naringenina hepatoprotectora antes de entrenar.",
+            macros: { kcal: 50, prot: 1, carb: 12, fat: 0, fiber: 2 },
+            ingredients: [
+              "1 unidad mediana (100 g) de Mandarina fresca en gajos (con su hollejo blanco)"
+            ],
+            steps: [
+              "Pela la mandarina a las 10:30 AM y cómela en gajos conservando la fibra blanca que recubre cada gajo."
+            ],
+            clinicalNote: "El flavonoide naringenina de los cítricos activa la oxidación hepática de ácidos grasos y ayuda a reducir la transaminasa TGP (49.9 U/L)."
+          },
+          {
+            id: "mie_almuerzo",
+            slot: "almuerzo",
+            time: "14:00 (2:00 PM)",
+            slotLabel: "Almuerzo Principal",
+            medAlert: "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática (14:20)",
+            title: "2 Tazas de Ensalada + Pescado Blanco al Vapor/Sudado (200 g) + 1 Camote + 1 Manzana",
+            shortDesc: "Filete de Tilapia/Basa bajo en purinas al kión y tomate + camote amarillo refrigerado + 2 tazas de ensalada.",
+            macros: { kcal: 495, prot: 43, carb: 64, fat: 6, fiber: 9 },
+            ingredients: [
+              "200 g en crudo de Filete de Basa o Tilapia Blanca Bell's (pescado blanco bajo en purinas)",
+              "1 unidad mediana (160 g en crudo) de Camote Amarillo sancochado con cáscara y refrigerado 12 h",
+              "Sudado natural: 30 g de Cebolla roja en pluma, 40 g de Tomate en rodajas, 1 diente de ajo, 2 rodajas de kión (jengibre) y culantro fresco",
+              "Ensalada (2 tazas): 100 g de Col/Lechuga, 60 g de Vainitas cocidas al vapor al dente, 60 g de Pepinillo y jugo de 1 limón",
+              "1 unidad pequeña (110 g) de Manzana Israel con cáscara"
+            ],
+            steps: [
+              "En una sartén con tapa, arma una cama con la cebolla en pluma, el tomate, el ajo y el kión; coloca encima los 200 g de filete de pescado blanco sazonado con limón y pimienta.",
+              "Agrega 1/4 de taza de agua, tapa y cocina al vapor/sudado a fuego medio por 7 minutos (cero aceite).",
+              "Come primero las 2 tazas de ensalada con vainitas al dente, luego el pescado sudado, y al final el camote y la manzana. Toma tu Bisoprolol 2.5 mg."
+            ],
+            clinicalNote: "Elegimos pescado blanco (Basa/Tilapia) en lugar de pescados azules oscuros (bonito/caballa/anchoveta) porque contiene un 55% menos de purinas, protegiendo tu ácido úrico de 6.65 mg/dL."
+          },
+          {
+            id: "mie_mt",
+            slot: "media_tarde",
+            time: "16:30 (4:30 PM)",
+            slotLabel: "Media Tarde",
+            medAlert: null,
+            title: "1 Vaso (180 ml) de Yogurt Gloria Slim 0%",
+            shortDesc: "Proteína ligera de alta digestibilidad y efecto uricosúrico.",
+            macros: { kcal: 75, prot: 8, carb: 9, fat: 0, fiber: 0 },
+            ingredients: [
+              "1 vaso (180 ml) de Yogurt Gloria Slim Triple Zero"
+            ],
+            steps: [
+              "Servir frío a las 16:30."
+            ],
+            clinicalNote: "Mantiene estable la saciedad vespertina evitando el picoteo nocturno."
+          },
+          {
+            id: "mie_cena",
+            slot: "cena",
+            time: "19:00 (7:00 PM)",
+            slotLabel: "Cena Ligera",
+            medAlert: "Cierre de ventana nutricional a las 19:00",
+            title: "Ensalada Fresca + 1 Tortilla Bimbo Rapidita Integral con Atún",
+            shortDesc: "Wrap en tortilla integral con 1 lata de atún en agua escurrido, tomate y lechuga.",
+            macros: { kcal: 265, prot: 31, carb: 19, fat: 5, fiber: 5 },
+            ingredients: [
+              "1 unidad (30 g) de Tortilla Bimbo Rapidita Integral (congelar el resto del paquete para que dure semanas)",
+              "1 lata completa (120 g escurridos) de Filete de Atún en Agua Bell's (enjuagada 10 seg en colador)",
+              "1.5 tazas de Ensalada fresca: 80 g de Lechuga/Col picada, 60 g de Tomate en cubitos, 50 g de Pepinillo, 20 g de Cebolla roja y jugo de limón"
+            ],
+            steps: [
+              "Calienta la Tortilla Rapidita Integral en sartén seca durante 25 segundos por lado.",
+              "Mezcla el atún desalado y escurrido con parte de la lechuga, tomate, cebolla y limón; arma tu wrap o taco y acompáñalo con el resto de la ensalada fresca en el plato."
+            ],
+            clinicalNote: "Una sola Tortilla Rapidita Integral aporta apenas 13 g de carbohidratos netos, permitiendo una cena rápida, saciante y con mínima respuesta de insulina antes de dormir."
+          }
+        ]
+      },
+      {
+        dayIndex: 3,
+        dayName: "Jueves",
+        shortName: "Jue",
+        optionLabel: "Opción 4 — Lic. Isabel Ríos",
+        focusTag: "Protocolo Especial de Control de Purinas",
+        meals: [
+          {
+            id: "jue_desayuno",
+            slot: "desayuno",
+            time: "08:00 AM",
+            slotLabel: "Desayuno",
+            medAlert: "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
+            title: "Batido de fresa con leche light + 1 Pan integral con 40 g queso fresco light + 1 Mandarina",
+            shortDesc: "Batido proteico de fresa con leche light + sándwich de queso fresco light Bonlé (lavado) + mandarina.",
+            macros: { kcal: 395, prot: 21, carb: 55, fat: 9, fiber: 7 },
+            ingredients: [
+              "100 g de Fresa entera congelada Bell's / ARO",
+              "60 ml de Leche Evaporada Light Bell's + 180 ml de agua + 3 gotas de Stevia",
+              "2 rebanadas (55 g) de Pan de Molde Integral Bell's tostado",
+              "40 g de Queso Fresco Light Bonlé (pasado 10 seg por agua fría para retirar sal superficial)",
+              "3 rodajas de Tomate fresco y orégano seco",
+              "1 unidad mediana (100 g) de Mandarina en gajos"
+            ],
+            steps: [
+              "Enjuaga la tajada de 40 g de Queso Fresco Light bajo el caño, sécala con papel toalla y colócala en tu pan integral tostado con rodajas de tomate y abundante orégano.",
+              "Licúa los 100 g de fresas con los 60 ml de leche light, 180 ml de agua y stevia.",
+              "Come primero el pan con queso fresco (cuya caseína y calcio favorecen la eliminación de ácido úrico hoy que toca hígado en el almuerzo), luego el batido y la mandarina. Toma tu Irbesartán 150 mg."
+            ],
+            clinicalNote: "El calcio y los péptidos del queso fresco light y la leche ayudan al túbulo renal a excretar uratos, preparando tu organismo para el almuerzo de la Opción 4."
+          },
+          {
+            id: "jue_mm",
+            slot: "media_manana",
+            time: "10:30 AM",
+            slotLabel: "Pre-entreno",
+            medAlert: "Entrenar entre 11:00 AM y 13:00 PM + tomar 500 ml de agua",
+            title: "1 Manzana Israel entera con cáscara",
+            shortDesc: "Fibra pectina y quercetina natural antes de tu entrenamiento.",
+            macros: { kcal: 68, prot: 0, carb: 18, fat: 0, fiber: 3 },
+            ingredients: [
+              "1 unidad mediana (130 g) de Manzana Israel con cáscara",
+              "500 ml de Agua pura"
+            ],
+            steps: [
+              "Come la manzana entera con cáscara a las 10:30 AM y bebe medio litro de agua antes de tu rutina."
+            ],
+            clinicalNote: "Mantener el flujo urinario alto hoy es fundamental para que el ácido úrico (6.65 mg/dL) no se eleve tras el almuerzo."
+          },
+          {
+            id: "jue_almuerzo",
+            slot: "almuerzo",
+            time: "14:00 (2:00 PM)",
+            slotLabel: "Almuerzo Principal",
+            medAlert: "Tomar Bisoprolol 2.5 mg + 1 vaso extra (350 ml) de Agua con Limón (Alcalinizante Renal)",
+            title: "2 Tazas de Ensalada + Hígado de Res Encebollado (160-180 g) + 1 Choclo + 1 Mandarina",
+            shortDesc: "Bistec de hígado sellado descartando el caldo de cocción por las purinas + cebolla roja rica en quercetina.",
+            macros: { kcal: 510, prot: 46, carb: 58, fat: 8, fiber: 9 },
+            ingredients: [
+              "160 a 180 g en crudo de Hígado de Res fresco limpio de nervios",
+              "1 taza (140 g) de Choclo Desgranado Bell's sancochado",
+              "Encebollado Protector: 70 g de Cebolla roja en pluma gruesa, 50 g de Tomate en gajos, 1 diente de ajo, 1 cda de vinagre tinto/blanco, comino y orégano",
+              "Ensalada (2 tazas): 120 g de Pepinillo en rodajas, 80 g de Col/Lechuga, 40 g de Zanahoria cruda rallada y jugo de 1 limón sutil entero",
+              "1 unidad mediana (100 g) de Mandarina + 1 vaso grande (350 ml) de agua con el jugo de medio limón"
+            ],
+            steps: [
+              "PROTOCOLO ESTRICTO ANTI-ÁCIDO ÚRICO: Marina el bistec de hígado con ajo, vinagre, comino y pimienta. Séllalo en sartén antiadherente caliente por 2 minutos por lado.",
+              "Retira el hígado a un plato y DESCARTA POR COMPLETO el líquido oscuro que soltó en la sartén (allí quedan disueltas gran parte de las purinas libres).",
+              "Limpia la sartén con papel toalla y saltea los 70 g de cebolla roja y 50 g de tomate con 2 cucharadas de agua y orégano por 2 minutos; sírvelos encima del hígado.",
+              "Come primero las 2 tazas de ensalada, luego el hígado encebollado, después el choclo y la mandarina, acompañando con el vaso extra de agua con limón. Toma tu Bisoprolol 2.5 mg."
+            ],
+            clinicalNote: "Al descartar el caldo de cocción del hígado y combinarlo con 70 g de cebolla roja (quercetina que inhibe la xantina oxidasa) y citrato de limón, evitas que suba tu ácido úrico de 6.65 mg/dL."
+          },
+          {
+            id: "jue_mt",
+            slot: "media_tarde",
+            time: "16:30 (4:30 PM)",
+            slotLabel: "Media Tarde",
+            medAlert: null,
+            title: "20 g de Frutos Secos Naturales Sin Sal",
+            shortDesc: "Saciante vespertino rico en ácido oleico y magnesio.",
+            macros: { kcal: 115, prot: 5, carb: 3, fat: 10, fiber: 2 },
+            ingredients: [
+              "20 g de Maní Tostado Natural Sin Sal Villa Natura"
+            ],
+            steps: [
+              "Pesar 20 g a las 16:30 y consumir con un vaso de agua."
+            ],
+            clinicalNote: "Aporta magnesio intracelular, un cofactor esencial para que el receptor de insulina funcione correctamente."
+          },
+          {
+            id: "jue_cena",
+            slot: "cena",
+            time: "19:00 (7:00 PM)",
+            slotLabel: "Cena Ligera",
+            medAlert: "Cierre de ventana nutricional a las 19:00",
+            title: "Bowl de Ensalada de Verduras (2 tazas) con 1 Lata de Atún y 1 Papa en Cubos",
+            shortDesc: "Bowl fresco de 2 tazas de vegetales + 1 lata de atún en agua desalado + dados de papa refrigerada al limón.",
+            macros: { kcal: 285, prot: 32, carb: 31, fat: 2, fiber: 5 },
+            ingredients: [
+              "1 lata completa (120 g escurridos) de Filete de Atún en Agua Bell's (enjuagada 10 seg en colador)",
+              "1 unidad mediana (130 g) de Papa Blanca Yungay sancochada, refrigerada 12 h y cortada en cubos",
+              "2 tazas de Verduras: 80 g de Pepinillo, 60 g de Tomate, 50 g de Vainitas cocidas al vapor, 60 g de Col/Lechuga",
+              "Jugo de 1 limón sutil, ajo en polvo, perejil/orégano y pimienta"
+            ],
+            steps: [
+              "En un bowl amplio mezcla las 2 tazas de verduras con los cubos de papa fría y el atún previamente desalado en colador.",
+              "Aliña con jugo de limón recién exprimido, ajo en polvo y orégano."
+            ],
+            clinicalNote: "Cena limpia y alta en potasio vegetal para contrarrestar el sodio y mantener la presión arterial óptima durante el sueño."
+          }
+        ]
+      },
+      {
+        dayIndex: 4,
+        dayName: "Viernes",
+        shortName: "Vie",
+        optionLabel: "Opción 5 — Lic. Isabel Ríos",
+        focusTag: "Granola Casera Sin Azúcar y Alta Saciedad",
+        meals: [
+          {
+            id: "vie_desayuno",
+            slot: "desayuno",
+            time: "08:00 AM",
+            slotLabel: "Desayuno",
+            medAlert: "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
+            title: "Jugo de fresas con leche light con stevia + 1 Pan integral con pollo (80 g) y apio",
+            shortDesc: "Batido de fresa con leche light + sándwich integral de pechuga deshilachada con apio y yogur 0%.",
+            macros: { kcal: 415, prot: 34, carb: 47, fat: 8, fiber: 7 },
+            ingredients: [
+              "100 g de Fresa entera congelada Bell's / ARO",
+              "60 ml de Leche Evaporada Light Bell's + 180 ml de agua + 3 gotas de Stevia",
+              "80 g de Pechuga de pollo sancochada y deshilachada",
+              "1 tallo grande (35 g) de Apio fresco picado en medias lunas muy finas",
+              "1 cucharada (15 g) de Yogurt Gloria Slim 0% + jugo de medio limón, orégano y pimienta",
+              "2 rebanadas (55 g) de Pan de Molde Integral Bell's tostado"
+            ],
+            steps: [
+              "Mezcla los 80 g de pollo deshilachado con el apio picado, la cucharada de yogurt 0% (en reemplazo de mayonesa), gotas de limón y pimienta. Arma el sándwich en pan integral tostado.",
+              "Licúa las fresas con la leche light diluida y stevia.",
+              "Come primero el sándwich de pollo y apio y luego toma el batido de fresa. Toma tu Irbesartán 150 mg."
+            ],
+            clinicalNote: "El apio aporta ftálidos naturales (como el 3-n-butilftálido) que relajan el músculo liso de las arterias, actuando en sinergia con tu Irbesartán de las 08:00 AM."
+          },
+          {
+            id: "vie_mm",
+            slot: "media_manana",
+            time: "10:30 AM",
+            slotLabel: "Pre-entreno",
+            medAlert: "Entrenar entre 11:00 AM y 13:00 PM en tu habitación de 2x2 m",
+            title: "1 Mandarina W Murcott entera",
+            shortDesc: "Hidratación y antioxidantes cítricos pre-entreno.",
+            macros: { kcal: 50, prot: 1, carb: 12, fat: 0, fiber: 2 },
+            ingredients: [
+              "1 unidad mediana (100 g) de Mandarina en gajos",
+              "400 ml de Agua pura"
+            ],
+            steps: [
+              "Consumir a las 10:30 AM antes de entrenar."
+            ],
+            clinicalNote: "Aporta vitamina C, la cual compite favorablemente en el riñón para facilitar la excreción de ácido úrico."
+          },
+          {
+            id: "vie_almuerzo",
+            slot: "almuerzo",
+            time: "14:00 (2:00 PM)",
+            slotLabel: "Almuerzo Principal",
+            medAlert: "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática (14:20)",
+            title: "2 Tazas de Ensalada + 1.5 Latas de Atún al Limón + 1 Camote al Horno + 1 Manzana",
+            shortDesc: "Zarza proteica de atún en agua Bell's con apio y cebolla + camote amarillo al horno + ensalada.",
+            macros: { kcal: 530, prot: 46, carb: 68, fat: 5, fiber: 10 },
+            ingredients: [
+              "1.5 latas (180 g escurridos = 1 lata nueva + la 1/2 lata guardada del lunes) de Filete de Atún en Agua Bell's",
+              "1 unidad mediana (160 g en crudo) de Camote Amarillo cortado en rodajas o bastones con cáscara",
+              "Ensalada (2 tazas): 100 g de Col/Lechuga, 60 g de Tomate, 40 g de Cebolla roja en pluma lavada, 30 g de Apio picado, 50 g de Pepinillo y jugo de 1 limón sutil",
+              "1 unidad mediana (120 g) de Manzana Israel con cáscara"
+            ],
+            steps: [
+              "Enjuaga el atún durante 10 segundos en colador bajo el chorro de agua para retirar el sodio.",
+              "Cocina las rodajas de camote en horno, freidora de aire o sartén antiadherente tapada a fuego bajo con una pizca de canela u orégano hasta que doren.",
+              "Come primero las 2 tazas de ensalada fresca con el atún al limón y apio, y termina con el camote al horno y la manzana. Toma tu Bisoprolol 2.5 mg."
+            ],
+            clinicalNote: "Al usar la media lata restante del lunes llegas a 46 g de proteína magra en el almuerzo post-entreno sin desperdiciar alimento ni presupuesto."
+          },
+          {
+            id: "vie_mt",
+            slot: "media_tarde",
+            time: "16:30 (4:30 PM)",
+            slotLabel: "Media Tarde",
+            medAlert: null,
+            title: "20 g de Frutos Secos Sin Sal",
+            shortDesc: "Grasas cardioprotectoras sin sodio.",
+            macros: { kcal: 115, prot: 5, carb: 3, fat: 10, fiber: 2 },
+            ingredients: [
+              "20 g de Maní Tostado Natural Sin Sal Villa Natura"
+            ],
+            steps: [
+              "Consumir a las 16:30 con agua."
+            ],
+            clinicalNote: "Mantiene el colesterol LDL controlado gracias a sus fitoesteroles."
+          },
+          {
+            id: "vie_cena",
+            slot: "cena",
+            time: "19:00 (7:00 PM)",
+            slotLabel: "Cena Ligera",
+            medAlert: "Cierre de ventana nutricional a las 19:00",
+            title: "1 Vaso Grande (250 ml) de Yogurt 0% + Granola Casera Sin Azúcar",
+            shortDesc: "Yogurt Gloria Slim 0% con 3 cdas de avena tostada en sartén con chía, canela, stevia y 10 g frutos secos.",
+            macros: { kcal: 295, prot: 18, carb: 31, fat: 9, fiber: 6 },
+            ingredients: [
+              "250 ml de Yogurt Gloria Slim Triple Zero (0% grasa, 0% azúcar)",
+              "Granola Casera Sin Azúcar: 25 g (3 cdas) de tu Avena Grano de Oro + 5 g (1 cdta) de Chía Ecoandino + 10 g de tu Maní Natural picado + canela en polvo y 2 gotas de Stevia",
+              "(Opcional post-entreno): 2 claras de huevo duras aparte si deseas sumar +7 g de proteína pura"
+            ],
+            steps: [
+              "TRUCO DE AHORRO Y SALUD: En una sartén seca antiadherente a fuego medio-bajo, tuesta durante 4 minutos los 25 g de avena en hojuelas, 5 g de chía y 10 g de maní picado con canela en polvo revolviendo constantemente hasta que quede crujiente.",
+              "Retira del fuego, deja enfriar 2 minutos para que gane crocancia y sírvelo encima de los 250 ml de Yogurt Gloria Slim 0% frío."
+            ],
+            clinicalNote: "Las granolas comerciales \"sin azúcar\" cuestan S/ 14.20 y suelen usar maltitol o aceites refinados; hacerla en 4 minutos con tu misma avena, chía y maní tiene menor carga glucémica y te ahorra S/ 14.20."
+          }
+        ]
+      },
+      {
+        dayIndex: 5,
+        dayName: "Sábado",
+        shortName: "Sáb",
+        optionLabel: "Opción 6 — Lic. Isabel Ríos",
+        focusTag: "Estofado Casero sin Aceite y Betaglucanos",
+        meals: [
+          {
+            id: "sab_desayuno",
+            slot: "desayuno",
+            time: "08:00 AM",
+            slotLabel: "Desayuno",
+            medAlert: "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
+            title: "1 Taza de avena con canela + 1/2 manzana, 1/2 plátano, 30 g arándanos, 1 cda chía + 2 huevos duros",
+            shortDesc: "Porridge sensibilizador con chía y arándanos precedido por 2 huevos duros.",
+            macros: { kcal: 485, prot: 21, carb: 58, fat: 18, fiber: 11 },
+            ingredients: [
+              "40 g en crudo de Avena Hojuela Entera Grano de Oro hervida en 250 ml de agua y canela",
+              "1 cucharada sopera (10 g) de Semillas de Chía Negra Ecoandino",
+              "1/2 Manzana Israel picada (65 g) + 1/2 Plátano en rodajas (55 g) + 30 g de Arándanos frescos",
+              "2 unidades (110 g) de Huevos Pardos Bell's duros"
+            ],
+            steps: [
+              "Come primero los 2 huevos duros.",
+              "Hierve la avena 4 minutos con agua y canela, apaga el fuego, incorpora la cucharada de chía y sirve con la manzana, el medio plátano y los arándanos encima. Toma tu Irbesartán 150 mg."
+            ],
+            clinicalNote: "Segundo día semanal de carga de betaglucanos de avena + colina de 2 yemas para seguir limpiando la grasa hepática (TGP 49.9 U/L)."
+          },
+          {
+            id: "sab_mm",
+            slot: "media_manana",
+            time: "10:30 AM",
+            slotLabel: "Pre-entreno",
+            medAlert: "Entrenar entre 11:00 AM y 13:00 PM en tu habitación de 2x2 m",
+            title: "1 Mandarina W Murcott entera",
+            shortDesc: "Energía ligera antes de la sesión de sábado.",
+            macros: { kcal: 50, prot: 1, carb: 12, fat: 0, fiber: 2 },
+            ingredients: [
+              "1 unidad mediana (100 g) de Mandarina en gajos"
+            ],
+            steps: [
+              "Consumir en gajos enteros a las 10:30 AM antes de entrenar."
+            ],
+            clinicalNote: "Aporta flavonoides cítricos e hidratación celular."
+          },
+          {
+            id: "sab_almuerzo",
+            slot: "almuerzo",
+            time: "14:00 (2:00 PM)",
+            slotLabel: "Almuerzo Principal",
+            medAlert: "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática (14:20)",
+            title: "2 Tazas de Ensalada + Estofado de Pollo sin Aceite (200 g) + 1 Taza de Arroz a la Jardinera + 1 Manzana",
+            shortDesc: "Estofado peruano de pechuga en salsa natural de tomate, zanahoria y laurel + arroz integral a la jardinera.",
+            macros: { kcal: 560, prot: 53, carb: 66, fat: 7, fiber: 10 },
+            ingredients: [
+              "200 g en crudo de Pechuga de Pollo sin piel en trozos grandes",
+              "Salsa natural del estofado: 60 g de Tomate maduro licuado, 40 g de Cebolla roja picada, 1 diente de ajo, 30 g de Zanahoria en rodajas, 1 hoja de laurel, orégano y páprika",
+              "Arroz a la jardinera (1 taza): 50 g en crudo de Arroz Integral Bell's cocido con 30 g de Vainitas picadas, 20 g de Zanahoria en cubitos y 20 g de Choclo desgranado",
+              "Ensalada (2 tazas): 120 g de Col/Lechuga fresca + 80 g de Pepinillo en rodajas con jugo de 1 limón",
+              "1 unidad pequeña (110 g) de Manzana Israel"
+            ],
+            steps: [
+              "En una olla antiadherente caliente sin aceite, sella los 200 g de pollo con ajo, comino y páprika por 2 minutos.",
+              "Agrega la cebolla picada, el tomate licuado, las rodajas de zanahoria, la hoja de laurel y 1/2 taza de agua. Tapa y cocina a fuego lento por 20 minutos hasta formar un jugo espeso natural.",
+              "Come primero las 2 tazas de ensalada fresca al limón, luego el estofado de pollo y al final la taza de arroz integral a la jardinera y la manzana. Toma tu Bisoprolol 2.5 mg."
+            ],
+            clinicalNote: "El licopeno del tomate cocido sin aceites refinados reduce la oxidación de las partículas de colesterol LDL, protegiendo tu endotelio vascular."
+          },
+          {
+            id: "sab_mt",
+            slot: "media_tarde",
+            time: "16:30 (4:30 PM)",
+            slotLabel: "Media Tarde",
+            medAlert: null,
+            title: "1 Vaso (180 ml) de Yogurt Gloria Slim 0%",
+            shortDesc: "Colación proteica vespertina 0% azúcar.",
+            macros: { kcal: 75, prot: 8, carb: 9, fat: 0, fiber: 0 },
+            ingredients: [
+              "1 vaso (180 ml) de Yogurt Gloria Slim Triple Zero"
+            ],
+            steps: [
+              "Servir frío a las 16:30."
+            ],
+            clinicalNote: "Favorece la saciedad y el control del ácido úrico."
+          },
+          {
+            id: "sab_cena",
+            slot: "cena",
+            time: "19:00 (7:00 PM)",
+            slotLabel: "Cena Ligera",
+            medAlert: "Cierre de ventana nutricional a las 19:00",
+            title: "Ensalada de Tomate y Cebolla (1.5 tazas) + Pollo en Cuadritos (150 g) + 3/4 Taza de Choclo",
+            shortDesc: "Pollo salteado al ajo y orégano en cubos + ensalada fresca de tomate y cebolla + choclo.",
+            macros: { kcal: 320, prot: 37, carb: 28, fat: 5, fiber: 4 },
+            ingredients: [
+              "150 g en crudo de Pechuga de Pollo cortada en cuadritos",
+              "1.5 tazas de Ensalada de Tomate: 150 g de Tomate en gajos + 30 g de Cebolla en pluma lavada + jugo de limón y orégano",
+              "3/4 de taza (100 g) de Choclo Desgranado Bell's sancochado",
+              "1 diente de ajo picado, comino y pimienta"
+            ],
+            steps: [
+              "Saltea los 150 g de pollo en cuadritos en tu sartén antiadherente con ajo picado, orégano, gotas de limón y 1 cucharada de agua durante 6 minutos.",
+              "Sirve junto a la ensalada de tomate al orégano y el choclo sancochado."
+            ],
+            clinicalNote: "Cena ligera de rápida digestión que evita el reflujo y permite un sueño profundo reparador (clave para mantener tu cortisol AM en su óptimo 7.93 ug/dL)."
+          }
+        ]
+      },
+      {
+        dayIndex: 6,
+        dayName: "Domingo",
+        shortName: "Dom",
+        optionLabel: "Opción 7 — Lic. Isabel Ríos",
+        focusTag: "Lomo de Cerdo Magro y Pasta Al Dente",
+        meals: [
+          {
+            id: "dom_desayuno",
+            slot: "desayuno",
+            time: "08:00 AM",
+            slotLabel: "Desayuno",
+            medAlert: "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
+            title: "1 Taza de leche light + 1 Pan con 30 g queso fresco y 1 lámina jamón de pavita + 2 Mandarinas",
+            shortDesc: "Sándwich mixto saludable de queso fresco light y jamón de pavita San Fernando + leche tibia + 2 mandarinas.",
+            macros: { kcal: 420, prot: 25, carb: 56, fat: 8, fiber: 6 },
+            ingredients: [
+              "60 ml de Leche Evaporada Light Bell's + 180 ml de agua caliente con canela",
+              "2 rebanadas (55 g) de Pan de Molde Integral Bell's tostado",
+              "30 g de Queso Fresco Light Bonlé (enjuagado 10 seg en agua para bajar sodio)",
+              "1 lámina (20 g) de Jamón de Pavita San Fernando",
+              "2 unidades medianas (180 g) de Mandarina W Murcott en gajos"
+            ],
+            steps: [
+              "Pasa la lámina de jamón de pavita 20 segundos por sartén seca y arma tu sándwich en el pan integral tostado junto con los 30 g de queso fresco light desalado y orégano.",
+              "Acompaña con la taza de leche tibia con canela y termina con las 2 mandarinas en gajos. Toma tu Irbesartán 150 mg."
+            ],
+            clinicalNote: "Al enjuagar el queso fresco y usar 1 lámina de jamón de pavita, disfrutas del desayuno dominical de la doctora manteniendo el sodio total del plato debajo de 400 mg."
+          },
+          {
+            id: "dom_mm",
+            slot: "media_manana",
+            time: "10:30 AM",
+            slotLabel: "Pre-entreno",
+            medAlert: "Caminata recreativa o sesión de movilidad articular (11:00 AM)",
+            title: "1 Manzana Israel pequeña con cáscara",
+            shortDesc: "Pectina soluble antes del almuerzo dominical.",
+            macros: { kcal: 60, prot: 0, carb: 15, fat: 0, fiber: 3 },
+            ingredients: [
+              "1 unidad pequeña (110 g) de Manzana Israel entera con cáscara"
+            ],
+            steps: [
+              "Lavar y comer con cáscara a las 10:30 AM."
+            ],
+            clinicalNote: "Prepara el tránsito intestinal y reduce el apetito voraz antes del almuerzo con pasta."
+          },
+          {
+            id: "dom_almuerzo",
+            slot: "almuerzo",
+            time: "14:00 (2:00 PM)",
+            slotLabel: "Almuerzo Principal",
+            medAlert: "Tomar Bisoprolol fumarato 2.5 mg al terminar + 15 min caminata suave (14:20)",
+            title: "2 Tazas de Ensalada + Lomo de Cerdo Magro (200 g) + 1 Taza de Fideos Al Dente + Fruta",
+            shortDesc: "Lomo de cerdo magro a la plancha + 1 taza de fideos al dente (8 min) con salsa de tomate casera + 30 g arándanos.",
+            macros: { kcal: 575, prot: 51, carb: 62, fat: 11, fiber: 8 },
+            ingredients: [
+              "200 g en crudo de Lomo de Cerdo Magro Ternez (retirar cualquier borde de grasa blanca visible)",
+              "55 g en crudo de Spaghetti o Fideos Tornillo Bell's (cocidos estrictamente 8 minutos AL DENTE = 1 taza / 140 g cocidos)",
+              "Salsa de Tomate Casera: 70 g de Tomate picado, 40 g de Cebolla roja, 1 diente de ajo, orégano, albahaca y 1 cdta de vinagre",
+              "Ensalada (2 tazas OBLIGATORIAS ANTES DE LA PASTA): 100 g de Col/Lechuga, 60 g de Vainitas al vapor, 60 g de Pepinillo y jugo de 1 limón",
+              "30 g de Arándanos frescos (o 1 mandarina mediana)"
+            ],
+            steps: [
+              "REGLA DE ORO PARA COMER FIDEOS CON INSULINA DE 39.0: Hierve los 55 g de fideos durante SOLO 8 MINUTOS para que queden firmes ('al dente'). Al dente su índice glucémico es bajo.",
+              "Sazona los 200 g de lomo de cerdo magro con ajo, vinagre, comino y orégano, y dóralos en sartén antiadherente sin aceite.",
+              "En la misma sartén saltea el tomate picado, cebolla y albahaca con 3 cucharadas de agua y baña tu taza de fideos.",
+              "ORDEN ESTRICTO: Come 1° las 2 tazas completas de ensalada con limón → 2° los 200 g de lomo de cerdo → 3° la taza de fideos al dente y los arándanos. Toma tu Bisoprolol 2.5 mg."
+            ],
+            clinicalNote: "El lomo de cerdo magro es rico en tiamina (Vitamina B1), cofactor indispensable para oxidar los carbohidratos de los fideos en la mitocondria sin convertirlos en triglicéridos hepáticos."
+          },
+          {
+            id: "dom_mt",
+            slot: "media_tarde",
+            time: "16:30 (4:30 PM)",
+            slotLabel: "Media Tarde",
+            medAlert: null,
+            title: "20 g de Frutos Secos Sin Sal",
+            shortDesc: "Aporte de grasas monoinsaturadas y saciedad de domingo.",
+            macros: { kcal: 115, prot: 5, carb: 3, fat: 10, fiber: 2 },
+            ingredients: [
+              "20 g de Maní Tostado Natural Sin Sal Villa Natura"
+            ],
+            steps: [
+              "Consumir 20 g a las 16:30 con agua."
+            ],
+            clinicalNote: "Cierra el aporte semanal de fitoesteroles reductores de LDL."
+          },
+          {
+            id: "dom_cena",
+            slot: "cena",
+            time: "19:00 (7:00 PM)",
+            slotLabel: "Cena Ligera",
+            medAlert: "Cierre de semana nutricional a las 19:00",
+            title: "Ensalada Cocida Al Dente (1.5 tazas) + 1 Lata de Atún + 1/4 de Palta Fuerte (60 g)",
+            shortDesc: "Vainitas y zanahoria en bastones al vapor (6 min) + 1 lata de atún en agua + 60 g de palta al limón.",
+            macros: { kcal: 310, prot: 31, carb: 16, fat: 13, fiber: 7 },
+            ingredients: [
+              "1 lata completa (120 g escurridos) de Filete de Atún en Agua Bell's (enjuagada 10 seg en colador)",
+              "1.5 tazas de Ensalada Cocida Al Dente: 100 g de Vainitas picadas + 80 g de Zanahoria en bastones cocidas al vapor por solo 6 minutos",
+              "1/4 de unidad mediana (60 g de pulpa limpia) de Palta Fuerte o Hass en láminas",
+              "Jugo de 1 limón sutil, orégano y pimienta negra"
+            ],
+            steps: [
+              "Cocina al vapor las vainitas y los bastones de zanahoria durante SOLO 6 MINUTOS (deben quedar crujientes / al dente; nunca blandas ni sobrecocidas para no elevar su índice glucémico).",
+              "Pásalas por un chorro breve de agua fría para cortar la cocción y sírvelas con la lata de atún desalado encima y los 60 g de palta en láminas aliñadas con limón."
+            ],
+            clinicalNote: "Cena cetogénica suave de domingo (solo 9 g de carbohidratos netos) que deja la insulina basal en su nivel más bajo de toda la semana para arrancar el lunes oxidando grasa visceral."
+          }
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // 2. ITEMIZED SHOPPING LIST DATA (34 SEPARATE INDIVIDUAL ITEMS — NO PACKS!)
+    // =========================================================================
+    const ITEMIZED_SHOPPING_DATA = [
+// ... existing code ...
+      { id: "sh_37", cat: "4. Tubérculos y Verduras Uno por Uno (11 Productos Separados)", name: "Ajo Entero Fresco en Malla", qty: "1 malla de 120 gramos (~3 cabezas)", store: "Plaza Vea Web", price: 2.90, unitPrice: "S/ 2.90 x malla", usage: "Sazonador natural sin sodio para todas las carnes y guisos (dura 2 semanas)", freq: "Cada 2 semanas (S/ 1.45/sem)" }
+    ];
+
+    // =========================================================================
+    // 3. STATE MANAGEMENT (Persisted in localStorage)
+    // =========================================================================
+    let activeBottomTab = 'plan'; // 'plan' | 'shop' | 'health'
+    let selectedDayIndex = 0; // 0 = Lunes ... 6 = Domingo
+    let showAllWeekTogether = false;
+    let selectedSlotFilter = 'all';
+    let mealSearchQuery = '';
+    let shopCategoryFilter = 'all';
+    let shopSearchQuery = '';
+    let activeModalMealId = null;
+
+    let completedMeals = {};
+    // 13 glasses of 250 ml = 3.25 Liters per day
+    let waterGlassesByDay = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+    // Daily Medication Tracking: Irbesartán 150mg (08:00) & Bisoprolol 2.5mg (14:00)
+    let medsTakenByDay = {
+      0: { irb: false, bis: false },
+      1: { irb: false, bis: false },
+      2: { irb: false, bis: false },
+      3: { irb: false, bis: false },
+      4: { irb: false, bis: false },
+      5: { irb: false, bis: false },
+      6: { irb: false, bis: false }
+    };
+    let checkedShoppingItems = {};
+
+    try {
+      const savedMeals = localStorage.getItem('isabel_rios_completed_meals_v2');
+      if (savedMeals) completedMeals = JSON.parse(savedMeals);
+      const savedWater = localStorage.getItem('isabel_rios_water_13_v2');
+      if (savedWater) waterGlassesByDay = JSON.parse(savedWater);
+      const savedMeds = localStorage.getItem('isabel_rios_meds_v2');
+      if (savedMeds) medsTakenByDay = JSON.parse(savedMeds);
+      const savedShop = localStorage.getItem('isabel_rios_shop_v2');
+      if (savedShop) checkedShoppingItems = JSON.parse(savedShop);
+    } catch (e) {
+      console.warn('Storage fallback:', e);
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('isabel_rios_completed_meals_v2', JSON.stringify(completedMeals));
+        localStorage.setItem('isabel_rios_water_13_v2', JSON.stringify(waterGlassesByDay));
+        localStorage.setItem('isabel_rios_meds_v2', JSON.stringify(medsTakenByDay));
+        localStorage.setItem('isabel_rios_shop_v2', JSON.stringify(checkedShoppingItems));
+      } catch (e) {
+        console.warn('Storage write fallback:', e);
+      }
+    }
+
+    function getAllMealsFlat() {
+      const list = [];
+      DAYS_DATA.forEach(day => {
+        day.meals.forEach(meal => {
+          list.push({ ...meal, dayIndex: day.dayIndex, dayName: day.dayName, optionLabel: day.optionLabel });
+        });
+      });
+      return list;
+    }
+
+    function getSlotStyle(slot) {
+      switch (slot) {
+        case 'desayuno':
+          return { pill: 'bg-amber-100 text-amber-900', border: 'border-l-amber-500', icon: 'sunrise' };
+        case 'media_manana':
+          return { pill: 'bg-emerald-100 text-emerald-900', border: 'border-l-emerald-500', icon: 'zap' };
+        case 'almuerzo':
+          return { pill: 'bg-sky-100 text-sky-900', border: 'border-l-sky-600', icon: 'utensils' };
+        case 'media_tarde':
+          return { pill: 'bg-purple-100 text-purple-900', border: 'border-l-purple-500', icon: 'coffee' };
+        case 'cena':
+          return { pill: 'bg-indigo-100 text-indigo-900', border: 'border-l-indigo-600', icon: 'moon' };
+        default:
+          return { pill: 'bg-slate-100 text-slate-800', border: 'border-l-slate-400', icon: 'circle' };
+      }
+    }
+
+    // =========================================================================
+    // 4. RENDER TAB 1: PLAN & DAILY MEALS FEED
+    // =========================================================================
+    function renderPlanTab() {
+      // Update Header Progress Badge
+      const doneTotal = Object.values(completedMeals).filter(Boolean).length;
+      const badgeEl = document.getElementById('header-progress-badge');
+      if (badgeEl) badgeEl.textContent = `${doneTotal}/35 listas`;
+
+      // Render 7 Day Selector Pills
+      const pillsBar = document.getElementById('day-pills-bar');
+      if (pillsBar) {
+        pillsBar.innerHTML = DAYS_DATA.map((d, idx) => {
+          const isSelected = !showAllWeekTogether && idx === selectedDayIndex;
+          const doneDay = d.meals.filter(m => completedMeals[m.id]).length;
+          return `
+            <button
+              onclick="selectDayPill(${idx})"
+              class="py-2 px-1 rounded-xl flex flex-col items-center justify-center transition-all border ${
+                isSelected
+                  ? 'bg-emerald-700 text-white border-emerald-800 shadow-sm'
+                  : 'bg-slate-50 text-slate-700 border-slate-200/80 hover:bg-slate-100'
+              }"
+            >
+              <span class="text-[9px] font-bold uppercase opacity-80">Op ${idx + 1}</span>
+              <span class="text-xs font-extrabold">${d.shortName}</span>
+              <span class="text-[9px] font-bold mt-0.5 ${isSelected ? 'text-emerald-200' : doneDay === 5 ? 'text-emerald-600' : 'text-slate-400'}">${doneDay}/5</span>
+            </button>
+          `;
+        }).join('');
+      }
+
+      // Render Quick Strip for Current Day (Meds + 13 Glasses Water + Macros)
+      const stripEl = document.getElementById('daily-quick-strip');
+      if (stripEl) {
+        const day = DAYS_DATA[selectedDayIndex];
+        const totalKcal = day.meals.reduce((a, m) => a + m.macros.kcal, 0);
+        const totalProt = day.meals.reduce((a, m) => a + m.macros.prot, 0);
+        const totalFiber = day.meals.reduce((a, m) => a + m.macros.fiber, 0);
+        const glasses = waterGlassesByDay[selectedDayIndex] || 0;
+        const liters = (glasses * 0.25).toFixed(2);
+        const dayMeds = medsTakenByDay[selectedDayIndex] || { irb: false, bis: false };
+
+        stripEl.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">${day.optionLabel}</span>
+              <h2 class="text-sm font-extrabold text-slate-900">${day.dayName} — ${day.focusTag}</h2>
+            </div>
+            <div class="text-right text-[11px] font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-xl">
+              ${totalKcal} kcal • <span class="text-emerald-700">${totalProt}g P</span> • ${totalFiber}g Fibra
+            </div>
+          </div>
+
+          <!-- Interactive Medication & Water Quick Row -->
+          <div class="grid grid-cols-3 gap-1.5 pt-0.5">
+            <button
+              onclick="toggleMedDay(${selectedDayIndex}, 'irb')"
+              class="p-2 rounded-xl border text-left transition-all flex items-center gap-1.5 ${
+                dayMeds.irb
+                  ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+                  : 'bg-sky-50/70 border-sky-200 text-slate-700'
+              }"
+            >
+              <i data-lucide="${dayMeds.irb ? 'check-circle-2' : 'pill'}" class="w-4 h-4 ${dayMeds.irb ? 'text-emerald-600' : 'text-sky-600'} shrink-0"></i>
+              <div class="min-w-0">
+                <span class="text-[9px] font-extrabold uppercase block text-sky-800">08:00 AM</span>
+                <span class="text-[10px] font-bold truncate block">Irbesartán 150</span>
+              </div>
+            </button>
+
+            <button
+              onclick="toggleMedDay(${selectedDayIndex}, 'bis')"
+              class="p-2 rounded-xl border text-left transition-all flex items-center gap-1.5 ${
+                dayMeds.bis
+                  ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+                  : 'bg-indigo-50/70 border-indigo-200 text-slate-700'
+              }"
+            >
+              <i data-lucide="${dayMeds.bis ? 'check-circle-2' : 'pill'}" class="w-4 h-4 ${dayMeds.bis ? 'text-emerald-600' : 'text-indigo-600'} shrink-0"></i>
+              <div class="min-w-0">
+                <span class="text-[9px] font-extrabold uppercase block text-indigo-800">14:00 PM</span>
+                <span class="text-[10px] font-bold truncate block">Bisoprolol 2.5</span>
+              </div>
+            </button>
+
+            <div class="p-1.5 rounded-xl border border-sky-200 bg-sky-50/60 flex items-center justify-between">
+              <div class="pl-1">
+                <span class="text-[9px] font-extrabold uppercase block text-sky-800">Agua (${liters}L)</span>
+                <span class="text-[10px] font-extrabold text-slate-800">${glasses}/13 vasos</span>
+              </div>
+              <button
+                onclick="incrementWaterQuick(${selectedDayIndex})"
+                class="w-7 h-7 rounded-lg bg-sky-600 active:bg-sky-700 text-white font-extrabold text-xs flex items-center justify-center shadow-sm"
+                title="Sumar 1 vaso de 250 ml"
+              >
+                +1
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      // Render Meals Feed
+      const feedContainer = document.getElementById('meals-feed-container');
+      if (!feedContainer) return;
+
+      const query = mealSearchQuery.trim().toLowerCase();
+      const daysToRender = (showAllWeekTogether || query.length > 0) ? DAYS_DATA : [DAYS_DATA[selectedDayIndex]];
+
+      let html = '';
+      daysToRender.forEach(day => {
+        const filteredMeals = day.meals.filter(meal => {
+          const matchesSlot = selectedSlotFilter === 'all' || meal.slot === selectedSlotFilter;
+          const matchesQuery = !query ||
+            meal.title.toLowerCase().includes(query) ||
+            meal.shortDesc.toLowerCase().includes(query) ||
+            meal.ingredients.some(i => i.toLowerCase().includes(query));
+          return matchesSlot && matchesQuery;
+        });
+
+        if (filteredMeals.length === 0) return;
+
+        if (showAllWeekTogether || query.length > 0) {
+          html += `
+            <div class="pt-2 pb-1 px-1 flex items-center justify-between">
+              <span class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">${day.dayName} (${day.optionLabel})</span>
+              <span class="text-[11px] font-semibold text-emerald-700">${day.focusTag}</span>
+            </div>
+          `;
+        }
+
+        filteredMeals.forEach(meal => {
+          const style = getSlotStyle(meal.slot);
+          const isDone = !!completedMeals[meal.id];
+
+          html += `
+            <div
+              onclick="openRecipeModal('${meal.id}')"
+              class="meal-card cursor-pointer bg-white rounded-2xl border border-slate-200/90 border-l-4 ${style.border} p-3.5 shadow-sm relative ${isDone ? 'opacity-75 bg-emerald-50/30' : ''}"
+            >
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[11px] font-extrabold ${style.pill}">
+                  <i data-lucide="${style.icon}" class="w-3.5 h-3.5"></i>
+                  <span>${meal.time} • ${meal.slotLabel}</span>
+                </span>
+
+                <button
+                  onclick="toggleMealCompleted(event, '${meal.id}')"
+                  class="w-7 h-7 rounded-xl flex items-center justify-center transition-colors ${
+                    isDone
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-400 hover:text-emerald-600 border border-slate-200'
+                  }"
+                  title="Marcar comida completada"
+                >
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+              <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 leading-snug ${isDone ? 'line-through text-slate-400' : ''}">
+                ${meal.title}
+              </h3>
+              <p class="text-[11px] text-slate-500 mt-1 line-clamp-2">${meal.shortDesc}</p>
+
+              ${meal.medAlert ? `
+                <div class="mt-2 px-2.5 py-1 rounded-xl bg-sky-50 border border-sky-200/80 text-sky-900 text-[10px] font-bold flex items-center gap-1.5">
+                  <i data-lucide="bell-ring" class="w-3 h-3 text-sky-600 shrink-0"></i>
+                  <span class="truncate">${meal.medAlert}</span>
+                </div>
+              ` : ''}
+
+              <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                <span class="font-bold text-slate-600">
+                  ${meal.macros.kcal} kcal • <strong class="text-emerald-700">${meal.macros.prot}g Prot</strong> • ${meal.macros.carb}g C • ${meal.macros.fiber}g Fibra
+                </span>
+                <span class="font-extrabold text-emerald-700 inline-flex items-center gap-0.5">
+                  <span>Ver Receta</span>
+                  <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </span>
+              </div>
+            </div>
+          `;
+        });
+      });
+
+      if (!html) {
+        html = `
+          <div class="bg-white rounded-2xl p-8 text-center border border-slate-200">
+            <p class="text-xs font-bold text-slate-500">No se encontraron comidas con ese filtro.</p>
+          </div>
+        `;
+      }
+
+      feedContainer.innerHTML = html;
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // 5. RENDER TAB 2: 37 ITEMIZED SHOPPING LIST (NO PACKS)
+    // =========================================================================
+    function renderShopTab() {
+      const container = document.getElementById('itemized-shopping-container');
+      const textarea = document.getElementById('google-keep-textarea');
+      if (!container) return;
+
+      // Update dynamic budget progress bar
+      const totalBudget = ITEMIZED_SHOPPING_DATA.reduce((s, i) => s + i.price, 0);
+      const checkedItems = ITEMIZED_SHOPPING_DATA.filter(i => checkedShoppingItems[i.id]);
+      const checkedSoles = checkedItems.reduce((s, i) => s + i.price, 0);
+      const pct = Math.min(100, Math.round((checkedSoles / totalBudget) * 100));
+
+      const countEl = document.getElementById('shop-checked-count');
+      const solesEl = document.getElementById('shop-checked-soles');
+      const barEl = document.getElementById('shop-budget-bar');
+      if (countEl) countEl.textContent = checkedItems.length;
+      if (solesEl) solesEl.textContent = `S/ ${checkedSoles.toFixed(2)}`;
+      if (barEl) barEl.style.width = `${pct}%`;
+
+      // Filter items
+      const q = shopSearchQuery.trim().toLowerCase();
+      const filtered = ITEMIZED_SHOPPING_DATA.filter(item => {
+        const matchesCat = shopCategoryFilter === 'all' || item.cat.startsWith(shopCategoryFilter);
+        const matchesQuery = !q ||
+          item.name.toLowerCase().includes(q) ||
+          item.qty.toLowerCase().includes(q) ||
+          item.usage.toLowerCase().includes(q);
+        return matchesCat && matchesQuery;
+      });
+
+      const categories = [...new Set(filtered.map(i => i.cat))];
+      let html = '';
+
+      categories.forEach(cat => {
+        const items = filtered.filter(i => i.cat === cat);
+        const catTotal = items.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+
+        html += `
+          <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="px-3.5 py-2.5 bg-slate-900 text-white flex items-center justify-between">
+              <h3 class="text-[11px] font-extrabold truncate pr-2">${cat}</h3>
+              <span class="text-[11px] font-bold text-emerald-300 shrink-0">S/ ${catTotal}</span>
+            </div>
+            <div class="divide-y divide-slate-100">
+              ${items.map(item => {
+                const isChecked = !!checkedShoppingItems[item.id];
+                return `
+                  <label class="flex items-start gap-3 p-3 active:bg-slate-50 cursor-pointer transition-colors ${isChecked ? 'bg-emerald-50/40' : ''}">
+                    <input
+                      type="checkbox"
+                      ${isChecked ? 'checked' : ''}
+                      onchange="toggleShoppingItem('${item.id}')"
+                      class="mt-0.5 w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                    />
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-baseline justify-between gap-2">
+                        <span class="text-xs font-extrabold text-slate-900 ${isChecked ? 'line-through text-slate-400' : ''}">
+                          ${item.name} — <span class="text-emerald-700">${item.qty}</span>
+                        </span>
+                        <span class="text-xs font-extrabold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200 shrink-0">
+                          S/ ${item.price.toFixed(2)}
+                        </span>
+                      </div>
+                      <p class="text-[10px] text-slate-500 mt-0.5">
+                        <strong>${item.store}</strong> (${item.unitPrice}) • ${item.freq}
+                      </p>
+                      <p class="text-[10px] text-slate-600 mt-0.5">
+                        <strong>Uso:</strong> ${item.usage}
+                      </p>
+                    </div>
+                  </label>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html || `<div class="p-6 text-center text-xs text-slate-500 bg-white rounded-2xl">Sin resultados.</div>`;
+
+      // Populate Google Keep Formatted Text
+      if (textarea) {
+        const keepLines = [
+          "🛒 LISTA DE COMPRAS CLÍNICA (37 ÍTEMS SEPARADOS) — PLAN LIC. ISABEL RÍOS",
+          "📍 Horarios: 08:00 Desayuno | 10:30 Pre-entreno | 14:00 Almuerzo | 16:30 Tarde | 19:00 Cena",
+          "------------------------------------------------------------",
+          "",
+          "🥩 1. CARNES, PESCADOS, HUEVOS Y LÁCTEOS:",
+          ...ITEMIZED_SHOPPING_DATA.filter(i => i.cat.startsWith("1.")).map(
+            i => `[${checkedShoppingItems[i.id] ? 'x' : ' '}] ${i.name}: ${i.qty} — S/ ${i.price.toFixed(2)} (${i.unitPrice}) | Uso: ${i.usage}`
+          ),
+          "",
+          "🧀 2. QUESO, JAMÓN, PANES Y ABARROTES SECOS:",
+          ...ITEMIZED_SHOPPING_DATA.filter(i => i.cat.startsWith("2.")).map(
+            i => `[${checkedShoppingItems[i.id] ? 'x' : ' '}] ${i.name}: ${i.qty} — S/ ${i.price.toFixed(2)} (${i.freq}) | Uso: ${i.usage}`
+          ),
+          "",
+          "🍓 3. FRUTAS EXACTAS (CADA UNA SEPARADA POR PESO):",
+          ...ITEMIZED_SHOPPING_DATA.filter(i => i.cat.startsWith("3.")).map(
+            i => `[${checkedShoppingItems[i.id] ? 'x' : ' '}] ${i.name}: ${i.qty} — S/ ${i.price.toFixed(2)} (${i.unitPrice}) | Uso: ${i.usage}`
+          ),
+          "",
+          "🥬 4. TUBÉRCULOS Y VERDURAS INDIVIDUALES (UNO POR UNO, CERO PACKS):",
+          ...ITEMIZED_SHOPPING_DATA.filter(i => i.cat.startsWith("4.")).map(
+            i => `[${checkedShoppingItems[i.id] ? 'x' : ' '}] ${i.name}: ${i.qty} — S/ ${i.price.toFixed(2)} (${i.unitPrice}) | Uso: ${i.usage}`
+          )
+        ];
+        textarea.value = keepLines.join('\n');
+      }
+
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // 6. RENDER TAB 3: METAS / SALUD + 13 GLASSES WATER COUNTER & MEDS
+    // =========================================================================
+    function renderHealthTab() {
+      const glasses = waterGlassesByDay[selectedDayIndex] || 0;
+      const liters = (glasses * 0.25).toFixed(2);
+      const dayName = DAYS_DATA[selectedDayIndex].dayName;
+
+      const litersEl = document.getElementById('health-water-liters');
+      const countEl = document.getElementById('health-water-glasses');
+      if (litersEl) litersEl.textContent = `${liters} L (${dayName})`;
+      if (countEl) countEl.textContent = `${glasses} / 13 vasos de 250 ml`;
+
+      const waterGrid = document.getElementById('health-water-grid');
+      if (waterGrid) {
+        waterGrid.innerHTML = Array.from({ length: 13 }).map((_, idx) => {
+          const active = idx < glasses;
+          return `
+            <button
+              onclick="setWaterGlasses13(${selectedDayIndex}, ${idx + 1 === glasses ? idx : idx + 1})"
+              class="h-11 rounded-2xl border flex flex-col items-center justify-center transition-all ${
+                active
+                  ? 'bg-sky-600 text-white border-sky-700 shadow-sm'
+                  : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-sky-50'
+              }"
+            >
+              <i data-lucide="glass-water" class="w-3.5 h-3.5"></i>
+              <span class="text-[9px] font-extrabold mt-0.5">${idx + 1}</span>
+            </button>
+          `;
+        }).join('');
+      }
+
+      // Render Daily Meds & Workout Synchronization Checklist
+      const medsContainer = document.getElementById('health-meds-checklist');
+      if (medsContainer) {
+        const dayMeds = medsTakenByDay[selectedDayIndex] || { irb: false, bis: false };
+        medsContainer.innerHTML = `
+          <button
+            onclick="toggleMedDay(${selectedDayIndex}, 'irb')"
+            class="w-full p-3 rounded-2xl border flex items-center justify-between transition-all ${
+              dayMeds.irb ? 'bg-emerald-50 border-emerald-300' : 'bg-slate-50 border-slate-200'
+            }"
+          >
+            <div class="flex items-center gap-2.5 text-left">
+              <div class="w-8 h-8 rounded-xl ${dayMeds.irb ? 'bg-emerald-600 text-white' : 'bg-sky-100 text-sky-700'} flex items-center justify-center">
+                <i data-lucide="${dayMeds.irb ? 'check' : 'pill'}" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <span class="text-xs font-extrabold text-slate-900 block">08:00 AM — Irbesartán 150 mg (${dayName})</span>
+                <span class="text-[11px] text-slate-500">Tomar inmediatamente después del desayuno</span>
+              </div>
+            </div>
+            <span class="text-[11px] font-extrabold ${dayMeds.irb ? 'text-emerald-700' : 'text-slate-400'}">
+              ${dayMeds.irb ? 'Tomada' : 'Pendiente'}
+            </span>
+          </button>
+
+          <div class="p-3 rounded-2xl border border-emerald-200 bg-emerald-50/50 flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <i data-lucide="dumbbell" class="w-4 h-4"></i>
+            </div>
+            <div class="text-left">
+              <span class="text-xs font-extrabold text-slate-900 block">11:00 AM a 13:00 PM — Ventana Ideal de Entreno (2x2 m)</span>
+              <span class="text-[11px] text-slate-600">Después de tu fruta de las 10:30 AM y antes del almuerzo de las 14:00 (activa receptores GLUT-4).</span>
+            </div>
+          </div>
+
+          <button
+            onclick="toggleMedDay(${selectedDayIndex}, 'bis')"
+            class="w-full p-3 rounded-2xl border flex items-center justify-between transition-all ${
+              dayMeds.bis ? 'bg-emerald-50 border-emerald-300' : 'bg-slate-50 border-slate-200'
+            }"
+          >
+            <div class="flex items-center gap-2.5 text-left">
+              <div class="w-8 h-8 rounded-xl ${dayMeds.bis ? 'bg-emerald-600 text-white' : 'bg-indigo-100 text-indigo-700'} flex items-center justify-center">
+                <i data-lucide="${dayMeds.bis ? 'check' : 'pill'}" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <span class="text-xs font-extrabold text-slate-900 block">14:00 (2:00 PM) — Bisoprolol fumarato 2.5 mg (${dayName})</span>
+                <span class="text-[11px] text-slate-500">Tomar inmediatamente al terminar tu almuerzo principal</span>
+              </div>
+            </div>
+            <span class="text-[11px] font-extrabold ${dayMeds.bis ? 'text-emerald-700' : 'text-slate-400'}">
+              ${dayMeds.bis ? 'Tomada' : 'Pendiente'}
+            </span>
+          </button>
+        `;
+      }
+
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // 7. BOTTOM SHEET MODAL LOGIC
+    // =========================================================================
+    function openRecipeModal(mealId) {
+      const allMeals = getAllMealsFlat();
+      const meal = allMeals.find(m => m.id === mealId);
+      if (!meal) return;
+
+      activeModalMealId = mealId;
+
+      document.getElementById('modal-day-badge').textContent = `${meal.dayName.toUpperCase()} — ${meal.optionLabel.toUpperCase()}`;
+      document.getElementById('modal-time-badge').innerHTML = `<i data-lucide="clock" class="w-3 h-3"></i><span>${meal.time} • ${meal.slotLabel}</span>`;
+      document.getElementById('modal-title').textContent = meal.title;
+      document.getElementById('modal-subtitle').textContent = meal.shortDesc;
+
+      const medBadge = document.getElementById('modal-med-badge');
+      const medText = document.getElementById('modal-med-text');
+      if (meal.medAlert) {
+        medBadge.classList.remove('hidden');
+        medText.textContent = meal.medAlert;
+      } else {
+        medBadge.classList.add('hidden');
+      }
+
+      document.getElementById('modal-kcal').textContent = `${meal.macros.kcal}`;
+      document.getElementById('modal-prot').textContent = `${meal.macros.prot} g`;
+      document.getElementById('modal-carb').textContent = `${meal.macros.carb} g`;
+      document.getElementById('modal-fat').textContent = `${meal.macros.fat} g`;
+      document.getElementById('modal-fiber').textContent = `${meal.macros.fiber} g`;
+
+      const ingList = document.getElementById('modal-ingredients-list');
+      ingList.innerHTML = meal.ingredients.map(ing => `
+        <li class="bg-slate-50 border border-slate-200/90 rounded-xl p-2.5">
+          <label class="flex items-start gap-2.5 cursor-pointer text-xs text-slate-800">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" />
+            <span class="font-medium leading-snug">${ing}</span>
+          </label>
+        </li>
+      `).join('');
+
+      const stepsList = document.getElementById('modal-steps-list');
+      stepsList.innerHTML = meal.steps.map((step, idx) => `
+        <li class="flex items-start gap-2.5 bg-white border border-slate-200/80 rounded-2xl p-2.5 shadow-sm">
+          <span class="w-5 h-5 rounded-full bg-slate-900 text-white text-[10px] font-extrabold flex items-center justify-center shrink-0 mt-0.5">
+            ${idx + 1}
+          </span>
+          <p class="text-xs text-slate-700 leading-relaxed">${step}</p>
+        </li>
+      `).join('');
+
+      document.getElementById('modal-clinical-note').textContent = meal.clinicalNote;
+      updateModalCompleteButtonUI();
+
+      const modal = document.getElementById('recipe-modal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeRecipeModal() {
+      const modal = document.getElementById('recipe-modal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      activeModalMealId = null;
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target.id === 'recipe-modal') closeRecipeModal();
+    }
+
+    function navigateModalMeal(direction) {
+      if (!activeModalMealId) return;
+      const allMeals = getAllMealsFlat();
+      const idx = allMeals.findIndex(m => m.id === activeModalMealId);
+      if (idx === -1) return;
+      const nextIdx = (idx + direction + allMeals.length) % allMeals.length;
+      openRecipeModal(allMeals[nextIdx].id);
+    }
+
+    function updateModalCompleteButtonUI() {
+      const btn = document.getElementById('modal-complete-btn');
+      if (!btn || !activeModalMealId) return;
+      const isDone = !!completedMeals[activeModalMealId];
+      if (isDone) {
+        btn.className = "flex-1 py-2.5 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 bg-emerald-100 text-emerald-900 border border-emerald-300";
+        btn.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Comida Completada (Desmarcar)</span>`;
+      } else {
+        btn.className = "flex-1 py-2.5 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 bg-emerald-600 text-white shadow-sm";
+        btn.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Marcar Comida Lista</span>`;
+      }
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // 8. NAVIGATION & USER INTERACTIONS
+    // =========================================================================
+    function switchBottomTab(tabName) {
+      activeBottomTab = tabName;
+      const tabs = ['plan', 'shop', 'health'];
+      tabs.forEach(t => {
+        const viewEl = document.getElementById(`tab-view-${t}`);
+        const btnEl = document.getElementById(`nav-btn-${t}`);
+        const pillEl = document.getElementById(`nav-pill-${t}`);
+        if (viewEl) viewEl.classList.toggle('hidden', t !== tabName);
+        if (btnEl && pillEl) {
+          if (t === tabName) {
+            btnEl.className = "flex flex-col items-center justify-center gap-1 text-emerald-700 font-extrabold transition-colors";
+            pillEl.className = "px-4 py-1 rounded-full bg-emerald-100 flex items-center justify-center";
+          } else {
+            btnEl.className = "flex flex-col items-center justify-center gap-1 text-slate-500 font-semibold transition-colors";
+            pillEl.className = "px-4 py-1 rounded-full flex items-center justify-center";
+          }
+        }
+      });
+
+      if (tabName === 'plan') renderPlanTab();
+      if (tabName === 'shop') renderShopTab();
+      if (tabName === 'health') renderHealthTab();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    function selectDayPill(dayIdx) {
+      selectedDayIndex = dayIdx;
+      showAllWeekTogether = false;
+      const lbl = document.getElementById('toggle-week-mode-label');
+      if (lbl) lbl.textContent = "Ver 7 días juntos";
+      renderPlanTab();
+      if (activeBottomTab === 'health') renderHealthTab();
+    }
+
+    function toggleAllWeekCompact() {
+      showAllWeekTogether = !showAllWeekTogether;
+      const lbl = document.getElementById('toggle-week-mode-label');
+      if (lbl) lbl.textContent = showAllWeekTogether ? "Ver solo día actual" : "Ver 7 días juntos";
+      renderPlanTab();
+    }
+
+    function setSlotFilter(slot) {
+      selectedSlotFilter = slot;
+      document.querySelectorAll('.slot-chip').forEach(btn => {
+        if (btn.dataset.slot === slot) {
+          btn.className = "slot-chip shrink-0 px-3 py-1.5 rounded-xl text-[11px] font-extrabold bg-slate-900 text-white shadow-sm";
+        } else {
+          btn.className = "slot-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200";
+        }
+      });
+      renderPlanTab();
+    }
+
+    function handleSearchMeals(val) {
+      mealSearchQuery = val;
+      const clearBtn = document.getElementById('clear-meal-search');
+      if (clearBtn) clearBtn.classList.toggle('hidden', !val);
+      renderPlanTab();
+    }
+
+    function clearMealSearch() {
+      const input = document.getElementById('meal-search-input');
+      if (input) input.value = '';
+      handleSearchMeals('');
+    }
+
+    function toggleMealCompleted(event, mealId) {
+      if (event) event.stopPropagation();
+      completedMeals[mealId] = !completedMeals[mealId];
+      saveState();
+      renderPlanTab();
+      if (activeModalMealId === mealId) updateModalCompleteButtonUI();
+    }
+
+    function toggleCurrentModalMealCompleted() {
+      if (!activeModalMealId) return;
+      toggleMealCompleted(null, activeModalMealId);
+    }
+
+    function toggleMedDay(dayIdx, medKey) {
+      if (!medsTakenByDay[dayIdx]) medsTakenByDay[dayIdx] = { irb: false, bis: false };
+      medsTakenByDay[dayIdx][medKey] = !medsTakenByDay[dayIdx][medKey];
+      saveState();
+      renderPlanTab();
+      if (activeBottomTab === 'health') renderHealthTab();
+      showToast(medKey === 'irb' ? "Irbesartán 150 mg (08:00 AM) actualizado" : "Bisoprolol 2.5 mg (14:00 PM) actualizado");
+    }
+
+    function incrementWaterQuick(dayIdx) {
+      const current = waterGlassesByDay[dayIdx] || 0;
+      waterGlassesByDay[dayIdx] = current >= 13 ? 0 : current + 1;
+      saveState();
+      renderPlanTab();
+      if (activeBottomTab === 'health') renderHealthTab();
+    }
+
+    function setWaterGlasses13(dayIdx, count) {
+      waterGlassesByDay[dayIdx] = count;
+      saveState();
+      renderHealthTab();
+      renderPlanTab();
+    }
+
+    function setShopCatFilter(catPrefix) {
+      shopCategoryFilter = catPrefix;
+      document.querySelectorAll('.shop-cat-chip').forEach(btn => {
+        if (btn.dataset.cat === catPrefix) {
+          btn.className = "shop-cat-chip shrink-0 px-3 py-1.5 rounded-xl text-[11px] font-extrabold bg-slate-900 text-white";
+        } else {
+          btn.className = "shop-cat-chip shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold bg-white text-slate-700 border border-slate-200";
+        }
+      });
+      renderShopTab();
+    }
+
+    function handleShopSearch(val) {
+      shopSearchQuery = val;
+      renderShopTab();
+    }
+
+    function toggleShoppingItem(itemId) {
+      checkedShoppingItems[itemId] = !checkedShoppingItems[itemId];
+      saveState();
+      renderShopTab();
+    }
+
+    function toggleKeepTextPreview() {
+      const box = document.getElementById('keep-raw-preview-box');
+      if (box) box.classList.toggle('hidden');
+    }
+
+    function resetWeeklyProgress() {
+      completedMeals = {};
+      waterGlassesByDay = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+      medsTakenByDay = {
+        0: { irb: false, bis: false },
+        1: { irb: false, bis: false },
+        2: { irb: false, bis: false },
+        3: { irb: false, bis: false },
+        4: { irb: false, bis: false },
+        5: { irb: false, bis: false },
+        6: { irb: false, bis: false }
+      };
+      saveState();
+      renderPlanTab();
+      renderHealthTab();
+      showToast("Semana reiniciada a cero");
+    }
+
+    function copyTextFallback(text) {
+      const temp = document.createElement('textarea');
+      temp.value = text;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+    }
+
+    function copyKeepNoteToClipboard() {
+      renderShopTab();
+      const textarea = document.getElementById('google-keep-textarea');
+      if (!textarea) return;
+      copyTextFallback(textarea.value);
+      const label = document.getElementById('copy-keep-btn-text');
+      if (label) {
+        label.textContent = "¡Copiado!";
+        setTimeout(() => { label.textContent = "Copiar a Google Keep"; }, 2200);
+      }
+      showToast("37 ítems copiados para pegar en Google Keep");
+    }
+
+    function copyCurrentModalRecipe() {
+      if (!activeModalMealId) return;
+      const allMeals = getAllMealsFlat();
+      const meal = allMeals.find(m => m.id === activeModalMealId);
+      if (!meal) return;
+
+      const text = [
+        `🍽️ ${meal.dayName.toUpperCase()} (${meal.optionLabel}) — ${meal.time} ${meal.slotLabel}`,
+        `📌 Plato: ${meal.title}`,
+        `📊 Fitia Pro: ${meal.macros.kcal} kcal | ${meal.macros.prot}g P | ${meal.macros.carb}g C | ${meal.macros.fat}g G | ${meal.macros.fiber}g Fibra`,
+        "",
+        "🛒 INGREDIENTES EXACTOS:",
+        ...meal.ingredients.map(i => `• ${i}`),
+        "",
+        "👨‍🍳 PREPARACIÓN PASO A PASO:",
+        ...meal.steps.map((s, idx) => `${idx + 1}. ${s}`),
+        "",
+        `🩺 NOTA CLÍNICA: ${meal.clinicalNote}`
+      ].join('\n');
+
+      copyTextFallback(text);
+      showToast("Receta copiada al portapapeles");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast-notification');
+      const msgEl = document.getElementById('toast-message');
+      if (!toast || !msgEl) return;
+      msgEl.textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2600);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && activeModalMealId) closeRecipeModal();
+    });
+
+    window.onload = function () {
+      renderPlanTab();
+      renderShopTab();
+      renderHealthTab();
+      lucide.createIcons();
+    };
+  </script>
+</body>
+</html>

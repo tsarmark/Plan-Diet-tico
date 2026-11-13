@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Plan Dietético</string>
+    <string name="header_doctor_badge">Lic. Isabel Ríos</string>
+    <string name="header_weight_goal">123 → 81 kg</string>
+    <string name="header_title">Plan Nutricional Clínico</string>
+    <string name="header_week_label">Semana</string>
+    <string name="status_insulin">Insulina: 39.0</string>
+    <string name="status_uric_tgp">Úrico: 6.65 | TGP: 49.9</string>
+    <string name="status_fasting">Ayuno: 19h–08h</string>
+    <string name="nav_plan">Hoy / Plan</string>
+    <string name="nav_shop">Compras (37)</string>
+    <string name="nav_health">Salud / Metas</string>
+    <string name="search_meals_hint">Buscar plato o ingrediente (ej. atún, pavita, avena)…</string>
+    <string name="search_shop_hint">Filtrar insumo (ej. pollo, atún, chía, palta)…</string>
+    <string name="clear_search_cd">Limpiar búsqueda</string>
+    <string name="close_modal_cd">Cerrar receta</string>
+    <string name="prev_meal_cd">Comida anterior</string>
+    <string name="next_meal_cd">Siguiente comida</string>
+    <string name="share_list_btn">Compartir Lista</string>
+    <string name="copy_keep_btn">Copiar para Keep</string>
+    <string name="reset_week_btn">Reiniciar Semana</string>
+    <string name="reset_shop_btn">Desmarcar Todo</string>
+</resources>
