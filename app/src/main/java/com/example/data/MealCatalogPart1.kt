@@ -6,136 +6,140 @@ internal object MealCatalogPart1 {
             dayIndex = 0,
             dayName = "Lunes",
             shortName = "Lun",
-            optionLabel = "Opción 1 — Lic. Isabel Ríos",
+            optionLabel = "Opción 1 de la Doctora",
             focusTag = "Desinflamación e Inicio Semanal",
+            nightPrepReminder = "Para mañana Martes: Deja en remojo 65 g de Lenteja Superior BELL'S en agua por 12 h (desechar el agua mañana para eliminar purinas) y guarda en táper los 70 g extra de pechuga SADIA cocida hoy.",
             meals = listOf(
                 Meal(
                     id = "lun_desayuno",
                     dayIndex = 0,
                     dayName = "Lunes",
-                    optionLabel = "Opción 1 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 1 de la Doctora",
                     slot = MealSlot.DESAYUNO,
                     time = "08:00 AM",
                     slotLabel = "Desayuno",
-                    medAlert = "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
+                    medAlert = "Tomar Irbesartán 150 mg inmediatamente al terminar + 12 min caminata estática",
                     title = "Jugo de fresas con leche light con stevia + 1 pan con atún con tomate + 1 huevo duro",
-                    shortDesc = "Batido antioxidante de fresa + sándwich integral de atún desalado al limón + 1 huevo duro.",
+                    shortDesc = "1 Huevo Pardo BELL'S duro + sándwich integral con 1/2 lata de atún BELL'S desalado + licuado de 100 g fresa con leche light.",
                     macros = Macros(kcal = 465, prot = 37, carb = 46, fat = 11, fiber = 7),
                     ingredients = listOf(
-                        "100 g de Fresa entera congelada Bell's / ARO",
-                        "60 ml de Leche Evaporada Light Bell's + 180 ml de agua fría",
-                        "3 gotas de Stevia líquida natural (sin maltodextrina)",
-                        "1/2 lata (60 g escurridos) de Filete de Atún en Agua Bell's (guardar la otra mitad en táper para el viernes)",
-                        "60 g de Tomate fresco picado en cubitos",
-                        "2 rebanadas (55 g) de Pan de Molde Integral Bell's tostado",
-                        "1 unidad (55 g) de Huevo Pardo Bell's duro (cocido 9 min)",
-                        "Jugo de 1/2 limón sutil (10 ml), orégano seco y pimienta"
+                        "1/2 lata (60 g escurridos) de Filete de Atún en Agua BELL'S Lata 150g (guardar la otra mitad en táper para el viernes)",
+                        "60 g de Tomate redondo en cubitos + jugo de 1/2 limón y orégano",
+                        "2 rebanadas (55 g) de Pan de Molde Integral BELL'S tostado",
+                        "1 Huevo Pardo BELL'S duro (cocido 9 min)",
+                        "100 g de Fresa Entera Congelada BELL'S",
+                        "60 ml de Leche Light GLORIA/BELL'S + 180 ml de agua y 3 gotas de stevia"
                     ),
                     steps = listOf(
-                        "Coloca la media lata de atún en un colador pequeño y enjuágala durante 10 segundos bajo el chorro de agua fría para eliminar hasta el 75% del sodio de la conserva.",
-                        "Mezcla el atún bien escurrido con los 60 g de tomate en cubitos, el jugo de medio limón, orégano seco y pimienta negra. Rellena las 2 rebanadas de pan integral tostado.",
-                        "En la licuadora, procesa los 100 g de fresas congeladas con los 60 ml de leche evaporada light, 180 ml de agua y 3 gotas de stevia por 30 segundos.",
-                        "ORDEN DE INGESTA CLÍNICO: Come primero el huevo duro y el sándwich de atún con tomate; bebe el batido de fresa con leche al final para evitar picos de glucosa.",
-                        "Toma tu pastilla de Irbesartán 150 mg con un vaso de agua pura al terminar y realiza 12 minutos de marcha suave en tu habitación a las 08:20 AM."
+                        "Enjuaga durante 10 segundos en un colador 1/2 lata (60 g escurridos) de Filete de Atún en Agua BELL'S Lata 150g (retira el 75% del sodio; guarda la otra mitad en táper para el viernes).",
+                        "Mézclalo con 60 g de tomate redondo en cubitos, jugo de 1/2 limón y orégano sobre 2 rebanadas (55 g) de Pan de Molde Integral BELL'S tostado.",
+                        "ORDEN CLÍNICO: Come primero 1 Huevo Pardo BELL'S duro (cocido 9 min) y el sándwich; al final bebe el licuado de 100 g de Fresa Entera Congelada BELL'S + 60 ml de Leche Light GLORIA/BELL'S + 180 ml de agua y 3 gotas de stevia.",
+                        "Toma tu Irbesartán 150 mg al terminar y realiza 12 minutos de caminata estática en tu habitación."
                     ),
-                    clinicalNote = "El huevo duro aporta 145 mg de colina para exportar grasa del hígado (bajando tu TGP de 49.9 U/L), mientras que enjuagar el atún en agua protege tus riñones y potencia el efecto antihipertensivo del Irbesartán 150 mg."
+                    clinicalNote = "El huevo duro aporta colina hepatoprotectora para reducir tu TGP de 49.9 U/L, y enjuagar el atún 10 segundos retira el 75% del sodio potenciando el Irbesartán 150 mg.",
+                    timers = listOf(
+                        RecipeTimerSpec("Huevo duro (9 min)", 9 * 60),
+                        RecipeTimerSpec("Caminata post-desayuno (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "lun_mm",
                     dayIndex = 0,
                     dayName = "Lunes",
-                    optionLabel = "Opción 1 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 1 de la Doctora",
                     slot = MealSlot.MEDIA_MANANA,
                     time = "10:30 AM",
                     slotLabel = "Pre-entreno",
-                    medAlert = "Entrenar en 2x2 m entre 11:00 AM y 13:00 PM (Valle del Bisoprolol — Escala RPE 6 a 8)",
-                    title = "1 Manzana Israel mediana con cáscara + Hidratación pre-entreno",
-                    shortDesc = "Fruta entera de bajo índice glucémico antes de tu rutina en habitación de 2x2 m.",
+                    medAlert = "Entrenar en tu espacio de 2x2 m entre 11:00 AM y 13:00 PM (Valle del Bisoprolol • RPE 6–8/10)",
+                    title = "1 unidad mediana (130 g) de Manzana Israel con cáscara + 400 ml de agua pura",
+                    shortDesc = "Fruta entera de bajo índice glucémico e hidratación previa al entrenamiento en habitación.",
                     macros = Macros(kcal = 68, prot = 0, carb = 18, fat = 0, fiber = 3),
                     ingredients = listOf(
-                        "1 unidad mediana (130 g) de Manzana Israel fresca bien lavada (con cáscara)",
-                        "400 ml de Agua pura a temperatura ambiente"
+                        "1 unidad mediana (130 g) de Manzana Israel fresca con cáscara",
+                        "400 ml de Agua pura"
                     ),
                     steps = listOf(
-                        "Lava bien la manzana Israel y cómela en trozos conservando el 100% de la cáscara (allí se concentra la pectina y el ácido ursólico).",
-                        "Bebe 400 ml de agua pura antes de iniciar tu rutina silenciosa de fuerza en tu habitación de 2x2 metros."
+                        "Lava bien la Manzana Israel y cómela entera conservando toda su cáscara a las 10:30 AM.",
+                        "Bebe los 400 ml de agua pura antes de entrenar en tu espacio de 2x2 m entre las 11:00 AM y las 13:00 PM (regulando el esfuerzo por Escala RPE 6–8/10 y Test del Habla)."
                     ),
-                    clinicalNote = "La pectina de la cáscara de manzana libera energía gradual para tu entrenamiento de media mañana sin disparar la insulina basal (39.0 uU/mL)."
+                    clinicalNote = "La pectina de la cáscara de manzana entrega energía sostenida sin elevar la insulina basal (39.0 μU/mL)."
                 ),
                 Meal(
                     id = "lun_almuerzo",
                     dayIndex = 0,
                     dayName = "Lunes",
-                    optionLabel = "Opción 1 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 1 de la Doctora",
                     slot = MealSlot.ALMUERZO,
                     time = "14:00 (2:00 PM)",
                     slotLabel = "Almuerzo Principal",
-                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática (14:20)",
-                    title = "2 Tazas de Ensalada Fresca + Pollo a las Hierbas (200 g) + 1 Taza de Arroz + 1 Mandarina",
-                    shortDesc = "Pechuga jugosa al vapor/sartén sin aceite + arroz integral refrigerado + 2 tazas de ensalada.",
+                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática",
+                    title = "Pollo a las Hierbas (200 g) + 1 Taza de Arroz Integral + 2 Tazas de Ensalada + 1 Mandarina",
+                    shortDesc = "Filete de Pechuga SADIA al vapor/sartén sin aceite + arroz integral BELL'S refrigerado 12 h + 2 tazas de ensalada.",
                     macros = Macros(kcal = 545, prot = 52, carb = 61, fat = 7, fiber = 8),
                     ingredients = listOf(
-                        "200 g en crudo de Filete de Pechuga de Pollo Fresca sin piel (tip: cocina 70 g extra para dejar listo tu pan del martes)",
-                        "55 g en crudo de Arroz Integral Bell's (equivale exactamente a 1 taza / 150 g ya cocido y refrigerado 12 h)",
-                        "100 g de Col blanca o Lechuga fresca picada fina (Ensalada Taza 1)",
-                        "80 g de Pepinillo en rodajas con cáscara + 60 g de Tomate en gajos (Ensalada Taza 2)",
-                        "Jugo de 1 limón sutil entero (20 ml), 1 diente de ajo chancado (4 g), 1 cdta de mostaza, comino, orégano y 1 pizca medida de sal",
-                        "1 unidad mediana (100 g) de Mandarina W Murcott en gajos"
+                        "200 g en crudo de Filete de Pechuga de Pollo SADIA (cocina 70 g extra para el pan del martes)",
+                        "55 g en crudo de Arroz Integral BELL'S (hervido y refrigerado 12 h antes = 1 taza / 150 g cocido)",
+                        "Ensalada (2 tazas): 100 g de Lechuga Americana, 80 g de Pepinillo con cáscara, 60 g de Tomate Redondo, jugo de 1 Limón Tahití/Sutil (20 ml)",
+                        "Aderezo: 1 diente de ajo chancado, 1 cdta de mostaza, comino, orégano y 1 pizca de sal",
+                        "Postre: 1 Mandarina W Murcott (100 g)"
                     ),
                     steps = listOf(
-                        "Marina los 200 g de pechuga de pollo durante 10 minutos con el diente de ajo chancado, 1 cdta de mostaza, jugo de medio limón, comino, orégano y pimienta.",
-                        "Calienta tu sartén antiadherente a fuego medio (CERO aceite vegetal). Coloca la pechuga con 2 cucharadas soperas de agua, tapa la sartén y cocina 4 minutos por lado hasta que quede dorada y jugosa.",
-                        "Arma tus 2 tazas reglamentarias de ensalada con la col/lechuga, pepinillo con cáscara y tomate, aliñando con jugo de limón y orégano.",
-                        "ORDEN DE INGESTA OBLIGATORIO: 1° Come las 2 tazas de ensalada fresca → 2° Come los 200 g de pollo → 3° Come la taza de arroz integral (previamente refrigerado 12 h y recalentado) y cierra con la mandarina.",
-                        "Toma tu pastilla de Bisoprolol 2.5 mg al terminar de almorzar (14:15)."
+                        "Marina el filete de pechuga SADIA 10 min con ajo chancado, mostaza, limón, comino y orégano.",
+                        "Cocínalo en sartén antiadherente a fuego medio con 2 cucharadas de agua y tapado (4 min por lado, cero aceite vegetal).",
+                        "ORDEN DE INGESTA OBLIGATORIO: Come 1° las 2 tazas de ensalada, 2° los 200 g de pollo y 3° la taza de arroz integral recalentado y la mandarina.",
+                        "Toma tu Bisoprolol fumarato 2.5 mg al terminar."
                     ),
-                    clinicalNote = "Al entrenar antes de las 14:00 y comer primero las 2 tazas de ensalada, tus músculos captan la glucosa de la taza de arroz mediante transportadores GLUT-4 sin exigir que tu páncreas secrete insulina extra."
+                    clinicalNote = "Cocinar sin aceite de soya/maíz/girasol y comer las 2 tazas de ensalada antes del arroz reduce el pico glucémico y ayuda a revertir tu TGP de 49.9 U/L.",
+                    timers = listOf(
+                        RecipeTimerSpec("Pollo lado 1 (4 min)", 4 * 60),
+                        RecipeTimerSpec("Pollo lado 2 (4 min)", 4 * 60),
+                        RecipeTimerSpec("Caminata post-almuerzo (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "lun_mt",
                     dayIndex = 0,
                     dayName = "Lunes",
-                    optionLabel = "Opción 1 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 1 de la Doctora",
                     slot = MealSlot.MEDIA_TARDE,
                     time = "16:30 (4:30 PM)",
                     slotLabel = "Media Tarde",
                     medAlert = null,
-                    title = "1 Vaso de Yogurt Gloria Slim Triple Zero 0% con Canela",
-                    shortDesc = "Aporte proteico ligero de media tarde sin azúcar ni grasa saturada.",
+                    title = "1 vaso (180 ml) de Yogurt GLORIA Slim Triple Zero 0% frío con 1/2 cdta de canela en polvo",
+                    shortDesc = "Colación proteica 0% grasa y 0% azúcar que favorece la excreción renal de ácido úrico.",
                     macros = Macros(kcal = 75, prot = 8, carb = 9, fat = 0, fiber = 0),
                     ingredients = listOf(
-                        "1 vaso (180 ml) de Yogurt Gloria Slim Triple Zero (0% grasa, 0% azúcar añadida, 0% lactosa)",
+                        "1 vaso (180 ml) de Yogurt GLORIA Slim Triple Zero 0% frío",
                         "1/2 cucharadita de Canela en polvo"
                     ),
                     steps = listOf(
-                        "Sirve los 180 ml de Yogurt Gloria Slim 0% frío en un vaso o bowl a las 16:30 y espolvorea media cucharadita de canela en polvo encima."
+                        "Sirve los 180 ml de Yogurt GLORIA Slim Triple Zero 0% frío a las 16:30 y espolvorea media cucharadita de canela en polvo."
                     ),
-                    clinicalNote = "Los lácteos desnatados sin azúcar contienen péptidos bioactivos (caseína y lactosuero) que promueven la excreción renal de ácido úrico (bajando tu nivel de 6.65 mg/dL)."
+                    clinicalNote = "Los péptidos lácteos desnatados sin azúcar facilitan la eliminación renal de uratos (bajando tu ácido úrico de 6.65 mg/dL)."
                 ),
                 Meal(
                     id = "lun_cena",
                     dayIndex = 0,
                     dayName = "Lunes",
-                    optionLabel = "Opción 1 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 1 de la Doctora",
                     slot = MealSlot.CENA,
                     time = "19:00 (7:00 PM)",
                     slotLabel = "Cena Ligera",
-                    medAlert = "Cierre de ventana nutricional a las 19:00 (13 horas de descanso insulínico nocturno hasta las 08:00 AM)",
-                    title = "1 Lata de Atún al Limón + 1 Papa Sancochada (Almidón Resistente)",
-                    shortDesc = "Atún en agua desalado con cebolla roja y perejil + papa blanca sancochada y enfriada.",
+                    medAlert = "Cierre de ingesta a las 19:00 (13 horas de descanso insulínico nocturno hasta las 08:00 AM)",
+                    title = "1 Lata de Atún + 1 Papa sancochada (Almidón Resistente Tipo 3)",
+                    shortDesc = "1 lata de Filete de Atún en Agua BELL'S desalada al limón con cebolla roja + 1 Papa Blanca Yungay refrigerada 12 h.",
                     macros = Macros(kcal = 275, prot = 31, carb = 32, fat = 2, fiber = 4),
                     ingredients = listOf(
-                        "1 lata completa (120 g escurridos) de Filete de Atún en Agua Bell's",
-                        "1 unidad mediana (150 g en crudo) de Papa Blanca Yungay sancochada con cáscara y refrigerada 12 horas",
-                        "30 g de Cebolla roja picada muy fina y lavada",
-                        "Jugo de 1/2 limón sutil (10 ml), orégano o perejil picado y pimienta"
+                        "1 lata completa (100–120 g escurridos) de Filete de Atún en Agua BELL'S Lata 150g",
+                        "30 g de Cebolla roja picada fina, jugo de 1/2 limón, orégano y pimienta",
+                        "1 unidad mediana (150 g) de Papa Blanca Yungay sancochada con cáscara y refrigerada 12 h antes"
                     ),
                     steps = listOf(
-                        "Abre la lata de Filete de Atún en Agua Bell's, vacíala en un colador y enjuágala 10 segundos bajo el caño para retirar el sodio de conserva.",
-                        "Mezcla el atún con la cebolla roja picada fina, el jugo de medio limón, orégano y pimienta.",
-                        "Corta en rodajas la papa sancochada (que estuvo refrigerada al menos 12 horas para cristalizar su almidón en almidón resistente tipo 3; puedes comerla tibia o fría) y sírvela con el atún encima."
+                        "Abre 1 lata completa (100–120 g escurridos) de Filete de Atún en Agua BELL'S, enjuágala en colador por 10 seg para retirar el sodio.",
+                        "Mézclala con 30 g de cebolla roja picada fina, jugo de 1/2 limón, orégano y pimienta.",
+                        "Sirve con 1 unidad mediana (150 g) de Papa Blanca Yungay sancochada con cáscara y refrigerada 12 h antes (almidón resistente tipo 3)."
                     ),
-                    clinicalNote = "Cenar a las 19:00 con solo 2 g de grasa y papa retrogradada permite que tu insulina baje rápidamente a niveles basales durante la noche, activando la lipólisis hepática."
+                    clinicalNote = "Cerrar la ingesta a las 19:00 con almidón resistente tipo 3 otorga 13 horas de descanso insulínico nocturno para revertir el HOMA-IR de 9.73."
                 )
             )
         ),
@@ -143,127 +147,133 @@ internal object MealCatalogPart1 {
             dayIndex = 1,
             dayName = "Martes",
             shortName = "Mar",
-            optionLabel = "Opción 2 — Lic. Isabel Ríos",
-            focusTag = "Fibra Soluble y Control de LDL",
+            optionLabel = "Opción 2 de la Doctora",
+            focusTag = "Fibra Soluble y Reducción de LDL",
+            nightPrepReminder = "Para mañana Miércoles: Sancocha con cáscara 160 g de Camote Amarillo Procesado PLAZA VEA y déjalo refrigerando 12 h. Pasa 1 filete (200 g) de Basa BELL'S del congelador al refrigerador.",
             meals = listOf(
                 Meal(
                     id = "mar_desayuno",
                     dayIndex = 1,
                     dayName = "Martes",
-                    optionLabel = "Opción 2 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 2 de la Doctora",
                     slot = MealSlot.DESAYUNO,
                     time = "08:00 AM",
                     slotLabel = "Desayuno",
-                    medAlert = "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
-                    title = "1 Taza de leche sin lactosa/light + 2 Mandarinas + 1 Pan con pollo",
-                    shortDesc = "Taza de leche tibia a la canela + sándwich integral de pollo deshilachado (70 g) + 2 mandarinas.",
+                    medAlert = "Tomar Irbesartán 150 mg al terminar + 12 min caminata estática",
+                    title = "1 Taza de leche light/sin lactosa + 2 mandarinas + 1 pan con pollo",
+                    shortDesc = "Sándwich en Pan Integral BELL'S con 70 g de pechuga SADIA deshilachada, apio y Yogurt Slim 0% + leche tibia con canela + 2 mandarinas.",
                     macros = Macros(kcal = 440, prot = 32, carb = 56, fat = 8, fiber = 7),
                     ingredients = listOf(
-                        "60 ml de Leche Evaporada Light / Sin Lactosa Bell's + 180 ml de agua caliente con canela y clavo",
-                        "70 g de Pechuga de pollo ya cocida y deshilachada (reservada del lunes)",
-                        "20 g de Apio fresco picado muy chiquito",
-                        "1 cucharada (15 g) de Yogurt Gloria Slim 0% (como reemplazo saludable de la mayonesa) + gotas de limón",
-                        "2 rebanadas (55 g) de Pan de Molde Integral Bell's tostado",
-                        "2 unidades medianas (180 g) de Mandarina W Murcott enteras en gajos"
+                        "70 g de Pechuga de Pollo SADIA cocida y deshilachada (separada del lunes)",
+                        "20 g de Apio picado + 1 cda (15 g) de Yogurt Gloria Slim 0% (en vez de mayonesa), limón y pimienta",
+                        "2 rebanadas de Pan Integral BELL'S tostado",
+                        "1 taza de leche tibia con canela (60 ml de Leche Light GLORIA + 180 ml de agua)",
+                        "2 unidades (180 g) de Mandarina W Murcott en gajos enteros"
                     ),
                     steps = listOf(
-                        "Mezcla los 70 g de pechuga deshilachada con el apio picado, 1 cucharada de yogurt natural 0%, gotas de limón, pimienta y orégano. Arma tu sándwich en el pan integral tostado.",
-                        "Prepara tu taza de 240 ml de leche tibia diluyendo 60 ml de leche light en 180 ml de agua hervida con canela.",
-                        "Come primero el pan con pollo, luego la taza de leche y termina con las 2 mandarinas en gajos enteros (nunca exprimidas en jugo). Toma tu Irbesartán 150 mg."
+                        "Mezcla 70 g de pechuga de pollo SADIA cocida y deshilachada (separada del lunes) con 20 g de apio picado, 1 cda (15 g) de Yogurt Gloria Slim 0% (en vez de mayonesa), limón y pimienta dentro de 2 rebanadas de Pan Integral BELL'S.",
+                        "Acompaña con 1 taza de leche tibia con canela (60 ml de Leche Light + 180 ml de agua).",
+                        "Termina con 2 unidades (180 g) de Mandarina W Murcott en gajos enteros. Toma tu Irbesartán 150 mg."
                     ),
-                    clinicalNote = "Sustituir la mayonesa comercial por yogurt 0% con limón elimina 12 g de aceite de soya proinflamatorio y protege tu colesterol LDL (actualmente en 124 mg/dL, meta <100 mg/dL)."
+                    clinicalNote = "Reemplazar la mayonesa por Yogurt Gloria Slim 0% al limón evita grasas trans/omega-6 proinflamatorias y cuida tu perfil lipídico.",
+                    timers = listOf(
+                        RecipeTimerSpec("Caminata post-desayuno (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "mar_mm",
                     dayIndex = 1,
                     dayName = "Martes",
-                    optionLabel = "Opción 2 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 2 de la Doctora",
                     slot = MealSlot.MEDIA_MANANA,
                     time = "10:30 AM",
                     slotLabel = "Pre-entreno",
-                    medAlert = "Entrenar entre 11:00 AM y 13:00 PM en tu espacio de 2x2 m",
-                    title = "1/2 Plátano de seda pequeño (o 1 Manzana Israel)",
-                    shortDesc = "Potasio biodisponible y energía controlada pre-entrenamiento.",
+                    medAlert = "Entrenar en espacio de 2x2 m entre 11:00 AM y 13:00 PM",
+                    title = "1/2 unidad (60 g) de Plátano de Seda no muy maduro + 400 ml de agua",
+                    shortDesc = "Energía pre-entreno con almidón resistente y potasio natural.",
                     macros = Macros(kcal = 55, prot = 1, carb = 14, fat = 0, fiber = 2),
                     ingredients = listOf(
-                        "1/2 unidad (60 g) de Plátano de seda no muy maduro (o 1 manzana pequeña de 110 g)",
+                        "1/2 unidad (60 g) de Plátano de Seda no muy maduro",
                         "400 ml de Agua pura"
                     ),
                     steps = listOf(
-                        "Consume el medio plátano de seda a las 10:30 AM antes de iniciar tu sesión de ejercicios en habitación."
+                        "Consume 1/2 unidad (60 g) de Plátano de Seda no muy maduro con 400 ml de agua a las 10:30 AM antes de tu sesión en habitación."
                     ),
-                    clinicalNote = "El plátano no excesivamente maduro conserva almidón resistente y aporta potasio natural para la contracción muscular sin disparar la glucemia."
+                    clinicalNote = "El plátano pintón aporta potasio para la función muscular manteniendo bajo el índice glucémico."
                 ),
                 Meal(
                     id = "mar_almuerzo",
                     dayIndex = 1,
                     dayName = "Martes",
-                    optionLabel = "Opción 2 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 2 de la Doctora",
                     slot = MealSlot.ALMUERZO,
                     time = "14:00 (2:00 PM)",
                     slotLabel = "Almuerzo Principal",
-                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática (14:20)",
-                    title = "2 Tazas de Ensalada + Pavita a la Plancha (200 g) + 1 Taza de Lentejas + 1 Mandarina",
-                    shortDesc = "Medallones magros de pavita San Fernando + lentejas despurinizadas por remojo + 2 tazas de ensalada.",
+                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática",
+                    title = "Medallones Caseros de Pavita (200 g) + 1 Taza de Lentejas + 2 Tazas de Ensalada + 1 Mandarina",
+                    shortDesc = "2 medallones caseros de Carne Molida de Pavita SAN FERNANDO a la plancha + lentejas BELL'S despurinizadas + 2 tazas de ensalada.",
                     macros = Macros(kcal = 585, prot = 61, carb = 64, fat = 6, fiber = 15),
                     ingredients = listOf(
-                        "200 g en crudo de Pavita en trozos o medallones San Fernando (sin piel)",
-                        "65 g en crudo de Lenteja Superior Bell's (remojada 12 h y escurrida; rinde 1 taza / 180 g cocida)",
-                        "Aderezo al agua para lentejas: 30 g de Cebolla roja picada, 1 diente de ajo, 20 g de Zanahoria en cubitos, 1 hoja de laurel y comino (CERO tocino o embutidos)",
-                        "Ensalada (2 tazas): 120 g de Col blanca picada muy fina, 70 g de Tomate en cubos, 50 g de Pepinillo y jugo de 1 limón sutil (20 ml)",
-                        "1 unidad mediana (100 g) de Mandarina en gajos"
+                        "200 g en crudo de Carne Molida de Pavita SAN FERNANDO (Paquete 500g; congelar los 300 g restantes)",
+                        "65 g en crudo de Lenteja Superior BELL'S (remojada 12 h en agua que se desecha para eliminar purinas = 1 taza / 180 g cocida)",
+                        "Sofrito al agua de lentejas: 30 g de cebolla roja, 1 diente de ajo, 20 g de zanahoria en cubitos, laurel y comino",
+                        "Ensalada (2 tazas): 120 g de lechuga americana, 70 g de tomate, 50 g de pepinillo y jugo de 1 limón",
+                        "Postre: 1 Mandarina W Murcott (100 g)"
                     ),
                     steps = listOf(
-                        "REGLA ANTI-ÁCIDO ÚRICO: Deja las lentejas en remojo desde la noche anterior (12 h), bota el agua de remojo y enjuágalas bien (esto reduce oligosacáridos y purinas solubles).",
-                        "En una olla pequeña, cocina la cebolla y el ajo con 3 cucharadas de agua (sin aceite) por 3 minutos; añade las lentejas, zanahoria en cubitos, laurel y agua limpia por 20 minutos.",
-                        "Sazona los 200 g de pavita con ajo, orégano, comino, pimienta y gotas de limón, y dóralos en sartén antiadherente caliente.",
-                        "Come primero las 2 tazas de ensalada al limón, luego los 200 g de pavita, después la taza de lentejas y finalmente la mandarina. Toma tu Bisoprolol 2.5 mg."
+                        "Desecha el agua de remojo de 12 h de las lentejas y hierve los 65 g en agua limpia con cebolla, ajo, zanahoria en cubitos, laurel y comino por 20 minutos.",
+                        "Sazona los 200 g de carne molida de pavita SAN FERNANDO con ajo picado, perejil/orégano, comino y pimienta; forma 2 medallones gruesos tipo hamburguesa y dóralos en sartén antiadherente 4 min por lado sin aceite.",
+                        "ORDEN CLÍNICO: Come 1° las 2 tazas de ensalada, 2° los medallones de pavita y 3° la taza de lentejas y la mandarina. Toma tu Bisoprolol 2.5 mg."
                     ),
-                    clinicalNote = "Este plato entrega 15 g de fibra soluble viscosa que atrapa sales biliares de colesterol en el intestino, siendo tu herramienta #1 para bajar el LDL de 124 mg/dL a menos de 100 mg/dL."
+                    clinicalNote = "Sus 15 g de fibra soluble atrapan sales biliares de colesterol en el intestino para reducir directamente tu LDL de 124 mg/dL a <100 mg/dL.",
+                    timers = listOf(
+                        RecipeTimerSpec("Cocción lentejas (20 min)", 20 * 60),
+                        RecipeTimerSpec("Medallones pavita (4 min/lado)", 4 * 60),
+                        RecipeTimerSpec("Caminata post-almuerzo (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "mar_mt",
                     dayIndex = 1,
                     dayName = "Martes",
-                    optionLabel = "Opción 2 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 2 de la Doctora",
                     slot = MealSlot.MEDIA_TARDE,
                     time = "16:30 (4:30 PM)",
                     slotLabel = "Media Tarde",
                     medAlert = null,
-                    title = "20 g de Frutos Secos / Maní Tostado Natural Sin Sal",
-                    shortDesc = "Grasas monoinsaturadas (ácido oleico) para elevar tu colesterol HDL.",
+                    title = "20 g de Maní Tostado Natural Sin Sal VILLA NATURA pesado en balanza",
+                    shortDesc = "Grasas monoinsaturadas cardioprotectoras para elevar el colesterol HDL (45.4 mg/dL).",
                     macros = Macros(kcal = 115, prot = 5, carb = 3, fat = 10, fiber = 2),
                     ingredients = listOf(
-                        "20 g (1 puñado pequeño pesado en balanza) de Maní Tostado Natural Sin Sal ni Aceite Villa Natura"
+                        "20 g de Maní Tostado Natural Sin Sal VILLA NATURA pesado en balanza"
                     ),
                     steps = listOf(
-                        "Pesa exactamente 20 g en tu balanza de cocina a las 16:30 y mastícalos despacio acompañados de un vaso grande de agua."
+                        "Pesa exactamente 20 g en tu balanza de cocina a las 16:30 y acompáñalos con un vaso grande de agua."
                     ),
-                    clinicalNote = "Sus 10 g de grasas monoinsaturadas sin sodio elevan directamente tu colesterol protector HDL (45.4 mg/dL) con impacto glucémico e insulínico igual a cero."
+                    clinicalNote = "El ácido oleico sin sal añadida eleva el colesterol protector HDL sin estimular la insulina."
                 ),
                 Meal(
                     id = "mar_cena",
                     dayIndex = 1,
                     dayName = "Martes",
-                    optionLabel = "Opción 2 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 2 de la Doctora",
                     slot = MealSlot.CENA,
                     time = "19:00 (7:00 PM)",
                     slotLabel = "Cena Ligera",
-                    medAlert = "Cierre de ventana nutricional a las 19:00",
-                    title = "Ensalada Fresca (1.5 tazas) + Pollo a la Plancha (150 g) + 1 Choclo",
-                    shortDesc = "Filete de pechuga a las finas hierbas + 1 taza de choclo sancochado + ensalada al limón.",
+                    medAlert = "Cierre de ingesta a las 19:00",
+                    title = "Ensalada fresca (1.5 tazas) + Pollo a la plancha (150 g) + 1 Choclo",
+                    shortDesc = "150 g de Filete de Pechuga SADIA a la plancha sin aceite + 1.5 tazas de ensalada + 1 taza de Choclo BELL'S.",
                     macros = Macros(kcal = 335, prot = 38, carb = 31, fat = 5, fiber = 5),
                     ingredients = listOf(
-                        "150 g en crudo de Filete de Pechuga de Pollo Fresca sin piel",
-                        "1 taza (120 g) de Choclo Desgranado Bell's sancochado con anís",
-                        "1.5 tazas de Ensalada fresca: 80 g de Col/Lechuga, 70 g de Pepinillo en rodajas, 50 g de Tomate",
-                        "Jugo de 1/2 limón sutil, 1 diente de ajo, orégano seco y pimienta"
+                        "150 g de Filete de Pechuga de Pollo SADIA sazonado con ajo, limón y orégano",
+                        "1.5 tazas de ensalada (80 g lechuga americana, 70 g pepinillo, 50 g tomate)",
+                        "1 taza (120 g) de Choclo Desgranado BELL'S sancochado con anís"
                     ),
                     steps = listOf(
-                        "Sazona los 150 g de filete de pechuga con ajo, orégano, pimienta y limón, y cocínalos en sartén antiadherente 4 minutos por lado sin aceite.",
-                        "Sirve primero la ensalada fresca, luego la pechuga a la plancha y acompaña con el choclo sancochado."
+                        "Cocina en sartén antiadherente sin aceite los 150 g de Filete de Pechuga de Pollo SADIA sazonado con ajo, limón y orégano.",
+                        "Acompaña primero con las 1.5 tazas de ensalada fresca y luego con 1 taza (120 g) de Choclo Desgranado BELL'S sancochado con anís."
                     ),
-                    clinicalNote = "El grano entero de choclo peruano tiene una matriz fibrosa de digestión lenta que evita picos nocturnos de glucosa mientras los 38 g de proteína protegen tu masa muscular."
+                    clinicalNote = "Cena magra de digestión limpia que protege la masa muscular mientras inicia el ayuno nocturno de 13 horas."
                 )
             )
         ),
@@ -271,126 +281,133 @@ internal object MealCatalogPart1 {
             dayIndex = 2,
             dayName = "Miércoles",
             shortName = "Mié",
-            optionLabel = "Opción 3 — Lic. Isabel Ríos",
-            focusTag = "Betaglucanos, Omega-3 y Pescado Blanco",
+            optionLabel = "Opción 3 de la Doctora",
+            focusTag = "Betaglucanos, Chía y Pescado Blanco",
+            nightPrepReminder = "Para mañana Jueves: Pasa 1 porción (180–200 g) de Hígado de Res EL BUEN CORTE al refrigerador y deja sancochada y refrigerando 1 Papa Blanca Yungay mediana (130 g) para la cena del jueves.",
             meals = listOf(
                 Meal(
                     id = "mie_desayuno",
                     dayIndex = 2,
                     dayName = "Miércoles",
-                    optionLabel = "Opción 3 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 3 de la Doctora",
                     slot = MealSlot.DESAYUNO,
                     time = "08:00 AM",
                     slotLabel = "Desayuno",
-                    medAlert = "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
-                    title = "1 Taza de avena con canela + 1/2 manzana, 1/2 plátano, 30 g arándanos, 1 cda chía + 2 huevos duros",
-                    shortDesc = "Porridge alto en betaglucanos y Omega-3 con polifenoles de arándanos + 2 huevos duros.",
+                    medAlert = "Tomar Irbesartán 150 mg al terminar + 12 min caminata estática",
+                    title = "1 Taza de avena con canela + manzana, 1/2 plátano, arándanos, 1 cda chía + 2 huevos duros",
+                    shortDesc = "Come primero los 2 Huevos Pardos BELL'S duros y luego el porridge de 40 g Avena con 10 g Chía, frutas y 30 g Blueberries BELL'S.",
                     macros = Macros(kcal = 485, prot = 21, carb = 58, fat = 18, fiber = 11),
                     ingredients = listOf(
-                        "40 g en crudo (4 cucharadas soperas) de Avena Hojuela Entera Grano de Oro",
-                        "250 ml de Agua + 1 cucharadita de Canela en polvo + 2 gotas de Stevia",
-                        "1 cucharada sopera (10 g) de Semillas de Chía Negra Ecoandino",
-                        "1/2 unidad (65 g) de Manzana Israel picada en cubitos con cáscara",
-                        "1/2 unidad (55 g) de Plátano de seda en rodajas",
-                        "30 g de Arándanos frescos lavados",
-                        "2 unidades (110 g) de Huevos Pardos Bell's duros (cocidos 9 min)"
+                        "2 Huevos Pardos BELL'S duros (comer primero)",
+                        "40 g de Avena GRANO DE ORO / 3 OSITOS hervida 4 min en 250 ml de agua con canela",
+                        "1 cda (10 g) de Chía Negra ECOANDINO",
+                        "1/2 Manzana Israel (65 g) en cubos + 1/2 Plátano de seda (55 g)",
+                        "30 g de Blueberries (Arándanos) BELL'S FRESCOS"
                     ),
                     steps = listOf(
-                        "ORDEN CLÍNICO ANTI-PICO DE INSULINA: Come PRIMERO los 2 huevos duros con una pizca de orégano antes de probar la avena con frutas.",
-                        "En una olla pequeña, hierve los 40 g de avena en hojuelas con 250 ml de agua y canela durante 4 minutos revolviendo.",
-                        "Apaga el fuego, agrega inmediatamente la cucharada (10 g) de semillas de chía para que forme su gel mucilaginoso, y decora encima con la media manzana, el medio plátano y los 30 g de arándanos.",
-                        "Toma tu Irbesartán 150 mg al finalizar el desayuno."
+                        "ORDEN CLÍNICO: Come primero los 2 Huevos Pardos BELL'S duros (frena el pico glucémico matutino en un 38%).",
+                        "Luego consume tu porridge hecho hirviendo 4 min 40 g de Avena GRANO DE ORO / 3 OSITOS en 250 ml de agua con canela.",
+                        "Al apagar el fuego añade 1 cda (10 g) de Chía ECOANDINO, 1/2 Manzana Israel (65 g) en cubos, 1/2 Plátano de seda (55 g) y 30 g de Blueberries BELL'S FRESCOS.",
+                        "Toma tu Irbesartán 150 mg al terminar."
                     ),
-                    clinicalNote = "Comer primero los 2 huevos duros y sumar 10 g de chía a la avena reduce en un 38% la velocidad de absorción de las frutas, mientras las antocianinas de los arándanos mejoran directamente tu sensibilidad a la insulina (HOMA-IR)."
+                    clinicalNote = "Los betaglucanos de la avena más el gel soluble de la chía y las antocianinas de los arándanos mejoran la sensibilidad a la insulina (HOMA-IR).",
+                    timers = listOf(
+                        RecipeTimerSpec("Hervor avena (4 min)", 4 * 60),
+                        RecipeTimerSpec("Caminata post-desayuno (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "mie_mm",
                     dayIndex = 2,
                     dayName = "Miércoles",
-                    optionLabel = "Opción 3 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 3 de la Doctora",
                     slot = MealSlot.MEDIA_MANANA,
                     time = "10:30 AM",
                     slotLabel = "Pre-entreno",
-                    medAlert = "Entrenar entre 11:00 AM y 13:00 PM en habitación 2x2 m",
-                    title = "1 Mandarina W Murcott mediana en gajos",
-                    shortDesc = "Vitamina C y naringenina hepatoprotectora antes de entrenar.",
+                    medAlert = "Entrenar en espacio de 2x2 m entre 11:00 AM y 13:00 PM",
+                    title = "1 unidad mediana (100 g) de Mandarina W Murcott en gajos",
+                    shortDesc = "Vitamina C y naringenina cítrica antes de tu entrenamiento.",
                     macros = Macros(kcal = 50, prot = 1, carb = 12, fat = 0, fiber = 2),
                     ingredients = listOf(
-                        "1 unidad mediana (100 g) de Mandarina fresca en gajos (con su hollejo blanco)"
+                        "1 unidad mediana (100 g) de Mandarina W Murcott en gajos"
                     ),
                     steps = listOf(
-                        "Pela la mandarina a las 10:30 AM y cómela en gajos conservando la fibra blanca que recubre cada gajo."
+                        "Consume la mandarina en gajos enteros conservando el hollejo blanco a las 10:30 AM."
                     ),
-                    clinicalNote = "El flavonoide naringenina de los cítricos activa la oxidación hepática de ácidos grasos y ayuda a reducir la transaminasa TGP (49.9 U/L)."
+                    clinicalNote = "Favorece la oxidación hepática de ácidos grasos y aporta hidratación pre-entreno."
                 ),
                 Meal(
                     id = "mie_almuerzo",
                     dayIndex = 2,
                     dayName = "Miércoles",
-                    optionLabel = "Opción 3 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 3 de la Doctora",
                     slot = MealSlot.ALMUERZO,
                     time = "14:00 (2:00 PM)",
                     slotLabel = "Almuerzo Principal",
-                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática (14:20)",
-                    title = "2 Tazas de Ensalada + Pescado Blanco al Vapor/Sudado (200 g) + 1 Camote + 1 Manzana",
-                    shortDesc = "Filete de Tilapia/Basa bajo en purinas al kión y tomate + camote amarillo refrigerado + 2 tazas de ensalada.",
+                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática",
+                    title = "Filete de Basa al Vapor/Sudado (200 g) + 1 Camote + 2 Tazas de Ensalada + 1 Manzana",
+                    shortDesc = "200 g Filete de Basa BELL'S al vapor 7 min sobre cama de cebolla y tomate + 160 g camote refrigerado + 2 tazas de ensalada.",
                     macros = Macros(kcal = 495, prot = 43, carb = 64, fat = 6, fiber = 9),
                     ingredients = listOf(
-                        "200 g en crudo de Filete de Basa o Tilapia Blanca Bell's (pescado blanco bajo en purinas)",
-                        "1 unidad mediana (160 g en crudo) de Camote Amarillo sancochado con cáscara y refrigerado 12 h",
-                        "Sudado natural: 30 g de Cebolla roja en pluma, 40 g de Tomate en rodajas, 1 diente de ajo, 2 rodajas de kión (jengibre) y culantro fresco",
-                        "Ensalada (2 tazas): 100 g de Col/Lechuga, 60 g de Vainitas cocidas al vapor al dente, 60 g de Pepinillo y jugo de 1 limón",
-                        "1 unidad pequeña (110 g) de Manzana Israel con cáscara"
+                        "200 g de Filete de Basa BELL'S (Bolsa 1Kg) descongelado",
+                        "160 g de Camote Amarillo Procesado PLAZA VEA sancochado con cáscara y refrigerado 12 h",
+                        "Cama de sudado: 30 g de cebolla roja en pluma, 40 g de tomate en rodajas, 1 diente de ajo, orégano y limón",
+                        "Ensalada (2 tazas): 100 g de lechuga americana, 60 g de Vainita Americana al vapor al dente, 60 g de pepinillo y limón",
+                        "Postre: 1 Manzana Israel pequeña (110 g)"
                     ),
                     steps = listOf(
-                        "En una sartén con tapa, arma una cama con la cebolla en pluma, el tomate, el ajo y el kión; coloca encima los 200 g de filete de pescado blanco sazonado con limón y pimienta.",
-                        "Agrega 1/4 de taza de agua, tapa y cocina al vapor/sudado a fuego medio por 7 minutos (cero aceite).",
-                        "Come primero las 2 tazas de ensalada con vainitas al dente, luego el pescado sudado, y al final el camote y la manzana. Toma tu Bisoprolol 2.5 mg."
+                        "Coloca el filete de basa BELL'S sobre la cama de cebolla, tomate y ajo en una sartén con 1/4 taza de agua; tapa y cocina al vapor 7 minutos (cero aceite).",
+                        "Come 1° las 2 tazas de ensalada con vainitas al dente, 2° el filete de basa sudado y 3° el camote amarillo y la manzana.",
+                        "Toma tu Bisoprolol fumarato 2.5 mg al terminar."
                     ),
-                    clinicalNote = "Elegimos pescado blanco (Basa/Tilapia) en lugar de pescados azules oscuros (bonito/caballa/anchoveta) porque contiene un 55% menos de purinas, protegiendo tu ácido úrico de 6.65 mg/dL."
+                    clinicalNote = "El pescado blanco (Basa) tiene 55% menos purinas que el bonito o caballa, protegiendo tu ácido úrico (6.65 mg/dL).",
+                    timers = listOf(
+                        RecipeTimerSpec("Basa al vapor (7 min)", 7 * 60),
+                        RecipeTimerSpec("Caminata post-almuerzo (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "mie_mt",
                     dayIndex = 2,
                     dayName = "Miércoles",
-                    optionLabel = "Opción 3 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 3 de la Doctora",
                     slot = MealSlot.MEDIA_TARDE,
                     time = "16:30 (4:30 PM)",
                     slotLabel = "Media Tarde",
                     medAlert = null,
-                    title = "1 Vaso (180 ml) de Yogurt Gloria Slim 0%",
-                    shortDesc = "Proteína ligera de alta digestibilidad y efecto uricosúrico.",
+                    title = "1 vaso (180 ml) de Yogurt GLORIA Slim Triple Zero 0%",
+                    shortDesc = "Proteína ligera de media tarde sin grasa ni azúcar.",
                     macros = Macros(kcal = 75, prot = 8, carb = 9, fat = 0, fiber = 0),
                     ingredients = listOf(
-                        "1 vaso (180 ml) de Yogurt Gloria Slim Triple Zero"
+                        "1 vaso (180 ml) de Yogurt GLORIA Slim Triple Zero 0%"
                     ),
                     steps = listOf(
                         "Servir frío a las 16:30."
                     ),
-                    clinicalNote = "Mantiene estable la saciedad vespertina evitando el picoteo nocturno."
+                    clinicalNote = "Mantiene la saciedad vespertina y favorece la excreción renal de ácido úrico."
                 ),
                 Meal(
                     id = "mie_cena",
                     dayIndex = 2,
                     dayName = "Miércoles",
-                    optionLabel = "Opción 3 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 3 de la Doctora",
                     slot = MealSlot.CENA,
                     time = "19:00 (7:00 PM)",
                     slotLabel = "Cena Ligera",
-                    medAlert = "Cierre de ventana nutricional a las 19:00",
-                    title = "Ensalada Fresca + 1 Tortilla Bimbo Rapidita Integral con Atún",
-                    shortDesc = "Wrap en tortilla integral con 1 lata de atún en agua escurrido, tomate y lechuga.",
+                    medAlert = "Cierre de ingesta a las 19:00",
+                    title = "Ensalada + 1 Tortilla Rapidita Integral con Atún",
+                    shortDesc = "1 Tortilla BIMBO Rapidita Integral rellena con 1 lata de Atún en Agua BELL'S desalada + 1 taza adicional de ensalada fresca.",
                     macros = Macros(kcal = 265, prot = 31, carb = 19, fat = 5, fiber = 5),
                     ingredients = listOf(
-                        "1 unidad (30 g) de Tortilla Bimbo Rapidita Integral (congelar el resto del paquete para que dure semanas)",
-                        "1 lata completa (120 g escurridos) de Filete de Atún en Agua Bell's (enjuagada 10 seg en colador)",
-                        "1.5 tazas de Ensalada fresca: 80 g de Lechuga/Col picada, 60 g de Tomate en cubitos, 50 g de Pepinillo, 20 g de Cebolla roja y jugo de limón"
+                        "1 Tortilla BIMBO Rapidita Integral (congelar las 9 restantes de la bolsa)",
+                        "1 lata (100–120 g escurridos) de Filete de Atún en Agua BELL'S (enjuagada en colador)",
+                        "Lechuga americana picada, tomate y limón + 1 taza adicional de ensalada fresca al lado"
                     ),
                     steps = listOf(
-                        "Calienta la Tortilla Rapidita Integral en sartén seca durante 25 segundos por lado.",
-                        "Mezcla el atún desalado y escurrido con parte de la lechuga, tomate, cebolla y limón; arma tu wrap o taco y acompáñalo con el resto de la ensalada fresca en el plato."
+                        "Calienta 25 seg por lado 1 Tortilla BIMBO Rapidita Integral en sartén seca.",
+                        "Rellénala con 1 lata (100–120 g escurridos) de Filete de Atún en Agua BELL'S (enjuagada en colador), lechuga americana picada, tomate y limón, más 1 taza adicional de ensalada fresca al lado."
                     ),
-                    clinicalNote = "Una sola Tortilla Rapidita Integral aporta apenas 13 g de carbohidratos netos, permitiendo una cena rápida, saciante y con mínima respuesta de insulina antes de dormir."
+                    clinicalNote = "Aporta apenas 13 g de carbohidratos netos con 31 g de proteína magra para optimizar la sensibilidad insulínica nocturna."
                 )
             )
         ),
@@ -398,127 +415,132 @@ internal object MealCatalogPart1 {
             dayIndex = 3,
             dayName = "Jueves",
             shortName = "Jue",
-            optionLabel = "Opción 4 — Lic. Isabel Ríos",
-            focusTag = "Protocolo Especial de Control de Purinas",
+            optionLabel = "Opción 4 de la Doctora",
+            focusTag = "Protocolo Anti-Ácido Úrico",
+            nightPrepReminder = "Para mañana Viernes: Deja listos 80 g de Filete de Pechuga SADIA cocida y deshilachada para el pan del desayuno del viernes, y verifica la 1/2 lata de atún reservada del lunes.",
             meals = listOf(
                 Meal(
                     id = "jue_desayuno",
                     dayIndex = 3,
                     dayName = "Jueves",
-                    optionLabel = "Opción 4 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 4 de la Doctora",
                     slot = MealSlot.DESAYUNO,
                     time = "08:00 AM",
                     slotLabel = "Desayuno",
-                    medAlert = "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
-                    title = "Batido de fresa con leche light + 1 Pan integral con 40 g queso fresco light + 1 Mandarina",
-                    shortDesc = "Batido proteico de fresa con leche light + sándwich de queso fresco light Bonlé (lavado) + mandarina.",
+                    medAlert = "Tomar Irbesartán 150 mg al terminar + 12 min caminata estática",
+                    title = "Batido de fresa con leche + 1 Pan con queso fresco + 1 Mandarina",
+                    shortDesc = "Sándwich en Pan Integral BELL'S con 40 g de Queso Fresco BELL'S desalado + licuado de 100 g fresa con leche light + 1 mandarina.",
                     macros = Macros(kcal = 395, prot = 21, carb = 55, fat = 9, fiber = 7),
                     ingredients = listOf(
-                        "100 g de Fresa entera congelada Bell's / ARO",
-                        "60 ml de Leche Evaporada Light Bell's + 180 ml de agua + 3 gotas de Stevia",
-                        "2 rebanadas (55 g) de Pan de Molde Integral Bell's tostado",
-                        "40 g de Queso Fresco Light Bonlé (pasado 10 seg por agua fría para retirar sal superficial)",
-                        "3 rodajas de Tomate fresco y orégano seco",
-                        "1 unidad mediana (100 g) de Mandarina en gajos"
+                        "1 tajada de 40 g de Queso Fresco BELL'S (Paquete 300g) pasada 10 seg por agua fría",
+                        "2 rebanadas de Pan Integral BELL'S tostado + rodajas de tomate y orégano",
+                        "100 g de Fresa Congelada BELL'S + 60 ml de Leche Light + 180 ml de agua y stevia",
+                        "1 Mandarina W Murcott mediana (100 g)"
                     ),
                     steps = listOf(
-                        "Enjuaga la tajada de 40 g de Queso Fresco Light bajo el caño, sécala con papel toalla y colócala en tu pan integral tostado con rodajas de tomate y abundante orégano.",
-                        "Licúa los 100 g de fresas con los 60 ml de leche light, 180 ml de agua y stevia.",
-                        "Come primero el pan con queso fresco (cuya caseína y calcio favorecen la eliminación de ácido úrico hoy que toca hígado en el almuerzo), luego el batido y la mandarina. Toma tu Irbesartán 150 mg."
+                        "Pasa por agua fría durante 10 seg 1 tajada de 40 g de Queso Fresco BELL'S (Paquete 300g) y arma tu sándwich con rodajas de tomate y orégano en 2 rebanadas de Pan Integral BELL'S tostado.",
+                        "Licúa 100 g de Fresa Congelada BELL'S con 60 ml de Leche Light, 180 ml de agua y stevia.",
+                        "Come primero el sándwich de queso, luego el batido y cierra con 1 Mandarina mediana. Toma tu Irbesartán 150 mg."
                     ),
-                    clinicalNote = "El calcio y los péptidos del queso fresco light y la leche ayudan al túbulo renal a excretar uratos, preparando tu organismo para el almuerzo de la Opción 4."
+                    clinicalNote = "El calcio y los péptidos lácteos del queso fresco BELL'S y la leche preparan al riñón para excretar uratos hoy que toca hígado en el almuerzo.",
+                    timers = listOf(
+                        RecipeTimerSpec("Caminata post-desayuno (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "jue_mm",
                     dayIndex = 3,
                     dayName = "Jueves",
-                    optionLabel = "Opción 4 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 4 de la Doctora",
                     slot = MealSlot.MEDIA_MANANA,
                     time = "10:30 AM",
                     slotLabel = "Pre-entreno",
-                    medAlert = "Entrenar entre 11:00 AM y 13:00 PM + tomar 500 ml de agua",
-                    title = "1 Manzana Israel entera con cáscara",
-                    shortDesc = "Fibra pectina y quercetina natural antes de tu entrenamiento.",
+                    medAlert = "Entrenar entre 11:00 AM y 13:00 PM + beber 500 ml de agua",
+                    title = "1 Manzana Israel mediana (130 g) con cáscara + 500 ml de agua",
+                    shortDesc = "Quercetina natural e hidratación reforzada en el día de control de purinas.",
                     macros = Macros(kcal = 68, prot = 0, carb = 18, fat = 0, fiber = 3),
                     ingredients = listOf(
-                        "1 unidad mediana (130 g) de Manzana Israel con cáscara",
+                        "1 Manzana Israel mediana (130 g) con cáscara",
                         "500 ml de Agua pura"
                     ),
                     steps = listOf(
-                        "Come la manzana entera con cáscara a las 10:30 AM y bebe medio litro de agua antes de tu rutina."
+                        "Consume la manzana entera con cáscara a las 10:30 AM acompañada de 500 ml de agua antes de tu rutina."
                     ),
-                    clinicalNote = "Mantener el flujo urinario alto hoy es fundamental para que el ácido úrico (6.65 mg/dL) no se eleve tras el almuerzo."
+                    clinicalNote = "Mantener alto el volumen urinario diluye el ácido úrico sérico (6.65 mg/dL)."
                 ),
                 Meal(
                     id = "jue_almuerzo",
                     dayIndex = 3,
                     dayName = "Jueves",
-                    optionLabel = "Opción 4 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 4 de la Doctora",
                     slot = MealSlot.ALMUERZO,
                     time = "14:00 (2:00 PM)",
                     slotLabel = "Almuerzo Principal",
-                    medAlert = "Tomar Bisoprolol 2.5 mg + 1 vaso extra (350 ml) de Agua con Limón (Alcalinizante Renal)",
-                    title = "2 Tazas de Ensalada + Hígado de Res Encebollado (160-180 g) + 1 Choclo + 1 Mandarina",
-                    shortDesc = "Bistec de hígado sellado descartando el caldo de cocción por las purinas + cebolla roja rica en quercetina.",
+                    medAlert = "Tomar Bisoprolol 2.5 mg + 350 ml de agua con medio limón (Alcalinizante Renal)",
+                    title = "Hígado de Res Encebollado Despurinizado (180 g) + 1 Choclo + 2 Tazas de Ensalada + 1 Mandarina",
+                    shortDesc = "180 g Hígado EL BUEN CORTE sellado descartando el jugo oscuro + encebollado rico en quercetina + 1 taza de choclo + ensalada.",
                     macros = Macros(kcal = 510, prot = 46, carb = 58, fat = 8, fiber = 9),
                     ingredients = listOf(
-                        "160 a 180 g en crudo de Hígado de Res fresco limpio de nervios",
-                        "1 taza (140 g) de Choclo Desgranado Bell's sancochado",
-                        "Encebollado Protector: 70 g de Cebolla roja en pluma gruesa, 50 g de Tomate en gajos, 1 diente de ajo, 1 cda de vinagre tinto/blanco, comino y orégano",
-                        "Ensalada (2 tazas): 120 g de Pepinillo en rodajas, 80 g de Col/Lechuga, 40 g de Zanahoria cruda rallada y jugo de 1 limón sutil entero",
-                        "1 unidad mediana (100 g) de Mandarina + 1 vaso grande (350 ml) de agua con el jugo de medio limón"
+                        "180 g de Hígado de Res EL BUEN CORTE",
+                        "1 taza (140 g) de Choclo Desgranado BELL'S sancochado",
+                        "Encebollado rico en quercetina: 70 g de cebolla roja en pluma gruesa, 50 g de tomate en gajos, 1 diente de ajo, 1 cda de vinagre, comino y orégano",
+                        "Ensalada (2 tazas): 120 g de pepinillo, 80 g de lechuga americana, 40 g de zanahoria cruda rallada y jugo de 1 limón",
+                        "Postre: 1 Mandarina + 350 ml de agua con medio limón"
                     ),
                     steps = listOf(
-                        "PROTOCOLO ESTRICTO ANTI-ÁCIDO ÚRICO: Marina el bistec de hígado con ajo, vinagre, comino y pimienta. Séllalo en sartén antiadherente caliente por 2 minutos por lado.",
-                        "Retira el hígado a un plato y DESCARTA POR COMPLETO el líquido oscuro que soltó en la sartén (allí quedan disueltas gran parte de las purinas libres).",
-                        "Limpia la sartén con papel toalla y saltea los 70 g de cebolla roja y 50 g de tomate con 2 cucharadas de agua y orégano por 2 minutos; sírvelos encima del hígado.",
-                        "Come primero las 2 tazas de ensalada, luego el hígado encebollado, después el choclo y la mandarina, acompañando con el vaso extra de agua con limón. Toma tu Bisoprolol 2.5 mg."
+                        "PREPARACIÓN ANTI-ÁCIDO ÚRICO: Sella el hígado en sartén caliente 2 min por lado, retíralo al plato y DESCARTA POR COMPLETO el jugo oscuro que soltó en la sartén (allí se concentran las purinas hidrosolubles).",
+                        "En la sartén limpia saltea con 2 cdas de agua los 70 g de cebolla roja y el tomate por 2 min y sírvelos encima del hígado.",
+                        "Come 1° las 2 tazas de ensalada, 2° el hígado encebollado y 3° el choclo y la mandarina, bebiendo los 350 ml de agua con medio limón. Toma tu Bisoprolol 2.5 mg."
                     ),
-                    clinicalNote = "Al descartar el caldo de cocción del hígado y combinarlo con 70 g de cebolla roja (quercetina que inhibe la xantina oxidasa) y citrato de limón, evitas que suba tu ácido úrico de 6.65 mg/dL."
+                    clinicalNote = "Descartar el caldo de cocción del hígado y combinarlo con 70 g de cebolla roja (quercetina inhibidora de la xantina oxidasa) y citrato de limón protege tu ácido úrico.",
+                    timers = listOf(
+                        RecipeTimerSpec("Sellado hígado (2 min/lado)", 2 * 60),
+                        RecipeTimerSpec("Salteado cebolla (2 min)", 2 * 60),
+                        RecipeTimerSpec("Caminata post-almuerzo (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "jue_mt",
                     dayIndex = 3,
                     dayName = "Jueves",
-                    optionLabel = "Opción 4 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 4 de la Doctora",
                     slot = MealSlot.MEDIA_TARDE,
                     time = "16:30 (4:30 PM)",
                     slotLabel = "Media Tarde",
                     medAlert = null,
-                    title = "20 g de Frutos Secos Naturales Sin Sal",
-                    shortDesc = "Saciante vespertino rico en ácido oleico y magnesio.",
+                    title = "20 g de Maní Tostado Natural Sin Sal VILLA NATURA",
+                    shortDesc = "Grasas saludables y magnesio intracelular sin sodio.",
                     macros = Macros(kcal = 115, prot = 5, carb = 3, fat = 10, fiber = 2),
                     ingredients = listOf(
-                        "20 g de Maní Tostado Natural Sin Sal Villa Natura"
+                        "20 g de Maní Tostado Natural Sin Sal VILLA NATURA"
                     ),
                     steps = listOf(
-                        "Pesar 20 g a las 16:30 y consumir con un vaso de agua."
+                        "Pesar 20 g en balanza y consumir a las 16:30 con agua."
                     ),
-                    clinicalNote = "Aporta magnesio intracelular, un cofactor esencial para que el receptor de insulina funcione correctamente."
+                    clinicalNote = "Aporta saciedad sin elevar la glucosa ni el ácido úrico."
                 ),
                 Meal(
                     id = "jue_cena",
                     dayIndex = 3,
                     dayName = "Jueves",
-                    optionLabel = "Opción 4 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 4 de la Doctora",
                     slot = MealSlot.CENA,
                     time = "19:00 (7:00 PM)",
                     slotLabel = "Cena Ligera",
-                    medAlert = "Cierre de ventana nutricional a las 19:00",
-                    title = "Bowl de Ensalada de Verduras (2 tazas) con 1 Lata de Atún y 1 Papa en Cubos",
-                    shortDesc = "Bowl fresco de 2 tazas de vegetales + 1 lata de atún en agua desalado + dados de papa refrigerada al limón.",
+                    medAlert = "Cierre de ingesta a las 19:00",
+                    title = "Ensalada de verduras (2 tazas) con 1 Lata de Atún y 1 Papa en cubos",
+                    shortDesc = "Bowl de pepinillo, tomate, vainitas al vapor, lechuga americana, 1 Papa Yungay fría en dados y 1 lata de Atún BELL'S desalada.",
                     macros = Macros(kcal = 285, prot = 32, carb = 31, fat = 2, fiber = 5),
                     ingredients = listOf(
-                        "1 lata completa (120 g escurridos) de Filete de Atún en Agua Bell's (enjuagada 10 seg en colador)",
-                        "1 unidad mediana (130 g) de Papa Blanca Yungay sancochada, refrigerada 12 h y cortada en cubos",
-                        "2 tazas de Verduras: 80 g de Pepinillo, 60 g de Tomate, 50 g de Vainitas cocidas al vapor, 60 g de Col/Lechuga",
-                        "Jugo de 1 limón sutil, ajo en polvo, perejil/orégano y pimienta"
+                        "1 lata de Filete de Atún en Agua BELL'S desalada al limón",
+                        "1 Papa Blanca Yungay mediana (130 g) sancochada y fría en dados",
+                        "Bowl de 2 tazas de verduras: 80 g de pepinillo, 60 g de tomate, 50 g de vainitas al vapor y 60 g de lechuga americana"
                     ),
                     steps = listOf(
-                        "En un bowl amplio mezcla las 2 tazas de verduras con los cubos de papa fría y el atún previamente desalado en colador.",
-                        "Aliña con jugo de limón recién exprimido, ajo en polvo y orégano."
+                        "Mezcla en un bowl 80 g de pepinillo, 60 g de tomate, 50 g de vainitas al vapor, 60 g de lechuga americana y 1 Papa Blanca Yungay mediana (130 g) sancochada y fría en dados.",
+                        "Corona con 1 lata de Filete de Atún en Agua BELL'S desalada en colador y aliñada con jugo de limón."
                     ),
-                    clinicalNote = "Cena limpia y alta en potasio vegetal para contrarrestar el sodio y mantener la presión arterial óptima durante el sueño."
+                    clinicalNote = "Cena alcalinizante rica en potasio vegetal para sostener el control de presión arterial durante la noche."
                 )
             )
         )

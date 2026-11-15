@@ -1,6 +1,7 @@
 package com.example.ui.screens
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,6 +27,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.CalendarViewWeek
 import androidx.compose.material.icons.filled.Check
@@ -38,6 +40,7 @@ import androidx.compose.material.icons.filled.NightsStay
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Card
@@ -47,6 +50,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -73,6 +77,7 @@ import com.example.data.Meal
 import com.example.data.MealSlot
 import com.example.ui.PlanUiState
 import com.example.ui.theme.Amber100
+import com.example.ui.theme.Amber50
 import com.example.ui.theme.Amber700
 import com.example.ui.theme.Emerald100
 import com.example.ui.theme.Emerald50
@@ -139,6 +144,11 @@ fun PlanScreen(
             item(key = "daily_quick_strip") {
                 DailyQuickSummaryCard(
                     day = uiState.selectedDay,
+                    consumedKcal = uiState.selectedDayConsumedKcal,
+                    consumedProt = uiState.selectedDayConsumedProt,
+                    consumedCarb = uiState.selectedDayConsumedCarb,
+                    consumedFat = uiState.selectedDayConsumedFat,
+                    consumedFiber = uiState.selectedDayConsumedFiber,
                     waterGlasses = uiState.selectedDayHealth.waterGlasses,
                     irbesartanTaken = uiState.selectedDayHealth.irbesartanTaken,
                     bisoprololTaken = uiState.selectedDayHealth.bisoprololTaken,
@@ -148,6 +158,10 @@ fun PlanScreen(
                     onToggleWorkout = { onToggleWorkout(uiState.selectedDayIndex) },
                     onIncrementWater = { onIncrementWater(uiState.selectedDayIndex) }
                 )
+            }
+
+            item(key = "night_prep_reminder") {
+                NightPrepReminderCard(day = uiState.selectedDay)
             }
 
             item(key = "search_and_slots") {
@@ -347,6 +361,11 @@ private fun DaySelectorCard(
 @Composable
 private fun DailyQuickSummaryCard(
     day: DayPlan,
+    consumedKcal: Int,
+    consumedProt: Int,
+    consumedCarb: Int,
+    consumedFat: Int,
+    consumedFiber: Int,
     waterGlasses: Int,
     irbesartanTaken: Boolean,
     bisoprololTaken: Boolean,
@@ -357,6 +376,10 @@ private fun DailyQuickSummaryCard(
     onIncrementWater: () -> Unit
 ) {
     val liters = String.format(Locale.US, "%.2f", waterGlasses * 0.25)
+    val kcalProgress by animateFloatAsState(
+        targetValue = if (day.totalKcal > 0) (consumedKcal.toFloat() / day.totalKcal).coerceIn(0f, 1f) else 0f,
+        label = "dailyKcalBar"
+    )
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -391,11 +414,77 @@ private fun DailyQuickSummaryCard(
                     color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Text(
-                        text = "${day.totalKcal} kcal • ${day.totalProt}g P • ${day.totalFiber}g Fibra",
+                        text = "Meta: ${day.totalKcal} kcal • ${day.totalProt}g P • ${day.totalFiber}g Fibra",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
                     )
+                }
+            }
+
+            // Fitia-style Consumed Macros Tracker
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = Emerald50.copy(alpha = 0.7f),
+                border = BorderStroke(1.dp, Emerald600.copy(alpha = 0.25f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "CONSUMO HOY (ESTILO FITIA)",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Emerald700
+                        )
+                        Text(
+                            text = "$consumedKcal / ${day.totalKcal} kcal",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Emerald900
+                        )
+                    }
+                    LinearProgressIndicator(
+                        progress = { kcalProgress },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(7.dp)
+                            .clip(RoundedCornerShape(50)),
+                        color = Emerald600,
+                        trackColor = Emerald100
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Prot: ${consumedProt}/${day.totalProt}g",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color(0xFF065F46)
+                        )
+                        Text(
+                            text = "Carbos: ${consumedCarb}/${day.totalCarb}g",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color(0xFF92400E)
+                        )
+                        Text(
+                            text = "Grasas: ${consumedFat}/${day.totalFat}g",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color(0xFF075985)
+                        )
+                        Text(
+                            text = "Fibra: ${consumedFiber}/${day.totalFiber}g",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color(0xFF065F46)
+                        )
+                    }
                 }
             }
 
@@ -500,6 +589,51 @@ private fun DailyQuickSummaryCard(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NightPrepReminderCard(day: DayPlan) {
+    Surface(
+        shape = RoundedCornerShape(16.dp),
+        color = Amber50,
+        border = BorderStroke(1.dp, Amber700.copy(alpha = 0.35f)),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Amber100),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Bedtime,
+                    contentDescription = null,
+                    tint = Amber700,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "PREPARACIÓN NOCTURNA (ALMIDÓN RESISTENTE / REMOJO)",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Amber700
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = day.nightPrepReminder,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF451A03)
+                )
             }
         }
     }
@@ -679,7 +813,7 @@ private fun MealItemCard(
             Box(
                 modifier = Modifier
                     .width(5.dp)
-                    .height(165.dp)
+                    .height(175.dp)
                     .background(visuals.accentStrip)
             )
 
@@ -695,24 +829,52 @@ private fun MealItemCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(visuals.pillBg)
-                            .padding(horizontal = 10.dp, vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = visuals.icon,
-                            contentDescription = null,
-                            tint = visuals.pillText,
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Text(
-                            text = "${meal.time} • ${meal.slotLabel}",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = visuals.pillText
-                        )
+                        Row(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(visuals.pillBg)
+                                .padding(horizontal = 10.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                        ) {
+                            Icon(
+                                imageVector = visuals.icon,
+                                contentDescription = null,
+                                tint = visuals.pillText,
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Text(
+                                text = "${meal.time} • ${meal.slotLabel}",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = visuals.pillText
+                            )
+                        }
+
+                        if (meal.timers.isNotEmpty()) {
+                            Row(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                                    .padding(horizontal = 7.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(3.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Timer,
+                                    contentDescription = null,
+                                    tint = Emerald700,
+                                    modifier = Modifier.size(12.dp)
+                                )
+                                Text(
+                                    text = "${meal.timers.size}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Emerald700
+                                )
+                            }
+                        }
                     }
 
                     IconButton(

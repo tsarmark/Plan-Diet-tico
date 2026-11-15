@@ -38,6 +38,15 @@ private data class FilterState(
     val activeModalMealId: String? = null
 )
 
+private data class PersistedDataBundle(
+    val mealIds: Set<String>,
+    val shopIds: Set<String>,
+    val healthMap: Map<Int, DailyHealthEntity>,
+    val ingKeys: Set<String>,
+    val currentWeightKg: Float,
+    val customBiomarkers: Map<String, String>
+)
+
 data class PlanUiState(
     val activeTab: AppTab = AppTab.PLAN,
     val selectedDayIndex: Int = 0,
@@ -53,6 +62,8 @@ data class PlanUiState(
     val checkedShoppingIds: Set<String> = emptySet(),
     val dailyHealthByDay: Map<Int, DailyHealthEntity> = emptyMap(),
     val checkedIngredientKeys: Set<String> = emptySet(),
+    val currentWeightKg: Float = 123.0f,
+    val customBiomarkers: Map<String, String> = emptyMap(),
     val days: List<DayPlan> = ClinicalCatalog.days,
     val shoppingItems: List<ShoppingItem> = ShoppingCatalog.items
 ) {
@@ -64,6 +75,25 @@ data class PlanUiState(
 
     val completedMealsCount: Int
         get() = completedMealIds.size
+
+    // Fitia-style consumed macros for the currently selected day
+    private val selectedDayCompletedMeals: List<Meal>
+        get() = selectedDay.meals.filter { completedMealIds.contains(it.id) }
+
+    val selectedDayConsumedKcal: Int
+        get() = selectedDayCompletedMeals.sumOf { it.macros.kcal }
+
+    val selectedDayConsumedProt: Int
+        get() = selectedDayCompletedMeals.sumOf { it.macros.prot }
+
+    val selectedDayConsumedCarb: Int
+        get() = selectedDayCompletedMeals.sumOf { it.macros.carb }
+
+    val selectedDayConsumedFat: Int
+        get() = selectedDayCompletedMeals.sumOf { it.macros.fat }
+
+    val selectedDayConsumedFiber: Int
+        get() = selectedDayCompletedMeals.sumOf { it.macros.fiber }
 
     val checkedShopCount: Int
         get() = shoppingItems.count { checkedShoppingIds.contains(it.id) }
@@ -95,13 +125,36 @@ class PlanViewModel(private val repository: PlanRepository) : ViewModel() {
     private val _snackbarEvents = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val snackbarEvents: SharedFlow<String> = _snackbarEvents.asSharedFlow()
 
+    private val persistedBundleFlow = combine(
+        combine(
+            repository.completedMealIds,
+            repository.checkedShoppingIds,
+            repository.dailyHealthMap
+        ) { mealIds, shopIds, healthMap ->
+            Triple(mealIds, shopIds, healthMap)
+        },
+        combine(
+            repository.checkedIngredientKeys,
+            repository.currentWeightKg,
+            repository.customBiomarkers
+        ) { ingKeys, weightKg, biomarkers ->
+            Triple(ingKeys, weightKg, biomarkers)
+        }
+    ) { firstTriple, secondTriple ->
+        PersistedDataBundle(
+            mealIds = firstTriple.first,
+            shopIds = firstTriple.second,
+            healthMap = firstTriple.third,
+            ingKeys = secondTriple.first,
+            currentWeightKg = secondTriple.second,
+            customBiomarkers = secondTriple.third
+        )
+    }
+
     val uiState: StateFlow<PlanUiState> = combine(
         filters,
-        repository.completedMealIds,
-        repository.checkedShoppingIds,
-        repository.dailyHealthMap,
-        repository.checkedIngredientKeys
-    ) { f, mealIds, shopIds, healthMap, ingKeys ->
+        persistedBundleFlow
+    ) { f, persisted ->
         val modalMeal = f.activeModalMealId?.let { id ->
             ClinicalCatalog.allMealsFlat.find { it.id == id }
         }
@@ -116,10 +169,12 @@ class PlanViewModel(private val repository: PlanRepository) : ViewModel() {
             shopSearchQuery = f.shopSearchQuery,
             hideCheckedShopItems = f.hideCheckedShopItems,
             activeModalMeal = modalMeal,
-            completedMealIds = mealIds,
-            checkedShoppingIds = shopIds,
-            dailyHealthByDay = healthMap,
-            checkedIngredientKeys = ingKeys
+            completedMealIds = persisted.mealIds,
+            checkedShoppingIds = persisted.shopIds,
+            dailyHealthByDay = persisted.healthMap,
+            checkedIngredientKeys = persisted.ingKeys,
+            currentWeightKg = persisted.currentWeightKg,
+            customBiomarkers = persisted.customBiomarkers
         )
     }.stateIn(
         scope = viewModelScope,
@@ -207,15 +262,19 @@ class PlanViewModel(private val repository: PlanRepository) : ViewModel() {
     }
 
     fun toggleShoppingCategoryAll(category: ShopCategory) {
-        val targetItems = ShoppingCatalog.items.filter {
-            category == ShopCategory.ALL || it.category == category
+        val targetItems = ShoppingCatalog.items.filter { item ->
+            when (category) {
+                ShopCategory.ALL -> true
+                ShopCategory.SEMANAL_FRESCOS -> item.isWeeklyReplenishment
+                else -> item.category == category
+            }
         }
         val checked = uiState.value.checkedShoppingIds
         val allChecked = targetItems.isNotEmpty() && targetItems.all { checked.contains(it.id) }
         viewModelScope.launch {
             repository.setShoppingItemsChecked(targetItems.map { it.id }, !allChecked)
             _snackbarEvents.tryEmit(
-                if (!allChecked) "Sección marcada en tu carrito" else "Sección desmarcada"
+                if (!allChecked) "Sección marcada en tu carrito Agora" else "Sección desmarcada"
             )
         }
     }
@@ -223,7 +282,7 @@ class PlanViewModel(private val repository: PlanRepository) : ViewModel() {
     fun clearAllShoppingChecks() {
         viewModelScope.launch {
             repository.clearShoppingChecks()
-            _snackbarEvents.tryEmit("Lista de compras desmarcada")
+            _snackbarEvents.tryEmit("Lista de compras Agora desmarcada")
         }
     }
 
@@ -275,6 +334,20 @@ class PlanViewModel(private val repository: PlanRepository) : ViewModel() {
             _snackbarEvents.tryEmit(
                 if (done) "Entreno 2x2 m (11:00–13:00) completado" else "Entreno marcado como pendiente"
             )
+        }
+    }
+
+    fun updateWeight(newWeightKg: Float) {
+        viewModelScope.launch {
+            repository.updateCurrentWeight(newWeightKg)
+            _snackbarEvents.tryEmit("Peso actualizado a ${String.format(java.util.Locale.US, "%.1f", newWeightKg)} kg")
+        }
+    }
+
+    fun updateBiomarker(markerId: String, newValue: String) {
+        viewModelScope.launch {
+            repository.updateBiomarker(markerId, newValue)
+            _snackbarEvents.tryEmit("Marcador clínico actualizado")
         }
     }
 

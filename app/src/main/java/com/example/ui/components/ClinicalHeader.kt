@@ -48,15 +48,22 @@ import com.example.ui.theme.Rose500
 import com.example.ui.theme.Sky400
 import com.example.ui.theme.Slate900
 import com.example.ui.theme.Slate950
+import java.util.Locale
 
 @Composable
 fun ClinicalHeader(
     completedMealsCount: Int,
+    currentWeightKg: Float = 123.0f,
+    customBiomarkers: Map<String, String> = emptyMap(),
     modifier: Modifier = Modifier
 ) {
     val headerBrush = Brush.linearGradient(
         colors = listOf(Slate900, Emerald900, Emerald950)
     )
+    val weightDisplay = String.format(Locale.US, "%.1f", currentWeightKg).removeSuffix(".0")
+    val insulinVal = customBiomarkers["insulin"] ?: "39.0"
+    val uricVal = customBiomarkers["uric"] ?: "6.65"
+    val tgpVal = customBiomarkers["tgp"] ?: "49.9"
 
     Column(
         modifier = modifier
@@ -119,7 +126,7 @@ fun ClinicalHeader(
                                 .padding(horizontal = 8.dp, vertical = 2.dp)
                         )
                         Text(
-                            text = stringResource(R.string.header_weight_goal),
+                            text = "$weightDisplay → 81 kg",
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White.copy(alpha = 0.88f),
                             modifier = Modifier
@@ -173,13 +180,13 @@ fun ClinicalHeader(
             ClinicalStatusPill(
                 icon = Icons.Filled.MonitorHeart,
                 iconTint = Amber500,
-                text = stringResource(R.string.status_insulin),
+                text = "Insulina: $insulinVal",
                 modifier = Modifier.weight(1f)
             )
             ClinicalStatusPill(
                 icon = Icons.Filled.LocalFireDepartment,
                 iconTint = Rose500,
-                text = stringResource(R.string.status_uric_tgp),
+                text = "Úrico: $uricVal | TGP: $tgpVal",
                 modifier = Modifier.weight(1.25f)
             )
             ClinicalStatusPill(

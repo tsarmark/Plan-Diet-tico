@@ -23,6 +23,11 @@ data class Macros(
     val fiber: Int
 )
 
+data class RecipeTimerSpec(
+    val label: String,
+    val durationSeconds: Int
+)
+
 data class Meal(
     val id: String,
     val dayIndex: Int,
@@ -37,7 +42,8 @@ data class Meal(
     val macros: Macros,
     val ingredients: List<String>,
     val steps: List<String>,
-    val clinicalNote: String
+    val clinicalNote: String,
+    val timers: List<RecipeTimerSpec> = emptyList()
 )
 
 data class DayPlan(
@@ -46,6 +52,7 @@ data class DayPlan(
     val shortName: String,
     val optionLabel: String,
     val focusTag: String,
+    val nightPrepReminder: String,
     val meals: List<Meal>
 ) {
     val totalKcal: Int get() = meals.sumOf { it.macros.kcal }
@@ -56,22 +63,33 @@ data class DayPlan(
 }
 
 enum class ShopCategory(val code: String, val chipTitle: String, val sectionHeader: String) {
-    ALL("all", "Todos (37)", "Todos los Insumos"),
+    ALL("all", "Todos (35)", "Todos los Productos de Agora"),
+    SEMANAL_FRESCOS("frescos", "Reposición Semanal (S/ 88.60)", "Compra Semanal (Semanas 2, 3 y 4)"),
     CARNES_LACTEOS("1", "Carnes y Lácteos (9)", "1. Carnes, Pescados, Huevos y Lácteos"),
-    ABARROTES_PAN("2", "Queso, Pan y Abarrotes (10)", "2. Queso, Jamón, Panes y Abarrotes"),
-    FRUTAS("3", "Frutas (5)", "3. Frutas Exactas"),
-    VERDURAS_TUBERCULOS("4", "Verduras y Tubérculos (13)", "4. Tubérculos y Verduras Individuales")
+    ABARROTES_PAN("2", "Queso, Pan y Despensa (10)", "2. Queso, Jamón, Panes y Abarrotes"),
+    FRUTAS("3", "Frutas (5)", "3. Frutas en Agora (Plaza Vea)"),
+    VERDURAS_TUBERCULOS("4", "Tubérculos y Verduras (11)", "4. Tubérculos y Verduras Frescas")
 }
 
 data class ShoppingItem(
     val id: String,
+    val skuLabel: String,
     val orderNumber: Int,
     val category: ShopCategory,
     val name: String,
     val quantity: String,
     val priceSoles: Double,
-    val unitPriceRef: String?,
-    val usageNote: String
+    val weeklyCostSoles: Double,
+    val durationNote: String,
+    val usageNote: String,
+    val isWeeklyReplenishment: Boolean
+)
+
+data class AgoraPortionGuide(
+    val doctorRequest: String,
+    val agoraProduct: String,
+    val priceText: String,
+    val homeInstruction: String
 )
 
 enum class BiomarkerTone {
@@ -82,8 +100,9 @@ enum class BiomarkerTone {
 }
 
 data class BiomarkerTarget(
+    val id: String,
     val label: String,
-    val valueText: String,
+    val defaultValueText: String,
     val subUnit: String,
     val targetText: String,
     val tone: BiomarkerTone

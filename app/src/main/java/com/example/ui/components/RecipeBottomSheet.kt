@@ -1,9 +1,11 @@
 package com.example.ui.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,24 +31,38 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.HealthAndSafety
 import androidx.compose.material.icons.filled.Medication
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material.icons.filled.Scale
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,6 +75,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.R
 import com.example.data.Meal
+import com.example.data.RecipeTimerSpec
 import com.example.ui.theme.Amber100
 import com.example.ui.theme.Amber500
 import com.example.ui.theme.Amber700
@@ -66,12 +83,17 @@ import com.example.ui.theme.Emerald100
 import com.example.ui.theme.Emerald300
 import com.example.ui.theme.Emerald50
 import com.example.ui.theme.Emerald600
+import com.example.ui.theme.Emerald700
 import com.example.ui.theme.Emerald900
 import com.example.ui.theme.Emerald950
+import com.example.ui.theme.Sky100
 import com.example.ui.theme.Sky400
-import com.example.ui.theme.Sky50
+import com.example.ui.theme.Sky600
+import com.example.ui.theme.Sky700
 import com.example.ui.theme.Slate900
 import com.example.ui.theme.Slate950
+import java.util.Locale
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -232,6 +254,14 @@ fun RecipeBottomSheet(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // Interactive Clinical & Cooking Timers
+                if (meal.timers.isNotEmpty()) {
+                    ClinicalTimerSection(
+                        mealId = meal.id,
+                        timers = meal.timers
+                    )
+                }
+
                 // Section 1: Checkable Ingredients
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Row(
@@ -493,6 +523,184 @@ fun RecipeBottomSheet(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ClinicalTimerSection(
+    mealId: String,
+    timers: List<RecipeTimerSpec>
+) {
+    var selectedIdx by remember(mealId) { mutableIntStateOf(0) }
+    val activeSpec = timers.getOrElse(selectedIdx) { timers.first() }
+    var remainingSeconds by remember(mealId, selectedIdx) { mutableIntStateOf(activeSpec.durationSeconds) }
+    var isRunning by remember(mealId, selectedIdx) { mutableStateOf(false) }
+
+    LaunchedEffect(mealId, selectedIdx, isRunning) {
+        while (isRunning && remainingSeconds > 0) {
+            delay(1000L)
+            remainingSeconds -= 1
+            if (remainingSeconds <= 0) {
+                isRunning = false
+            }
+        }
+    }
+
+    val mins = remainingSeconds / 60
+    val secs = remainingSeconds % 60
+    val formattedTime = String.format(Locale.US, "%02d:%02d", mins, secs)
+    val timerProgress by animateFloatAsState(
+        targetValue = if (activeSpec.durationSeconds > 0) {
+            remainingSeconds.toFloat() / activeSpec.durationSeconds
+        } else 0f,
+        label = "timerBar"
+    )
+
+    Surface(
+        shape = RoundedCornerShape(18.dp),
+        color = Sky100.copy(alpha = 0.45f),
+        border = BorderStroke(1.dp, Sky600.copy(alpha = 0.35f)),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = Sky600
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Timer,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .size(15.dp)
+                    )
+                }
+                Text(
+                    text = "CRONÓMETRO CLÍNICO Y DE COCCIÓN",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Sky700
+                )
+            }
+
+            if (timers.size > 1) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    timers.forEachIndexed { idx, spec ->
+                        FilterChip(
+                            selected = idx == selectedIdx,
+                            onClick = { selectedIdx = idx },
+                            label = {
+                                Text(
+                                    text = spec.label,
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                            },
+                            shape = RoundedCornerShape(10.dp),
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Sky700,
+                                selectedLabelColor = Color.White,
+                                containerColor = Color.White
+                            )
+                        )
+                    }
+                }
+            } else {
+                Text(
+                    text = activeSpec.label,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF0C4A6E)
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = if (remainingSeconds == 0) "¡Tiempo cumplido!" else formattedTime,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = if (remainingSeconds == 0) Emerald700 else Color(0xFF0F172A)
+                    )
+                    Text(
+                        text = if (isRunning) "Contando en vivo…" else "Listo para iniciar",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color(0xFF475569)
+                    )
+                }
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = {
+                            if (remainingSeconds == 0) {
+                                remainingSeconds = activeSpec.durationSeconds
+                                isRunning = true
+                            } else {
+                                isRunning = !isRunning
+                            }
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isRunning) Amber700 else Sky700,
+                            contentColor = Color.White
+                        ),
+                        modifier = Modifier.testTag("recipe_timer_play_btn")
+                    ) {
+                        Icon(
+                            imageVector = if (isRunning) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = if (isRunning) "Pausar" else "Iniciar",
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+
+                    OutlinedButton(
+                        onClick = {
+                            isRunning = false
+                            remainingSeconds = activeSpec.durationSeconds
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        border = BorderStroke(1.dp, Sky700)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.RestartAlt,
+                            contentDescription = "Reiniciar cronómetro",
+                            tint = Sky700,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
+            }
+
+            LinearProgressIndicator(
+                progress = { timerProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(50)),
+                color = if (remainingSeconds == 0) Emerald600 else Sky600,
+                trackColor = Color.White
+            )
         }
     }
 }

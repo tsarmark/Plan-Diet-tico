@@ -5,9 +5,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.data.ClinicalCatalog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -22,11 +25,13 @@ class PlanRepository(private val context: Context) {
         val COMPLETED_MEALS = stringSetPreferencesKey("completed_meals")
         val CHECKED_SHOPPING = stringSetPreferencesKey("checked_shopping")
         val CHECKED_INGREDIENTS = stringSetPreferencesKey("checked_ingredients")
+        val CURRENT_WEIGHT_KG = floatPreferencesKey("current_weight_kg")
 
         fun waterKey(dayIndex: Int) = intPreferencesKey("day_${dayIndex}_water")
         fun irbKey(dayIndex: Int) = booleanPreferencesKey("day_${dayIndex}_irb")
         fun bisKey(dayIndex: Int) = booleanPreferencesKey("day_${dayIndex}_bis")
         fun workoutKey(dayIndex: Int) = booleanPreferencesKey("day_${dayIndex}_workout")
+        fun biomarkerKey(id: String) = stringPreferencesKey("biomarker_$id")
     }
 
     private val dataStore: DataStore<Preferences>
@@ -40,6 +45,16 @@ class PlanRepository(private val context: Context) {
 
     val checkedIngredientKeys: Flow<Set<String>> = dataStore.data
         .map { prefs -> prefs[Keys.CHECKED_INGREDIENTS] ?: emptySet() }
+
+    val currentWeightKg: Flow<Float> = dataStore.data
+        .map { prefs -> prefs[Keys.CURRENT_WEIGHT_KG] ?: 123.0f }
+
+    val customBiomarkers: Flow<Map<String, String>> = dataStore.data
+        .map { prefs ->
+            ClinicalCatalog.biomarkers.mapNotNull { marker ->
+                prefs[Keys.biomarkerKey(marker.id)]?.let { marker.id to it }
+            }.toMap()
+        }
 
     val dailyHealthMap: Flow<Map<Int, DailyHealthEntity>> = dataStore.data
         .map { prefs ->
@@ -123,6 +138,22 @@ class PlanRepository(private val context: Context) {
             prefs[Keys.workoutKey(dayIndex)] = next
         }
         return next
+    }
+
+    suspend fun updateCurrentWeight(weightKg: Float) {
+        dataStore.edit { prefs ->
+            prefs[Keys.CURRENT_WEIGHT_KG] = weightKg.coerceIn(45f, 250f)
+        }
+    }
+
+    suspend fun updateBiomarker(id: String, valueText: String) {
+        dataStore.edit { prefs ->
+            if (valueText.isBlank()) {
+                prefs.remove(Keys.biomarkerKey(id))
+            } else {
+                prefs[Keys.biomarkerKey(id)] = valueText.trim()
+            }
+        }
     }
 
     suspend fun resetWeeklyProgress() {

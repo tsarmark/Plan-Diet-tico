@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -24,7 +25,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.ContentCut
 import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
@@ -76,12 +80,17 @@ import com.example.ui.PlanUiState
 import com.example.ui.theme.Amber100
 import com.example.ui.theme.Amber50
 import com.example.ui.theme.Amber700
+import com.example.ui.theme.Emerald100
 import com.example.ui.theme.Emerald300
 import com.example.ui.theme.Emerald50
 import com.example.ui.theme.Emerald600
 import com.example.ui.theme.Emerald700
+import com.example.ui.theme.Emerald900
 import com.example.ui.theme.Rose50
 import com.example.ui.theme.Rose700
+import com.example.ui.theme.Sky100
+import com.example.ui.theme.Sky50
+import com.example.ui.theme.Sky700
 import com.example.ui.theme.Slate900
 import java.util.Locale
 
@@ -99,13 +108,19 @@ fun ShoppingScreen(
     modifier: Modifier = Modifier
 ) {
     var showClearConfirm by remember { mutableStateOf(false) }
+    var showPortionGuide by remember { mutableStateOf(false) }
 
     val query = uiState.shopSearchQuery.trim().lowercase(Locale.getDefault())
     val filteredItems = uiState.shoppingItems.filter { item ->
-        val catOk = uiState.shopCategory == ShopCategory.ALL || item.category == uiState.shopCategory
+        val catOk = when (uiState.shopCategory) {
+            ShopCategory.ALL -> true
+            ShopCategory.SEMANAL_FRESCOS -> item.isWeeklyReplenishment
+            else -> item.category == uiState.shopCategory
+        }
         val hideOk = !uiState.hideCheckedShopItems || !uiState.checkedShoppingIds.contains(item.id)
         val queryOk = query.isEmpty() ||
             item.name.lowercase(Locale.getDefault()).contains(query) ||
+            item.skuLabel.lowercase(Locale.getDefault()).contains(query) ||
             item.quantity.lowercase(Locale.getDefault()).contains(query) ||
             item.usageNote.lowercase(Locale.getDefault()).contains(query)
         catOk && hideOk && queryOk
@@ -126,7 +141,7 @@ fun ShoppingScreen(
             onDismissRequest = { showClearConfirm = false },
             title = { Text("¿Desmarcar todos los insumos?") },
             text = {
-                Text("Se limpiarán las casillas marcadas en la lista de compras de Plaza Vea para iniciar una nueva compra.")
+                Text("Se limpiarán las casillas marcadas en la lista de compras de Plaza Vea vía Agora para iniciar una nueva compra.")
             },
             confirmButton = {
                 Button(
@@ -166,10 +181,19 @@ fun ShoppingScreen(
                     checkedSoles = uiState.checkedShopSoles,
                     pendingSoles = uiState.pendingShopSoles,
                     totalSoles = ShoppingCatalog.totalBudgetSoles,
+                    weeklyReplenishmentSoles = ShoppingCatalog.weeklyReplenishmentSoles,
+                    netWeeklyConsumedSoles = ShoppingCatalog.netWeeklyConsumedSoles,
                     hideChecked = uiState.hideCheckedShopItems,
                     onToggleHideChecked = onToggleHideChecked,
                     onCopyKeepList = onCopyKeepList,
                     onShareList = onShareList
+                )
+            }
+
+            item(key = "shop_portioning_guide") {
+                PortioningGuideCard(
+                    expanded = showPortionGuide,
+                    onToggleExpanded = { showPortionGuide = !showPortionGuide }
                 )
             }
 
@@ -265,7 +289,7 @@ fun ShoppingScreen(
                             )
                             Text(
                                 text = if (uiState.hideCheckedShopItems && uiState.checkedShopCount == uiState.shoppingItems.size) {
-                                    "¡Compraste los 37 insumos de la semana!"
+                                    "¡Compraste los 35 insumos del catálogo Agora!"
                                 } else {
                                     "No hay insumos que coincidan con el filtro."
                                 },
@@ -349,6 +373,8 @@ private fun ShoppingHeroCard(
     checkedSoles: Double,
     pendingSoles: Double,
     totalSoles: Double,
+    weeklyReplenishmentSoles: Double,
+    netWeeklyConsumedSoles: Double,
     hideChecked: Boolean,
     onToggleHideChecked: () -> Unit,
     onCopyKeepList: () -> Unit,
@@ -398,7 +424,7 @@ private fun ShoppingHeroCard(
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
-                            text = "PLAZA VEA • 37 INSUMOS EXACTOS",
+                            text = "PLAZA VEA VÍA AGORA • 28 SKUs (35 ÍTEMS)",
                             style = MaterialTheme.typography.labelSmall,
                             color = Amber700
                         )
@@ -408,15 +434,49 @@ private fun ShoppingHeroCard(
 
             Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 Text(
-                    text = "Compras Semanales Exactas — Plan Lic. Isabel Ríos",
+                    text = "Lista de Compras Real — Plaza Vea vía Agora",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color(0xFF0F172A)
                 )
                 Text(
-                    text = "Toca cada insumo para marcarlo en tu carrito mientras compras. Incluye cantidades exactas, precios referenciales y el uso clínico en tu menú.",
+                    text = "Precios y presentaciones auditadas en Agora. Los empaques grandes de pavita, quesos y abarrotes rinden de 2 a 28 semanas.",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color(0xFF475569)
+                )
+            }
+
+            // 3-Column Financial Summary from PDF Section 4
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                FinancialMetricBox(
+                    label = "SEMANA 1 (CAJA)",
+                    value = "S/ ${String.format(Locale.US, "%.2f", totalSoles)}",
+                    sub = "28 SKUs completos",
+                    bg = Amber50,
+                    border = Amber100,
+                    valueColor = Amber700,
+                    modifier = Modifier.weight(1f)
+                )
+                FinancialMetricBox(
+                    label = "SEMANAS 2–4",
+                    value = "S/ ${String.format(Locale.US, "%.2f", weeklyReplenishmentSoles)}",
+                    sub = "Reposición frescos",
+                    bg = Sky50,
+                    border = Sky100,
+                    valueColor = Sky700,
+                    modifier = Modifier.weight(1f)
+                )
+                FinancialMetricBox(
+                    label = "COSTO NETO/SEM",
+                    value = "S/ ${String.format(Locale.US, "%.2f", netWeeklyConsumedSoles)}",
+                    sub = "Prorrateado real",
+                    bg = Emerald50,
+                    border = Emerald100,
+                    valueColor = Emerald700,
+                    modifier = Modifier.weight(1f)
                 )
             }
 
@@ -436,7 +496,7 @@ private fun ShoppingHeroCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "En tu carrito ($checkedCount/$totalCount ítems):",
+                            text = "En tu carrito Agora ($checkedCount/$totalCount ítems):",
                             style = MaterialTheme.typography.labelMedium,
                             color = Color(0xFF334155)
                         )
@@ -556,6 +616,165 @@ private fun ShoppingHeroCard(
 }
 
 @Composable
+private fun FinancialMetricBox(
+    label: String,
+    value: String,
+    sub: String,
+    bg: Color,
+    border: Color,
+    valueColor: Color,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        shape = RoundedCornerShape(14.dp),
+        color = bg,
+        border = BorderStroke(1.dp, border),
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = Color(0xFF475569),
+                maxLines = 1
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.ExtraBold,
+                color = valueColor,
+                maxLines = 1
+            )
+            Text(
+                text = sub,
+                style = MaterialTheme.typography.labelSmall,
+                color = Color(0xFF64748B),
+                maxLines = 1
+            )
+        }
+    }
+}
+
+@Composable
+private fun PortioningGuideCard(
+    expanded: Boolean,
+    onToggleExpanded: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, Emerald600.copy(alpha = 0.35f))
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onToggleExpanded() }
+                    .padding(horizontal = 14.dp, vertical = 12.dp)
+                    .testTag("toggle_portion_guide_btn"),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(10.dp),
+                        color = Emerald100
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ContentCut,
+                            contentDescription = null,
+                            tint = Emerald900,
+                            modifier = Modifier
+                                .padding(7.dp)
+                                .size(18.dp)
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = "Guía de Fraccionamiento en Casa (Tabla 1 Agora)",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = "Cómo cortar y congelar carnes y queso comprados en Agora",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+                Icon(
+                    imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                    contentDescription = null,
+                    tint = Emerald700
+                )
+            }
+
+            AnimatedVisibility(visible = expanded) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                    ShoppingCatalog.portionGuides.forEach { guide ->
+                        Surface(
+                            shape = RoundedCornerShape(14.dp),
+                            color = Emerald50.copy(alpha = 0.55f),
+                            border = BorderStroke(1.dp, Emerald600.copy(alpha = 0.25f)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(3.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = guide.agoraProduct,
+                                        style = MaterialTheme.typography.labelLarge,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = Emerald900,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    Text(
+                                        text = guide.priceText,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Emerald700
+                                    )
+                                }
+                                Text(
+                                    text = "Plan semanal: ${guide.doctorRequest}",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Color(0xFF0F172A)
+                                )
+                                Text(
+                                    text = "En casa: ${guide.homeInstruction}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color(0xFF334155)
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun ShopCategoryCard(
     category: ShopCategory,
     items: List<ShoppingItem>,
@@ -564,6 +783,7 @@ private fun ShopCategoryCard(
     onToggleCategoryAll: () -> Unit
 ) {
     val categoryTotal = items.sumOf { it.priceSoles }
+    val categoryWeekly = items.sumOf { it.weeklyCostSoles }
     val checkedInCategory = items.count { checkedIds.contains(it.id) }
 
     Card(
@@ -591,7 +811,7 @@ private fun ShopCategoryCard(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "$checkedInCategory/${items.size} marcados • Subtotal S/ ${String.format(Locale.US, "%.2f", categoryTotal)}",
+                        text = "$checkedInCategory/${items.size} marcados • Caja S/ ${String.format(Locale.US, "%.2f", categoryTotal)} • Semanal S/ ${String.format(Locale.US, "%.2f", categoryWeekly)}",
                         style = MaterialTheme.typography.labelSmall,
                         color = Emerald300
                     )
@@ -668,6 +888,43 @@ private fun ShoppingItemRow(
                 verticalAlignment = Alignment.Top
             ) {
                 Column(modifier = Modifier.weight(1f)) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = item.skuLabel,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Slate900,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Amber100)
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        )
+                        if (item.isWeeklyReplenishment) {
+                            Text(
+                                text = "Compra semanal",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Sky700,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(Sky100)
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        } else {
+                            Text(
+                                text = "Dura ${item.durationNote}",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Emerald700,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(Emerald100)
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(3.dp))
                     Text(
                         text = item.name,
                         style = MaterialTheme.typography.titleSmall,
@@ -706,19 +963,17 @@ private fun ShoppingItemRow(
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }
-                    if (item.unitPriceRef != null) {
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = item.unitPriceRef,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "S/ ${String.format(Locale.US, "%.2f", item.weeklyCostSoles)}/sem",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
 
             Text(
-                text = "Uso: ${item.usageNote}",
+                text = "Plan: ${item.usageNote}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

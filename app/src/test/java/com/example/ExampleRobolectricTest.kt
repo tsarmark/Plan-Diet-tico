@@ -25,19 +25,23 @@ class ExampleRobolectricTest {
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun `verify app name and complete clinical and Plaza Vea catalogs`() {
+    fun `verify app name and complete clinical and Agora Plaza Vea catalogs`() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val appName = context.getString(R.string.app_name)
         assertEquals("Plan Dietético", appName)
 
         assertEquals(7, ClinicalCatalog.days.size)
         assertEquals(35, ClinicalCatalog.allMealsFlat.size)
-        assertEquals(37, ShoppingCatalog.items.size)
+        assertEquals(35, ShoppingCatalog.items.size)
+        assertEquals(6, ShoppingCatalog.portionGuides.size)
         assertEquals(9, ShoppingCatalog.items.count { it.category == ShopCategory.CARNES_LACTEOS })
         assertEquals(10, ShoppingCatalog.items.count { it.category == ShopCategory.ABARROTES_PAN })
         assertEquals(5, ShoppingCatalog.items.count { it.category == ShopCategory.FRUTAS })
-        assertEquals(13, ShoppingCatalog.items.count { it.category == ShopCategory.VERDURAS_TUBERCULOS })
-        assertTrue(ShoppingCatalog.buildKeepFormattedList(setOf("sh_01")).contains("[x] Pechuga Entera de Pollo Fresca Plaza Vea"))
+        assertEquals(11, ShoppingCatalog.items.count { it.category == ShopCategory.VERDURAS_TUBERCULOS })
+        assertEquals(264.31, ShoppingCatalog.totalBudgetSoles, 0.01)
+        assertEquals(88.60, ShoppingCatalog.weeklyReplenishmentSoles, 0.01)
+        assertEquals(116.45, ShoppingCatalog.netWeeklyConsumedSoles, 0.01)
+        assertTrue(ShoppingCatalog.buildKeepFormattedList(setOf("sh_01")).contains("[x] SKU #1 • Filete de Pechuga de Pollo SADIA Bolsa 1Kg"))
     }
 
     @Test

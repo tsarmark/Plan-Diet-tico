@@ -133,7 +133,11 @@ fun PlanDieteticoApp(viewModel: PlanViewModel) {
                 }
 
                 Column(modifier = Modifier.weight(1f)) {
-                    ClinicalHeader(completedMealsCount = uiState.completedMealsCount)
+                    ClinicalHeader(
+                        completedMealsCount = uiState.completedMealsCount,
+                        currentWeightKg = uiState.currentWeightKg,
+                        customBiomarkers = uiState.customBiomarkers
+                    )
 
                     Box(modifier = Modifier.weight(1f)) {
                         ActiveTabContent(
@@ -202,12 +206,12 @@ private fun ActiveTabContent(
             onClearAllChecks = viewModel::clearAllShoppingChecks,
             onCopyKeepList = {
                 val text = ShoppingCatalog.buildKeepFormattedList(uiState.checkedShoppingIds)
-                copyToClipboard(context, "Compras Plaza Vea", text)
-                viewModel.notifyMessage("37 insumos copiados para Google Keep")
+                copyToClipboard(context, "Compras Agora Plaza Vea", text)
+                viewModel.notifyMessage("Lista Agora Plaza Vea copiada para Google Keep")
             },
             onShareList = {
                 val text = ShoppingCatalog.buildKeepFormattedList(uiState.checkedShoppingIds)
-                sharePlainText(context, "Compras Semanales Plaza Vea", text)
+                sharePlainText(context, "Compras Agora Plaza Vea (S/ 264.31)", text)
             }
         )
 
@@ -219,6 +223,29 @@ private fun ActiveTabContent(
             onToggleIrbesartan = viewModel::toggleIrbesartan,
             onToggleBisoprolol = viewModel::toggleBisoprolol,
             onToggleWorkout = viewModel::toggleWorkout,
+            onUpdateWeight = viewModel::updateWeight,
+            onUpdateBiomarker = viewModel::updateBiomarker,
+            onOpenGoogleFit = {
+                openAppOrPlayStore(
+                    context = context,
+                    packages = listOf("com.google.android.apps.fitness"),
+                    fallbackUrl = "https://play.google.com/store/apps/details?id=com.google.android.apps.fitness"
+                )
+            },
+            onOpenXiaomiScale = {
+                openAppOrPlayStore(
+                    context = context,
+                    packages = listOf("com.xiaomi.smarthome", "com.xiaomi.hm.health", "com.xiaomi.wearable"),
+                    fallbackUrl = "https://play.google.com/store/apps/details?id=com.xiaomi.smarthome"
+                )
+            },
+            onOpenFitia = {
+                openAppOrPlayStore(
+                    context = context,
+                    packages = listOf("com.fitia.app"),
+                    fallbackUrl = "https://play.google.com/store/apps/details?id=com.fitia.app"
+                )
+            },
             onResetWeek = viewModel::resetWeeklyProgress,
             onCheckUpdate = {
                 openExternalUrl(
@@ -380,6 +407,26 @@ private fun sharePlainText(context: Context, subject: String, text: String) {
         putExtra(Intent.EXTRA_TEXT, text)
     }
     context.startActivity(Intent.createChooser(sendIntent, subject))
+}
+
+private fun openAppOrPlayStore(
+    context: Context,
+    packages: List<String>,
+    fallbackUrl: String
+) {
+    val pm = context.packageManager
+    for (pkg in packages) {
+        val launchIntent = pm.getLaunchIntentForPackage(pkg)
+        if (launchIntent != null) {
+            try {
+                context.startActivity(launchIntent)
+                return
+            } catch (_: Exception) {
+                // continue to next package or fallback
+            }
+        }
+    }
+    openExternalUrl(context, fallbackUrl) {}
 }
 
 private fun openExternalUrl(context: Context, url: String, onFailure: () -> Unit) {

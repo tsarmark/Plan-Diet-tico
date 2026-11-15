@@ -16,22 +16,26 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.LocalDrink
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MonitorHeart
+import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.filled.WaterDrop
-import com.example.BuildConfig
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -41,7 +45,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -59,7 +65,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.BuildConfig
 import com.example.R
 import com.example.data.BiomarkerTarget
 import com.example.data.BiomarkerTone
@@ -72,6 +81,7 @@ import com.example.ui.theme.Emerald100
 import com.example.ui.theme.Emerald50
 import com.example.ui.theme.Emerald600
 import com.example.ui.theme.Emerald700
+import com.example.ui.theme.Emerald900
 import com.example.ui.theme.Indigo100
 import com.example.ui.theme.Indigo700
 import com.example.ui.theme.Rose100
@@ -92,11 +102,22 @@ fun HealthScreen(
     onToggleIrbesartan: (Int) -> Unit,
     onToggleBisoprolol: (Int) -> Unit,
     onToggleWorkout: (Int) -> Unit,
+    onUpdateWeight: (Float) -> Unit,
+    onUpdateBiomarker: (String, String) -> Unit,
+    onOpenGoogleFit: () -> Unit,
+    onOpenXiaomiScale: () -> Unit,
+    onOpenFitia: () -> Unit,
     onResetWeek: () -> Unit,
     onCheckUpdate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showResetDialog by remember { mutableStateOf(false) }
+    var showWeightDialog by remember { mutableStateOf(false) }
+    var weightInputText by remember(uiState.currentWeightKg) {
+        mutableStateOf(String.format(Locale.US, "%.1f", uiState.currentWeightKg))
+    }
+    var editingMarker by remember { mutableStateOf<BiomarkerTarget?>(null) }
+    var markerInputText by remember { mutableStateOf("") }
 
     val selectedDay = uiState.selectedDay
     val health = uiState.selectedDayHealth
@@ -112,7 +133,7 @@ fun HealthScreen(
             onDismissRequest = { showResetDialog = false },
             title = { Text("¿Reiniciar progreso semanal?") },
             text = {
-                Text("Se pondrán en cero las comidas completadas, los vasos de agua y las tomas de medicación de la semana. Tu lista de compras se mantendrá intacta.")
+                Text("Se pondrán en cero las comidas completadas, los vasos de agua y las tomas de medicación de la semana. Tu lista de compras, tu peso y tus marcadores se mantendrán intactos.")
             },
             confirmButton = {
                 Button(
@@ -133,6 +154,88 @@ fun HealthScreen(
         )
     }
 
+    if (showWeightDialog) {
+        AlertDialog(
+            onDismissRequest = { showWeightDialog = false },
+            title = { Text("Registrar Peso Corporal (kg)") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Ingresa el peso registrado hoy en tu báscula Xiaomi (Meta: de 123.0 kg a 81.0 kg):",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    OutlinedTextField(
+                        value = weightInputText,
+                        onValueChange = { weightInputText = it },
+                        singleLine = true,
+                        label = { Text("Peso actual (kg)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        val parsed = weightInputText.replace(',', '.').toFloatOrNull()
+                        if (parsed != null && parsed in 40f..250f) {
+                            onUpdateWeight(parsed)
+                            showWeightDialog = false
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Emerald700)
+                ) {
+                    Text("Guardar Peso")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showWeightDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+    editingMarker?.let { marker ->
+        AlertDialog(
+            onDismissRequest = { editingMarker = null },
+            title = { Text("Actualizar ${marker.label}") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Valor basal (04/11/2026): ${marker.defaultValueText} ${marker.subUnit}\n${marker.targetText}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    OutlinedTextField(
+                        value = markerInputText,
+                        onValueChange = { markerInputText = it },
+                        singleLine = true,
+                        label = { Text("Nuevo resultado (${marker.subUnit})") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (markerInputText.isNotBlank()) {
+                            onUpdateBiomarker(marker.id, markerInputText.trim())
+                            editingMarker = null
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Emerald700)
+                ) {
+                    Text("Guardar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { editingMarker = null }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -145,6 +248,24 @@ fun HealthScreen(
             contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
+            // 0. Weight Progress (123 -> 81 kg) + Google Fit / Xiaomi Home / Fitia Hub
+            item(key = "weight_and_ecosystem_card") {
+                WeightAndEcosystemCard(
+                    currentWeightKg = uiState.currentWeightKg,
+                    onOpenWeightDialog = {
+                        weightInputText = String.format(Locale.US, "%.1f", uiState.currentWeightKg)
+                        showWeightDialog = true
+                    },
+                    onStepWeight = { delta ->
+                        val next = (uiState.currentWeightKg + delta).coerceIn(50f, 200f)
+                        onUpdateWeight(next)
+                    },
+                    onOpenGoogleFit = onOpenGoogleFit,
+                    onOpenXiaomiScale = onOpenXiaomiScale,
+                    onOpenFitia = onOpenFitia
+                )
+            }
+
             // Compact Day Selector for Health Tracking
             item(key = "health_day_selector") {
                 Card(
@@ -302,7 +423,6 @@ fun HealthScreen(
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
-                                // Quick -1 / +1 stepper in 7th slot or row below
                                 OutlinedIconButton(
                                     onClick = { onAdjustWater(uiState.selectedDayIndex, 1) },
                                     modifier = Modifier
@@ -432,7 +552,7 @@ fun HealthScreen(
                 }
             }
 
-            // 3. Clinical Biomarkers & Reversal Targets
+            // 3. Editable Clinical Biomarkers & Reversal Targets
             item(key = "biomarkers_card") {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -462,14 +582,14 @@ fun HealthScreen(
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
-                            Column {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Tus Marcadores Clínicos y Metas",
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.ExtraBold
                                 )
                                 Text(
-                                    text = "Basal (04/11/2026) vs. Objetivo de Reversión",
+                                    text = "Toca cualquier marcador para actualizar tus análisis de laboratorio",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -482,8 +602,14 @@ fun HealthScreen(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 pair.forEach { marker ->
+                                    val activeVal = uiState.customBiomarkers[marker.id] ?: marker.defaultValueText
                                     BiomarkerTile(
                                         marker = marker,
+                                        displayValue = activeVal,
+                                        onClick = {
+                                            markerInputText = activeVal
+                                            editingMarker = marker
+                                        },
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
@@ -656,6 +782,224 @@ fun HealthScreen(
 }
 
 @Composable
+private fun WeightAndEcosystemCard(
+    currentWeightKg: Float,
+    onOpenWeightDialog: () -> Unit,
+    onStepWeight: (Float) -> Unit,
+    onOpenGoogleFit: () -> Unit,
+    onOpenXiaomiScale: () -> Unit,
+    onOpenFitia: () -> Unit
+) {
+    val startWeight = 123.0f
+    val goalWeight = 81.0f
+    val lostKg = (startWeight - currentWeightKg).coerceAtLeast(0f)
+    val remainingKg = (currentWeightKg - goalWeight).coerceAtLeast(0f)
+    val progressTarget = ((startWeight - currentWeightKg) / (startWeight - goalWeight)).coerceIn(0f, 1f)
+    val animatedWeightProgress by animateFloatAsState(targetValue = progressTarget, label = "weightProg")
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, Emerald600.copy(alpha = 0.35f))
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(Emerald100),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.MonitorWeight,
+                            contentDescription = null,
+                            tint = Emerald700,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = "Evolución de Peso Corporal",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                        Text(
+                            text = "Inicial: 123.0 kg • Meta clínica: 81.0 kg",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                Surface(
+                    onClick = onOpenWeightDialog,
+                    shape = RoundedCornerShape(14.dp),
+                    color = Emerald700,
+                    contentColor = Color.White,
+                    modifier = Modifier.testTag("open_weight_dialog_btn")
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = null,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Text(
+                            text = "${String.format(Locale.US, "%.1f", currentWeightKg)} kg",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                }
+            }
+
+            LinearProgressIndicator(
+                progress = { animatedWeightProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(9.dp)
+                    .clip(RoundedCornerShape(50)),
+                color = Emerald600,
+                trackColor = Emerald100
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Bajado: -${String.format(Locale.US, "%.1f", lostKg)} kg (${(animatedWeightProgress * 100).toInt()}%)",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Emerald700
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "Faltan ${String.format(Locale.US, "%.1f", remainingKg)} kg",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Surface(
+                        onClick = { onStepWeight(-0.5f) },
+                        shape = RoundedCornerShape(8.dp),
+                        color = Emerald50,
+                        border = BorderStroke(1.dp, Emerald600.copy(alpha = 0.35f))
+                    ) {
+                        Text(
+                            text = "-0.5 kg",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Emerald900,
+                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 4.dp)
+                        )
+                    }
+                }
+            }
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+            Text(
+                text = "CONEXIÓN RÁPIDA CON TUS APPS DE SALUD",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                OutlinedButton(
+                    onClick = onOpenGoogleFit,
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag("open_google_fit_btn")
+                ) {
+                    Text(
+                        text = "Google Fit",
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp)
+                    )
+                }
+
+                OutlinedButton(
+                    onClick = onOpenXiaomiScale,
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag("open_xiaomi_btn")
+                ) {
+                    Text(
+                        text = "Xiaomi Báscula",
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp)
+                    )
+                }
+
+                OutlinedButton(
+                    onClick = onOpenFitia,
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag("open_fitia_btn")
+                ) {
+                    Text(
+                        text = "Fitia App",
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun WaterGlassButton(
     glassNumber: Int,
     isActive: Boolean,
@@ -759,6 +1103,8 @@ private fun HealthChecklistTile(
 @Composable
 private fun BiomarkerTile(
     marker: BiomarkerTarget,
+    displayValue: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val (bg, border, labelColor) = when (marker.tone) {
@@ -769,26 +1115,39 @@ private fun BiomarkerTile(
     }
 
     Surface(
+        onClick = onClick,
         shape = RoundedCornerShape(16.dp),
         color = bg,
         border = BorderStroke(1.dp, border),
-        modifier = modifier
+        modifier = modifier.testTag("biomarker_tile_${marker.id}")
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(3.dp)
         ) {
-            Text(
-                text = marker.label.uppercase(),
-                style = MaterialTheme.typography.labelSmall,
-                color = labelColor
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = marker.label.uppercase(),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = labelColor
+                )
+                Icon(
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = "Editar ${marker.label}",
+                    tint = labelColor.copy(alpha = 0.75f),
+                    modifier = Modifier.size(12.dp)
+                )
+            }
             Row(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = marker.valueText,
+                    text = displayValue,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color(0xFF0F172A)

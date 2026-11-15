@@ -6,124 +6,130 @@ object ClinicalCatalog {
             dayIndex = 4,
             dayName = "Viernes",
             shortName = "Vie",
-            optionLabel = "Opción 5 — Lic. Isabel Ríos",
-            focusTag = "Granola Casera Sin Azúcar y Alta Saciedad",
+            optionLabel = "Opción 5 de la Doctora",
+            focusTag = "Granola Casera Sin Azúcar y Ahorro",
+            nightPrepReminder = "Para mañana Sábado: Deja cocidos 50 g en crudo de Arroz Integral BELL'S a la jardinera (con vainita, zanahoria y choclo) y sepáralo en refrigeración para el almuerzo del sábado.",
             meals = listOf(
                 Meal(
                     id = "vie_desayuno",
                     dayIndex = 4,
                     dayName = "Viernes",
-                    optionLabel = "Opción 5 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 5 de la Doctora",
                     slot = MealSlot.DESAYUNO,
                     time = "08:00 AM",
                     slotLabel = "Desayuno",
-                    medAlert = "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
-                    title = "Jugo de fresas con leche light con stevia + 1 Pan integral con pollo (80 g) y apio",
-                    shortDesc = "Batido de fresa con leche light + sándwich integral de pechuga deshilachada con apio y yogur 0%.",
+                    medAlert = "Tomar Irbesartán 150 mg al terminar + 12 min caminata estática",
+                    title = "Jugo de fresas con leche light con stevia + 1 Pan con pollo y apio",
+                    shortDesc = "Sándwich en Pan Integral BELL'S con 80 g de Pechuga SADIA deshilachada, apio y Yogurt Slim 0% + licuado de 100 g fresa con leche light.",
                     macros = Macros(kcal = 415, prot = 34, carb = 47, fat = 8, fiber = 7),
                     ingredients = listOf(
-                        "100 g de Fresa entera congelada Bell's / ARO",
-                        "60 ml de Leche Evaporada Light Bell's + 180 ml de agua + 3 gotas de Stevia",
-                        "80 g de Pechuga de pollo sancochada y deshilachada",
-                        "1 tallo grande (35 g) de Apio fresco picado en medias lunas muy finas",
-                        "1 cucharada (15 g) de Yogurt Gloria Slim 0% + jugo de medio limón, orégano y pimienta",
-                        "2 rebanadas (55 g) de Pan de Molde Integral Bell's tostado"
+                        "80 g de Filete de Pechuga SADIA deshilachada",
+                        "1 tallo grande (35 g) de Apio picado fino + 1 cda de Yogurt Gloria Slim 0%, limón y pimienta",
+                        "2 rebanadas de Pan Integral BELL'S tostado",
+                        "Licuado: 100 g de Fresa Congelada BELL'S + 60 ml de Leche Light + 180 ml de agua y stevia"
                     ),
                     steps = listOf(
-                        "Mezcla los 80 g de pollo deshilachado con el apio picado, la cucharada de yogurt 0% (en reemplazo de mayonesa), gotas de limón y pimienta. Arma el sándwich en pan integral tostado.",
-                        "Licúa las fresas con la leche light diluida y stevia.",
-                        "Come primero el sándwich de pollo y apio y luego toma el batido de fresa. Toma tu Irbesartán 150 mg."
+                        "Mezcla 80 g de Filete de Pechuga SADIA deshilachada con 1 tallo grande (35 g) de Apio picado fino, 1 cda de Yogurt Gloria Slim 0%, limón y pimienta en 2 rebanadas de Pan Integral BELL'S.",
+                        "Come primero el sándwich y acompaña al final con el licuado de 100 g de Fresa Congelada BELL'S + 60 ml de Leche Light + 180 ml de agua y stevia.",
+                        "Toma tu Irbesartán 150 mg al terminar."
                     ),
-                    clinicalNote = "El apio aporta ftálidos naturales (como el 3-n-butilftálido) que relajan el músculo liso de las arterias, actuando en sinergia con tu Irbesartán de las 08:00 AM."
+                    clinicalNote = "Los ftálidos naturales del apio relajan el endotelio vascular actuando en sinergia con tu Irbesartán 150 mg.",
+                    timers = listOf(
+                        RecipeTimerSpec("Caminata post-desayuno (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "vie_mm",
                     dayIndex = 4,
                     dayName = "Viernes",
-                    optionLabel = "Opción 5 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 5 de la Doctora",
                     slot = MealSlot.MEDIA_MANANA,
                     time = "10:30 AM",
                     slotLabel = "Pre-entreno",
-                    medAlert = "Entrenar entre 11:00 AM y 13:00 PM en tu habitación de 2x2 m",
-                    title = "1 Mandarina W Murcott entera",
-                    shortDesc = "Hidratación y antioxidantes cítricos pre-entreno.",
+                    medAlert = "Entrenar en tu espacio de 2x2 m entre 11:00 AM y 13:00 PM",
+                    title = "1 Mandarina W Murcott mediana (100 g)",
+                    shortDesc = "Antioxidantes cítricos e hidratación antes del entrenamiento.",
                     macros = Macros(kcal = 50, prot = 1, carb = 12, fat = 0, fiber = 2),
                     ingredients = listOf(
-                        "1 unidad mediana (100 g) de Mandarina en gajos",
-                        "400 ml de Agua pura"
+                        "1 Mandarina W Murcott mediana (100 g)"
                     ),
                     steps = listOf(
-                        "Consumir a las 10:30 AM antes de entrenar."
+                        "Consumir en gajos enteros a las 10:30 AM antes de entrenar."
                     ),
-                    clinicalNote = "Aporta vitamina C, la cual compite favorablemente en el riñón para facilitar la excreción de ácido úrico."
+                    clinicalNote = "La vitamina C favorece la excreción tubular de ácido úrico."
                 ),
                 Meal(
                     id = "vie_almuerzo",
                     dayIndex = 4,
                     dayName = "Viernes",
-                    optionLabel = "Opción 5 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 5 de la Doctora",
                     slot = MealSlot.ALMUERZO,
                     time = "14:00 (2:00 PM)",
                     slotLabel = "Almuerzo Principal",
-                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática (14:20)",
-                    title = "2 Tazas de Ensalada + 1.5 Latas de Atún al Limón + 1 Camote al Horno + 1 Manzana",
-                    shortDesc = "Zarza proteica de atún en agua Bell's con apio y cebolla + camote amarillo al horno + ensalada.",
+                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática",
+                    title = "Zarza de Atún al Limón (1.5 latas) + 1 Camote al Horno + 2 Tazas de Ensalada + 1 Manzana",
+                    shortDesc = "1.5 latas de Filete de Atún en Agua BELL'S desalado (1 nueva + 1/2 del lunes) + 160 g camote al horno/sartén + 2 tazas de ensalada.",
                     macros = Macros(kcal = 530, prot = 46, carb = 68, fat = 5, fiber = 10),
                     ingredients = listOf(
-                        "1.5 latas (180 g escurridos = 1 lata nueva + la 1/2 lata guardada del lunes) de Filete de Atún en Agua Bell's",
-                        "1 unidad mediana (160 g en crudo) de Camote Amarillo cortado en rodajas o bastones con cáscara",
-                        "Ensalada (2 tazas): 100 g de Col/Lechuga, 60 g de Tomate, 40 g de Cebolla roja en pluma lavada, 30 g de Apio picado, 50 g de Pepinillo y jugo de 1 limón sutil",
-                        "1 unidad mediana (120 g) de Manzana Israel con cáscara"
+                        "1.5 latas (150–180 g escurridos = 1 lata nueva + la 1/2 lata guardada del lunes) de Filete de Atún en Agua BELL'S desalado en colador",
+                        "160 g de Camote Amarillo en rodajas horneado o dorado en sartén seca con canela/orégano",
+                        "Ensalada (2 tazas): 100 g de lechuga americana, 60 g de tomate, 40 g de cebolla roja lavada, 30 g de apio picado, 50 g de pepinillo y jugo de 1 limón",
+                        "Postre: 1 Manzana Israel (120 g)"
                     ),
                     steps = listOf(
-                        "Enjuaga el atún durante 10 segundos en colador bajo el chorro de agua para retirar el sodio.",
-                        "Cocina las rodajas de camote en horno, freidora de aire o sartén antiadherente tapada a fuego bajo con una pizca de canela u orégano hasta que doren.",
-                        "Come primero las 2 tazas de ensalada fresca con el atún al limón y apio, y termina con el camote al horno y la manzana. Toma tu Bisoprolol 2.5 mg."
+                        "Enjuaga en colador durante 10 segundos las 1.5 latas de Filete de Atún en Agua BELL'S para retirar el sodio.",
+                        "Hornea o dora en sartén antiadherente seca con tapa los 160 g de Camote Amarillo en rodajas con canela u orégano.",
+                        "Come 1° las 2 tazas de ensalada fresca con la zarza de atún al limón y apio, y 2° el camote dorado y la manzana. Toma tu Bisoprolol 2.5 mg."
                     ),
-                    clinicalNote = "Al usar la media lata restante del lunes llegas a 46 g de proteína magra en el almuerzo post-entreno sin desperdiciar alimento ni presupuesto."
+                    clinicalNote = "Aprovechar la media lata guardada del lunes entrega 46 g de proteína limpia en el almuerzo post-entreno con cero desperdicio.",
+                    timers = listOf(
+                        RecipeTimerSpec("Caminata post-almuerzo (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "vie_mt",
                     dayIndex = 4,
                     dayName = "Viernes",
-                    optionLabel = "Opción 5 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 5 de la Doctora",
                     slot = MealSlot.MEDIA_TARDE,
                     time = "16:30 (4:30 PM)",
                     slotLabel = "Media Tarde",
                     medAlert = null,
-                    title = "20 g de Frutos Secos Sin Sal",
-                    shortDesc = "Grasas cardioprotectoras sin sodio.",
+                    title = "20 g de Maní Tostado Natural Sin Sal VILLA NATURA",
+                    shortDesc = "Aporte de fitoesteroles y grasas monoinsaturadas sin sal.",
                     macros = Macros(kcal = 115, prot = 5, carb = 3, fat = 10, fiber = 2),
                     ingredients = listOf(
-                        "20 g de Maní Tostado Natural Sin Sal Villa Natura"
+                        "20 g de Maní Tostado Natural Sin Sal VILLA NATURA"
                     ),
                     steps = listOf(
-                        "Consumir a las 16:30 con agua."
+                        "Consumir 20 g pesados en balanza a las 16:30 con agua."
                     ),
-                    clinicalNote = "Mantiene el colesterol LDL controlado gracias a sus fitoesteroles."
+                    clinicalNote = "Mantiene estable la saciedad vespertina y reduce el colesterol LDL."
                 ),
                 Meal(
                     id = "vie_cena",
                     dayIndex = 4,
                     dayName = "Viernes",
-                    optionLabel = "Opción 5 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 5 de la Doctora",
                     slot = MealSlot.CENA,
                     time = "19:00 (7:00 PM)",
                     slotLabel = "Cena Ligera",
-                    medAlert = "Cierre de ventana nutricional a las 19:00",
-                    title = "1 Vaso Grande (250 ml) de Yogurt 0% + Granola Casera Sin Azúcar",
-                    shortDesc = "Yogurt Gloria Slim 0% con 3 cdas de avena tostada en sartén con chía, canela, stevia y 10 g frutos secos.",
+                    medAlert = "Cierre de ingesta a las 19:00",
+                    title = "1 Vaso de Yogurt 0% + Granola Casera \"Sin Azúcar\"",
+                    shortDesc = "250 ml de Yogurt GLORIA Slim Triple Zero 0% con 25 g avena + 5 g chía + 10 g maní sin sal tostados 4 min en sartén seca con canela.",
                     macros = Macros(kcal = 295, prot = 18, carb = 31, fat = 9, fiber = 6),
                     ingredients = listOf(
-                        "250 ml de Yogurt Gloria Slim Triple Zero (0% grasa, 0% azúcar)",
-                        "Granola Casera Sin Azúcar: 25 g (3 cdas) de tu Avena Grano de Oro + 5 g (1 cdta) de Chía Ecoandino + 10 g de tu Maní Natural picado + canela en polvo y 2 gotas de Stevia",
-                        "(Opcional post-entreno): 2 claras de huevo duras aparte si deseas sumar +7 g de proteína pura"
+                        "250 ml de Yogurt GLORIA Slim Triple Zero 0%",
+                        "Granola Casera: 25 g (3 cdas) de tu Avena GRANO DE ORO + 5 g de Chía ECOANDINO + 10 g de tu Maní sin sal VILLA NATURA picado + canela y 2 gotas de stevia"
                     ),
                     steps = listOf(
-                        "TRUCO DE AHORRO Y SALUD: En una sartén seca antiadherente a fuego medio-bajo, tuesta durante 4 minutos los 25 g de avena en hojuelas, 5 g de chía y 10 g de maní picado con canela en polvo revolviendo constantemente hasta que quede crujiente.",
-                        "Retira del fuego, deja enfriar 2 minutos para que gane crocancia y sírvelo encima de los 250 ml de Yogurt Gloria Slim 0% frío."
+                        "En lugar de gastar S/ 14.20 en granola comercial con maltitol, tuesta en sartén seca por 4 minutos 25 g (3 cdas) de tu Avena + 5 g de Chía + 10 g de tu Maní sin sal picado con canela y 2 gotas de stevia.",
+                        "Deja enfriar 2 minutos para que quede crujiente y sírvela sobre 250 ml de Yogurt GLORIA Slim Triple Zero 0%."
                     ),
-                    clinicalNote = "Las granolas comerciales \"sin azúcar\" cuestan S/ 14.20 y suelen usar maltitol o aceites refinados; hacerla en 4 minutos con tu misma avena, chía y maní tiene menor carga glucémica y te ahorra S/ 14.20."
+                    clinicalNote = "Ahorras S/ 14.20 evitando maltitol y aceites refinados de las granolas comerciales mientras sumas fibra soluble y Omega-3.",
+                    timers = listOf(
+                        RecipeTimerSpec("Tostado granola en sartén (4 min)", 4 * 60)
+                    )
                 )
             )
         ),
@@ -131,122 +137,131 @@ object ClinicalCatalog {
             dayIndex = 5,
             dayName = "Sábado",
             shortName = "Sáb",
-            optionLabel = "Opción 6 — Lic. Isabel Ríos",
-            focusTag = "Estofado Casero sin Aceite y Betaglucanos",
+            optionLabel = "Opción 6 de la Doctora",
+            focusTag = "Estofado Peruano sin Aceite",
+            nightPrepReminder = "Para mañana Domingo: Pasa 200 g de Lomito Saltado de Cerdo REDONDOS del congelador al refrigerador para el almuerzo dominical.",
             meals = listOf(
                 Meal(
                     id = "sab_desayuno",
                     dayIndex = 5,
                     dayName = "Sábado",
-                    optionLabel = "Opción 6 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 6 de la Doctora",
                     slot = MealSlot.DESAYUNO,
                     time = "08:00 AM",
                     slotLabel = "Desayuno",
-                    medAlert = "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
+                    medAlert = "Tomar Irbesartán 150 mg al terminar + 12 min caminata estática",
                     title = "1 Taza de avena con canela + 1/2 manzana, 1/2 plátano, 30 g arándanos, 1 cda chía + 2 huevos duros",
-                    shortDesc = "Porridge sensibilizador con chía y arándanos precedido por 2 huevos duros.",
+                    shortDesc = "Come primero los 2 Huevos Pardos BELL'S duros y luego el porridge de 40 g Avena + 10 g Chía + manzana, plátano y 30 g arándanos.",
                     macros = Macros(kcal = 485, prot = 21, carb = 58, fat = 18, fiber = 11),
                     ingredients = listOf(
-                        "40 g en crudo de Avena Hojuela Entera Grano de Oro hervida en 250 ml de agua y canela",
-                        "1 cucharada sopera (10 g) de Semillas de Chía Negra Ecoandino",
-                        "1/2 Manzana Israel picada (65 g) + 1/2 Plátano en rodajas (55 g) + 30 g de Arándanos frescos",
-                        "2 unidades (110 g) de Huevos Pardos Bell's duros"
+                        "2 Huevos Pardos BELL'S duros (comer primero)",
+                        "40 g de Avena GRANO DE ORO + 10 g de Chía Negra ECOANDINO",
+                        "1/2 Manzana Israel (65 g) + 1/2 Plátano de seda (55 g) + 30 g de Blueberries BELL'S FRESCOS"
                     ),
                     steps = listOf(
-                        "Come primero los 2 huevos duros.",
-                        "Hierve la avena 4 minutos con agua y canela, apaga el fuego, incorpora la cucharada de chía y sirve con la manzana, el medio plátano y los arándanos encima. Toma tu Irbesartán 150 mg."
+                        "Come primero los 2 Huevos Pardos BELL'S duros.",
+                        "Luego consume el porridge hervido 4 min de 40 g de Avena + 10 g de Chía + 1/2 manzana + 1/2 plátano + 30 g de arándanos.",
+                        "Toma tu Irbesartán 150 mg al terminar."
                     ),
-                    clinicalNote = "Segundo día semanal de carga de betaglucanos de avena + colina de 2 yemas para seguir limpiando la grasa hepática (TGP 49.9 U/L)."
+                    clinicalNote = "Segunda carga semanal de colina (2 yemas) y betaglucanos para acelerar la limpieza de grasa hepática (TGP 49.9 U/L).",
+                    timers = listOf(
+                        RecipeTimerSpec("Hervor avena (4 min)", 4 * 60),
+                        RecipeTimerSpec("Caminata post-desayuno (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "sab_mm",
                     dayIndex = 5,
                     dayName = "Sábado",
-                    optionLabel = "Opción 6 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 6 de la Doctora",
                     slot = MealSlot.MEDIA_MANANA,
                     time = "10:30 AM",
                     slotLabel = "Pre-entreno",
-                    medAlert = "Entrenar entre 11:00 AM y 13:00 PM en tu habitación de 2x2 m",
-                    title = "1 Mandarina W Murcott entera",
-                    shortDesc = "Energía ligera antes de la sesión de sábado.",
+                    medAlert = "Entrenar en tu espacio de 2x2 m entre 11:00 AM y 13:00 PM",
+                    title = "1 Mandarina W Murcott mediana (100 g)",
+                    shortDesc = "Hidratación y flavonoides cítricos pre-entreno.",
                     macros = Macros(kcal = 50, prot = 1, carb = 12, fat = 0, fiber = 2),
                     ingredients = listOf(
-                        "1 unidad mediana (100 g) de Mandarina en gajos"
+                        "1 Mandarina W Murcott mediana (100 g)"
                     ),
                     steps = listOf(
                         "Consumir en gajos enteros a las 10:30 AM antes de entrenar."
                     ),
-                    clinicalNote = "Aporta flavonoides cítricos e hidratación celular."
+                    clinicalNote = "Aporta vitamina C e hidratación celular."
                 ),
                 Meal(
                     id = "sab_almuerzo",
                     dayIndex = 5,
                     dayName = "Sábado",
-                    optionLabel = "Opción 6 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 6 de la Doctora",
                     slot = MealSlot.ALMUERZO,
                     time = "14:00 (2:00 PM)",
                     slotLabel = "Almuerzo Principal",
-                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática (14:20)",
-                    title = "2 Tazas de Ensalada + Estofado de Pollo sin Aceite (200 g) + 1 Taza de Arroz a la Jardinera + 1 Manzana",
-                    shortDesc = "Estofado peruano de pechuga en salsa natural de tomate, zanahoria y laurel + arroz integral a la jardinera.",
+                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 12 min caminata estática",
+                    title = "Estofado de Pollo sin Aceite (200 g) + 1 Taza de Arroz a la Jardinera + 2 Tazas de Ensalada + 1 Manzana",
+                    shortDesc = "200 g Filete de Pechuga SADIA en salsa natural de tomate, cebolla, zanahoria y laurel + arroz integral a la jardinera + ensalada.",
                     macros = Macros(kcal = 560, prot = 53, carb = 66, fat = 7, fiber = 10),
                     ingredients = listOf(
-                        "200 g en crudo de Pechuga de Pollo sin piel en trozos grandes",
-                        "Salsa natural del estofado: 60 g de Tomate maduro licuado, 40 g de Cebolla roja picada, 1 diente de ajo, 30 g de Zanahoria en rodajas, 1 hoja de laurel, orégano y páprika",
-                        "Arroz a la jardinera (1 taza): 50 g en crudo de Arroz Integral Bell's cocido con 30 g de Vainitas picadas, 20 g de Zanahoria en cubitos y 20 g de Choclo desgranado",
-                        "Ensalada (2 tazas): 120 g de Col/Lechuga fresca + 80 g de Pepinillo en rodajas con jugo de 1 limón",
-                        "1 unidad pequeña (110 g) de Manzana Israel"
+                        "200 g de Filete de Pechuga SADIA en trozos",
+                        "Salsa natural: 60 g de tomate licuado, 40 g de cebolla picada, 1 diente de ajo, 30 g de zanahoria en rodajas, laurel, páprika y orégano",
+                        "Arroz a la jardinera (1 taza): 50 g en crudo de Arroz Integral BELL'S cocido con 30 g de vainitas picadas, 20 g de zanahoria en cubitos y 20 g de choclo desgranado",
+                        "Ensalada (2 tazas): 120 g de lechuga americana + 80 g de pepinillo al limón",
+                        "Postre: 1 Manzana Israel (110 g)"
                     ),
                     steps = listOf(
-                        "En una olla antiadherente caliente sin aceite, sella los 200 g de pollo con ajo, comino y páprika por 2 minutos.",
-                        "Agrega la cebolla picada, el tomate licuado, las rodajas de zanahoria, la hoja de laurel y 1/2 taza de agua. Tapa y cocina a fuego lento por 20 minutos hasta formar un jugo espeso natural.",
-                        "Come primero las 2 tazas de ensalada fresca al limón, luego el estofado de pollo y al final la taza de arroz integral a la jardinera y la manzana. Toma tu Bisoprolol 2.5 mg."
+                        "Sella en olla antiadherente sin aceite los 200 g de Filete de Pechuga SADIA en trozos con ajo, páprika y orégano; añade el tomate licuado, cebolla, zanahoria en rodajas, laurel y 1/2 taza de agua cocinando tapado por 20 min.",
+                        "Come 1° las 2 tazas de ensalada de lechuga y pepinillo al limón, 2° el estofado de pollo y 3° la taza de arroz integral a la jardinera y la manzana.",
+                        "Toma tu Bisoprolol fumarato 2.5 mg al terminar."
                     ),
-                    clinicalNote = "El licopeno del tomate cocido sin aceites refinados reduce la oxidación de las partículas de colesterol LDL, protegiendo tu endotelio vascular."
+                    clinicalNote = "El licopeno del tomate cocido sin aceites refinados evita la oxidación del colesterol LDL.",
+                    timers = listOf(
+                        RecipeTimerSpec("Estofado a fuego lento (20 min)", 20 * 60),
+                        RecipeTimerSpec("Caminata post-almuerzo (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "sab_mt",
                     dayIndex = 5,
                     dayName = "Sábado",
-                    optionLabel = "Opción 6 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 6 de la Doctora",
                     slot = MealSlot.MEDIA_TARDE,
                     time = "16:30 (4:30 PM)",
                     slotLabel = "Media Tarde",
                     medAlert = null,
-                    title = "1 Vaso (180 ml) de Yogurt Gloria Slim 0%",
-                    shortDesc = "Colación proteica vespertina 0% azúcar.",
+                    title = "1 vaso (180 ml) de Yogurt GLORIA Slim Triple Zero 0%",
+                    shortDesc = "Colación proteica 0% grasa y 0% azúcar.",
                     macros = Macros(kcal = 75, prot = 8, carb = 9, fat = 0, fiber = 0),
                     ingredients = listOf(
-                        "1 vaso (180 ml) de Yogurt Gloria Slim Triple Zero"
+                        "1 vaso (180 ml) de Yogurt GLORIA Slim Triple Zero 0%"
                     ),
                     steps = listOf(
                         "Servir frío a las 16:30."
                     ),
-                    clinicalNote = "Favorece la saciedad y el control del ácido úrico."
+                    clinicalNote = "Sostiene la saciedad de la tarde y ayuda a depurar ácido úrico."
                 ),
                 Meal(
                     id = "sab_cena",
                     dayIndex = 5,
                     dayName = "Sábado",
-                    optionLabel = "Opción 6 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 6 de la Doctora",
                     slot = MealSlot.CENA,
                     time = "19:00 (7:00 PM)",
                     slotLabel = "Cena Ligera",
-                    medAlert = "Cierre de ventana nutricional a las 19:00",
-                    title = "Ensalada de Tomate y Cebolla (1.5 tazas) + Pollo en Cuadritos (150 g) + 3/4 Taza de Choclo",
-                    shortDesc = "Pollo salteado al ajo y orégano en cubos + ensalada fresca de tomate y cebolla + choclo.",
+                    medAlert = "Cierre de ingesta a las 19:00",
+                    title = "Ensalada de tomate + Pollo en cuadritos (150 g) + Choclo",
+                    shortDesc = "150 g de Pechuga de Pollo SADIA salteada en cuadritos con ajo y orégano + 150 g tomate en gajos con cebolla + 3/4 taza de Choclo BELL'S.",
                     macros = Macros(kcal = 320, prot = 37, carb = 28, fat = 5, fiber = 4),
                     ingredients = listOf(
-                        "150 g en crudo de Pechuga de Pollo cortada en cuadritos",
-                        "1.5 tazas de Ensalada de Tomate: 150 g de Tomate en gajos + 30 g de Cebolla en pluma lavada + jugo de limón y orégano",
-                        "3/4 de taza (100 g) de Choclo Desgranado Bell's sancochado",
-                        "1 diente de ajo picado, comino y pimienta"
+                        "150 g de Pechuga de Pollo SADIA en cuadritos",
+                        "150 g de Tomate en gajos con cebolla y limón",
+                        "3/4 taza (100 g) de Choclo Desgranado BELL'S sancochado",
+                        "Ajo, orégano, gotas de limón y 1 cda de agua"
                     ),
                     steps = listOf(
-                        "Saltea los 150 g de pollo en cuadritos en tu sartén antiadherente con ajo picado, orégano, gotas de limón y 1 cucharada de agua durante 6 minutos.",
-                        "Sirve junto a la ensalada de tomate al orégano y el choclo sancochado."
+                        "Saltea 150 g de Pechuga de Pollo SADIA en cuadritos en sartén antiadherente con ajo, orégano, gotas de limón y 1 cda de agua por 6 minutos.",
+                        "Acompaña con 150 g de tomate en gajos con cebolla y limón + 3/4 taza (100 g) de Choclo Desgranado BELL'S sancochado."
                     ),
-                    clinicalNote = "Cena ligera de rápida digestión que evita el reflujo y permite un sueño profundo reparador (clave para mantener tu cortisol AM en su óptimo 7.93 ug/dL)."
+                    clinicalNote = "Cena ligera que facilita un descanso profundo y repara el tejido muscular."
                 )
             )
         ),
@@ -254,124 +269,133 @@ object ClinicalCatalog {
             dayIndex = 6,
             dayName = "Domingo",
             shortName = "Dom",
-            optionLabel = "Opción 7 — Lic. Isabel Ríos",
+            optionLabel = "Opción 7 de la Doctora",
             focusTag = "Lomo de Cerdo Magro y Pasta Al Dente",
+            nightPrepReminder = "Para mañana Lunes: Deja sancochada y refrigerando 12 h 1 Papa Blanca Yungay mediana (150 g) para la cena del lunes y 55 g en crudo de Arroz Integral BELL'S para el almuerzo del lunes.",
             meals = listOf(
                 Meal(
                     id = "dom_desayuno",
                     dayIndex = 6,
                     dayName = "Domingo",
-                    optionLabel = "Opción 7 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 7 de la Doctora",
                     slot = MealSlot.DESAYUNO,
                     time = "08:00 AM",
                     slotLabel = "Desayuno",
-                    medAlert = "Tomar Irbesartán 150 mg al terminar (08:15 AM) + 12 min caminata estática",
-                    title = "1 Taza de leche light + 1 Pan con 30 g queso fresco y 1 lámina jamón de pavita + 2 Mandarinas",
-                    shortDesc = "Sándwich mixto saludable de queso fresco light y jamón de pavita San Fernando + leche tibia + 2 mandarinas.",
+                    medAlert = "Tomar Irbesartán 150 mg al terminar + 12 min caminata estática",
+                    title = "1 Taza de leche + 1 Pan con queso fresco y jamón de pavita + 2 mandarinas",
+                    shortDesc = "Sándwich en Pan Integral BELL'S con 30 g Queso Fresco BELL'S desalado y 1 lámina de Jamón de Pavita SAN FERNANDO + leche tibia + 2 mandarinas.",
                     macros = Macros(kcal = 420, prot = 25, carb = 56, fat = 8, fiber = 6),
                     ingredients = listOf(
-                        "60 ml de Leche Evaporada Light Bell's + 180 ml de agua caliente con canela",
-                        "2 rebanadas (55 g) de Pan de Molde Integral Bell's tostado",
-                        "30 g de Queso Fresco Light Bonlé (enjuagado 10 seg en agua para bajar sodio)",
-                        "1 lámina (20 g) de Jamón de Pavita San Fernando",
-                        "2 unidades medianas (180 g) de Mandarina W Murcott en gajos"
+                        "2 rebanadas de Pan Integral BELL'S tostado",
+                        "30 g de Queso Fresco BELL'S (pasado por agua) + 1 lámina (20 g) de Jamón de Pavita SAN FERNANDO (Paquete 100g) dorada en sartén seca",
+                        "1 taza de leche tibia (60 ml Leche Light GLORIA + 180 ml agua con canela)",
+                        "2 Mandarinas W Murcott en gajos (180 g)"
                     ),
                     steps = listOf(
-                        "Pasa la lámina de jamón de pavita 20 segundos por sartén seca y arma tu sándwich en el pan integral tostado junto con los 30 g de queso fresco light desalado y orégano.",
-                        "Acompaña con la taza de leche tibia con canela y termina con las 2 mandarinas en gajos. Toma tu Irbesartán 150 mg."
+                        "Arma tu sándwich en 2 rebanadas de Pan Integral BELL'S con 30 g de Queso Fresco BELL'S (pasado por agua) y 1 lámina (20 g) de Jamón de Pavita SAN FERNANDO (Paquete 100g) dorada en sartén seca.",
+                        "Acompaña con 1 taza de leche tibia (60 ml Leche Light + 180 ml agua con canela) y termina con 2 Mandarinas en gajos.",
+                        "Toma tu Irbesartán 150 mg al terminar."
                     ),
-                    clinicalNote = "Al enjuagar el queso fresco y usar 1 lámina de jamón de pavita, disfrutas del desayuno dominical de la doctora manteniendo el sodio total del plato debajo de 400 mg."
+                    clinicalNote = "Desalar el queso fresco por 10 segundos mantiene controlado el sodio matutino en sinergia con el Irbesartán.",
+                    timers = listOf(
+                        RecipeTimerSpec("Caminata post-desayuno (12 min)", 12 * 60)
+                    )
                 ),
                 Meal(
                     id = "dom_mm",
                     dayIndex = 6,
                     dayName = "Domingo",
-                    optionLabel = "Opción 7 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 7 de la Doctora",
                     slot = MealSlot.MEDIA_MANANA,
                     time = "10:30 AM",
                     slotLabel = "Pre-entreno",
-                    medAlert = "Caminata recreativa o sesión de movilidad articular (11:00 AM)",
-                    title = "1 Manzana Israel pequeña con cáscara",
-                    shortDesc = "Pectina soluble antes del almuerzo dominical.",
+                    medAlert = "Sesión de movilidad o entrenamiento en 2x2 m (11:00 AM)",
+                    title = "1 Manzana Israel pequeña (110 g) con cáscara",
+                    shortDesc = "Pectina soluble para moderar el apetito antes del almuerzo dominical.",
                     macros = Macros(kcal = 60, prot = 0, carb = 15, fat = 0, fiber = 3),
                     ingredients = listOf(
-                        "1 unidad pequeña (110 g) de Manzana Israel entera con cáscara"
+                        "1 Manzana Israel pequeña (110 g) con cáscara"
                     ),
                     steps = listOf(
-                        "Lavar y comer con cáscara a las 10:30 AM."
+                        "Lavar y comer entera con cáscara a las 10:30 AM."
                     ),
-                    clinicalNote = "Prepara el tránsito intestinal y reduce el apetito voraz antes del almuerzo con pasta."
+                    clinicalNote = "Prepara la microbiota intestinal y aporta saciedad previa al almuerzo."
                 ),
                 Meal(
                     id = "dom_almuerzo",
                     dayIndex = 6,
                     dayName = "Domingo",
-                    optionLabel = "Opción 7 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 7 de la Doctora",
                     slot = MealSlot.ALMUERZO,
                     time = "14:00 (2:00 PM)",
                     slotLabel = "Almuerzo Principal",
-                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 15 min caminata suave (14:20)",
-                    title = "2 Tazas de Ensalada + Lomo de Cerdo Magro (200 g) + 1 Taza de Fideos Al Dente + Fruta",
-                    shortDesc = "Lomo de cerdo magro a la plancha + 1 taza de fideos al dente (8 min) con salsa de tomate casera + 30 g arándanos.",
+                    medAlert = "Tomar Bisoprolol fumarato 2.5 mg al terminar + 15 min caminata suave",
+                    title = "Lomo de Cerdo Magro (200 g) + 1 Taza de Fideos Al Dente + 2 Tazas de Ensalada + Arándanos",
+                    shortDesc = "200 g Lomito Saltado de Cerdo REDONDOS limpio de grasa + 1 taza de Spaghetti/Tornillo BELL'S (8 min al dente) en salsa casera + 30 g arándanos.",
                     macros = Macros(kcal = 575, prot = 51, carb = 62, fat = 11, fiber = 8),
                     ingredients = listOf(
-                        "200 g en crudo de Lomo de Cerdo Magro Ternez (retirar cualquier borde de grasa blanca visible)",
-                        "55 g en crudo de Spaghetti o Fideos Tornillo Bell's (cocidos estrictamente 8 minutos AL DENTE = 1 taza / 140 g cocidos)",
-                        "Salsa de Tomate Casera: 70 g de Tomate picado, 40 g de Cebolla roja, 1 diente de ajo, orégano, albahaca y 1 cdta de vinagre",
-                        "Ensalada (2 tazas OBLIGATORIAS ANTES DE LA PASTA): 100 g de Col/Lechuga, 60 g de Vainitas al vapor, 60 g de Pepinillo y jugo de 1 limón",
-                        "30 g de Arándanos frescos (o 1 mandarina mediana)"
+                        "200 g de Lomito Saltado de Cerdo REDONDOS (Bandeja 620g) limpio de grasa visible",
+                        "55 g en crudo de Spaghetti o Tornillo BELL'S (hervido estrictamente 8 minutos al dente = 1 taza / 140 g cocido)",
+                        "Salsa casera: 70 g de tomate picado, 40 g de cebolla, ajo y orégano",
+                        "Ensalada (2 tazas obligatorias antes de la pasta): 100 g de lechuga americana, 60 g de vainitas al vapor, 60 g de pepinillo y limón",
+                        "Postre: 30 g de Blueberries BELL'S FRESCOS"
                     ),
                     steps = listOf(
-                        "REGLA DE ORO PARA COMER FIDEOS CON INSULINA DE 39.0: Hierve los 55 g de fideos durante SOLO 8 MINUTOS para que queden firmes ('al dente'). Al dente su índice glucémico es bajo.",
-                        "Sazona los 200 g de lomo de cerdo magro con ajo, vinagre, comino y orégano, y dóralos en sartén antiadherente sin aceite.",
-                        "En la misma sartén saltea el tomate picado, cebolla y albahaca con 3 cucharadas de agua y baña tu taza de fideos.",
-                        "ORDEN ESTRICTO: Come 1° las 2 tazas completas de ensalada con limón → 2° los 200 g de lomo de cerdo → 3° la taza de fideos al dente y los arándanos. Toma tu Bisoprolol 2.5 mg."
+                        "REGLA DE ORO: Hierve los 55 g en crudo de Spaghetti o Tornillo BELL'S durante estrictamente 8 MINUTOS al dente (equivale a 1 taza / 140 g cocido).",
+                        "Dora en sartén antiadherente sin aceite los 200 g de Lomito Saltado de Cerdo REDONDOS sazonado con ajo y orégano, y prepara la salsa casera con 70 g de tomate picado, 40 g de cebolla, ajo y orégano.",
+                        "ORDEN ESTRICTO: Come 1° las 2 tazas obligatorias de ensalada, 2° los 200 g de lomo de cerdo y 3° la taza de fideos al dente y los 30 g de arándanos. Toma tu Bisoprolol 2.5 mg."
                     ),
-                    clinicalNote = "El lomo de cerdo magro es rico en tiamina (Vitamina B1), cofactor indispensable para oxidar los carbohidratos de los fideos en la mitocondria sin convertirlos en triglicéridos hepáticos."
+                    clinicalNote = "El lomo de cerdo magro aporta tiamina (Vitamina B1) para oxidar los carbohidratos de la pasta al dente sin elevar los triglicéridos hepáticos.",
+                    timers = listOf(
+                        RecipeTimerSpec("Fideos Al Dente (8 min exactos)", 8 * 60),
+                        RecipeTimerSpec("Caminata post-almuerzo (15 min)", 15 * 60)
+                    )
                 ),
                 Meal(
                     id = "dom_mt",
                     dayIndex = 6,
                     dayName = "Domingo",
-                    optionLabel = "Opción 7 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 7 de la Doctora",
                     slot = MealSlot.MEDIA_TARDE,
                     time = "16:30 (4:30 PM)",
                     slotLabel = "Media Tarde",
                     medAlert = null,
-                    title = "20 g de Frutos Secos Sin Sal",
-                    shortDesc = "Aporte de grasas monoinsaturadas y saciedad de domingo.",
+                    title = "20 g de Maní Tostado Natural Sin Sal VILLA NATURA",
+                    shortDesc = "Grasas monoinsaturadas y saciedad de domingo por la tarde.",
                     macros = Macros(kcal = 115, prot = 5, carb = 3, fat = 10, fiber = 2),
                     ingredients = listOf(
-                        "20 g de Maní Tostado Natural Sin Sal Villa Natura"
+                        "20 g de Maní Tostado Natural Sin Sal VILLA NATURA"
                     ),
                     steps = listOf(
-                        "Consumir 20 g a las 16:30 con agua."
+                        "Consumir 20 g pesados en balanza a las 16:30 con agua."
                     ),
-                    clinicalNote = "Cierra el aporte semanal de fitoesteroles reductores de LDL."
+                    clinicalNote = "Completa el aporte semanal de ácido oleico cardioprotector."
                 ),
                 Meal(
                     id = "dom_cena",
                     dayIndex = 6,
                     dayName = "Domingo",
-                    optionLabel = "Opción 7 — Lic. Isabel Ríos",
+                    optionLabel = "Opción 7 de la Doctora",
                     slot = MealSlot.CENA,
                     time = "19:00 (7:00 PM)",
                     slotLabel = "Cena Ligera",
                     medAlert = "Cierre de semana nutricional a las 19:00",
-                    title = "Ensalada Cocida Al Dente (1.5 tazas) + 1 Lata de Atún + 1/4 de Palta Fuerte (60 g)",
-                    shortDesc = "Vainitas y zanahoria en bastones al vapor (6 min) + 1 lata de atún en agua + 60 g de palta al limón.",
+                    title = "Ensalada cocida al dente + 1 Lata de Atún + Palta",
+                    shortDesc = "100 g de Vainita Americana y 80 g de Zanahoria en bastones al vapor por solo 6 min + 1 lata de Atún BELL'S desalada + 60 g de Palta Fuerte.",
                     macros = Macros(kcal = 310, prot = 31, carb = 16, fat = 13, fiber = 7),
                     ingredients = listOf(
-                        "1 lata completa (120 g escurridos) de Filete de Atún en Agua Bell's (enjuagada 10 seg en colador)",
-                        "1.5 tazas de Ensalada Cocida Al Dente: 100 g de Vainitas picadas + 80 g de Zanahoria en bastones cocidas al vapor por solo 6 minutos",
-                        "1/4 de unidad mediana (60 g de pulpa limpia) de Palta Fuerte o Hass en láminas",
-                        "Jugo de 1 limón sutil, orégano y pimienta negra"
+                        "100 g de Vainita Americana + 80 g de Zanahoria en bastones (al vapor por solo 6 minutos al dente)",
+                        "1 lata de Filete de Atún en Agua BELL'S desalada en colador",
+                        "1/4 de unidad (60 g) de Palta Fuerte o Hass en láminas con limón"
                     ),
                     steps = listOf(
-                        "Cocina al vapor las vainitas y los bastones de zanahoria durante SOLO 6 MINUTOS (deben quedar crujientes / al dente; nunca blandas ni sobrecocidas para no elevar su índice glucémico).",
-                        "Pásalas por un chorro breve de agua fría para cortar la cocción y sírvelas con la lata de atún desalado encima y los 60 g de palta en láminas aliñadas con limón."
+                        "Cocina al vapor por solo 6 minutos (al dente) 100 g de Vainita Americana y 80 g de Zanahoria en bastones.",
+                        "Sirve encima 1 lata de Filete de Atún en Agua BELL'S desalada y 1/4 de unidad (60 g) de Palta Fuerte en láminas con limón."
                     ),
-                    clinicalNote = "Cena cetogénica suave de domingo (solo 9 g de carbohidratos netos) que deja la insulina basal en su nivel más bajo de toda la semana para arrancar el lunes oxidando grasa visceral."
+                    clinicalNote = "Cena muy baja en carbohidratos netos (9 g) para amanecer el lunes con la insulina basal en su nivel más bajo.",
+                    timers = listOf(
+                        RecipeTimerSpec("Verduras al vapor Al Dente (6 min)", 6 * 60)
+                    )
                 )
             )
         )
@@ -383,43 +407,49 @@ object ClinicalCatalog {
 
     val biomarkers: List<BiomarkerTarget> = listOf(
         BiomarkerTarget(
+            id = "insulina",
             label = "Insulina Basal",
-            valueText = "39.0",
+            defaultValueText = "39.0",
             subUnit = "μU/mL",
             targetText = "Meta: < 9.0 μU/mL",
             tone = BiomarkerTone.AMBER
         ),
         BiomarkerTarget(
+            id = "homa",
             label = "Índice HOMA-IR",
-            valueText = "9.73",
+            defaultValueText = "9.73",
             subUnit = "Gluc: 101",
             targetText = "Meta: < 1.8",
             tone = BiomarkerTone.AMBER
         ),
         BiomarkerTarget(
+            id = "tgp",
             label = "Hígado TGP (ALT)",
-            valueText = "49.9",
+            defaultValueText = "49.9",
             subUnit = "U/L",
             targetText = "Meta: < 30 U/L",
             tone = BiomarkerTone.ROSE
         ),
         BiomarkerTarget(
+            id = "urico",
             label = "Ácido Úrico",
-            valueText = "6.65",
+            defaultValueText = "6.65",
             subUnit = "mg/dL",
             targetText = "Meta: < 5.5 mg/dL",
             tone = BiomarkerTone.ROSE
         ),
         BiomarkerTarget(
+            id = "lipidos",
             label = "Colesterol LDL / HDL",
-            valueText = "124 / 45.4",
+            defaultValueText = "124 / 45.4",
             subUnit = "mg/dL",
             targetText = "Meta: LDL <100 | HDL >50",
             tone = BiomarkerTone.SKY
         ),
         BiomarkerTarget(
+            id = "renal",
             label = "Relación Alb/Creat",
-            valueText = "10.11",
+            defaultValueText = "10.11",
             subUnit = "mg/g",
             targetText = "Normal (<30) • Creat 0.70",
             tone = BiomarkerTone.EMERALD
@@ -428,20 +458,20 @@ object ClinicalCatalog {
 
     val goldenRules: List<ClinicalGoldenRule> = listOf(
         ClinicalGoldenRule(
-            title = "1° Fibra → 2° Proteína → 3° Carbohidrato",
-            detail = "Come siempre las 2 tazas de ensalada o los huevos duros antes del arroz, papa, camote, avena o fideos para frenar los picos de insulina."
+            title = "1° Ensalada (2 tazas) → 2° Proteína (200 g) → 3° Carbohidrato",
+            detail = "En todos tus almuerzos de las 14:00 PM come obligatoriamente primero las 2 tazas de ensalada fresca y en los desayunos de avena come primero los 2 huevos duros (reduce el pico glucémico en un 38%)."
         ),
         ClinicalGoldenRule(
-            title = "Desalado Renal en 10 Segundos",
-            detail = "Enjuaga siempre el atún en agua y el queso fresco light bajo el caño para reducir hasta el 75% del sodio y potenciar tu Irbesartán 150 mg."
+            title = "Cero Aceites de Soya, Maíz o Girasol",
+            detail = "Todos los almuerzos se cocinan en sartén u olla antiadherente con agua, ajo, cebolla, limón y especias para revertir tu TGP de 49.9 U/L y bajar el LDL de 124 mg/dL."
         ),
         ClinicalGoldenRule(
-            title = "Protocolo Anti-Ácido Úrico (6.65 mg/dL)",
-            detail = "Remoja las lentejas 12 h desechando el agua, descarta el caldo de cocción del hígado del jueves y usa jugo de limón diario como alcalinizante."
+            title = "Protocolo Anti-Ácido Úrico y Sodio Renal",
+            detail = "Enjuaga 10 s el atún y el queso fresco (retira 75% de sodio), remoja las lentejas 12 h desechando el agua y descarta el caldo oscuro al sellar el hígado del jueves."
         ),
         ClinicalGoldenRule(
-            title = "Almidón Resistente Refrigerado 12 h",
-            detail = "Cocina con anticipación la papa, el camote y el arroz integral y refrigéralos 12 horas para reducir su impacto glucémico."
+            title = "Descanso Insulínico Nocturno de 13 Horas (19:00 a 08:00)",
+            detail = "Cierra la ingesta calórica a las 19:00 PM y refrigera 12 h antes la papa, el camote y el arroz integral para formar almidón resistente tipo 3."
         )
     )
 
@@ -454,7 +484,7 @@ object ClinicalCatalog {
                 appendLine("Recordatorio: ${meal.medAlert}")
             }
             appendLine()
-            appendLine("INGREDIENTES EXACTOS:")
+            appendLine("INGREDIENTES EXACTOS (PLAZA VEA / AGORA):")
             meal.ingredients.forEach { appendLine("• $it") }
             appendLine()
             appendLine("PREPARACIÓN PASO A PASO:")
