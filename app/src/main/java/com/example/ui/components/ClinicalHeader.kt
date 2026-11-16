@@ -61,8 +61,8 @@ fun ClinicalHeader(
         colors = listOf(Slate900, Emerald900, Emerald950)
     )
     val weightDisplay = String.format(Locale.US, "%.1f", currentWeightKg).removeSuffix(".0")
-    val insulinVal = customBiomarkers["insulin"] ?: "39.0"
-    val uricVal = customBiomarkers["uric"] ?: "6.65"
+    val insulinVal = customBiomarkers["insulina"] ?: "39.0"
+    val uricVal = customBiomarkers["urico"] ?: "6.65"
     val tgpVal = customBiomarkers["tgp"] ?: "49.9"
 
     Column(

@@ -109,6 +109,7 @@ fun HealthScreen(
     onOpenFitia: () -> Unit,
     onResetWeek: () -> Unit,
     onCheckUpdate: () -> Unit,
+    onOpenWebVersion: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var showResetDialog by remember { mutableStateOf(false) }
@@ -721,7 +722,7 @@ fun HealthScreen(
                 }
             }
 
-            // 5. Version & GitHub Releases Update Card
+            // 5. Version, Direct APK Update & Web Version Card
             item(key = "app_update_card") {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -729,19 +730,15 @@ fun HealthScreen(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                 ) {
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(2.dp)
-                        ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                             Text(
-                                text = "Actualizaciones desde GitHub",
+                                text = "Actualización Directa APK y Versión Web",
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.ExtraBold
                             )
@@ -751,28 +748,56 @@ fun HealthScreen(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        Spacer(modifier = Modifier.size(10.dp))
-                        Button(
-                            onClick = onCheckUpdate,
-                            shape = RoundedCornerShape(14.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Emerald700,
-                                contentColor = Color.White
-                            ),
-                            modifier = Modifier
-                                .minimumInteractiveComponentSize()
-                                .testTag("check_update_btn")
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Filled.SystemUpdate,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.size(6.dp))
-                            Text(
-                                text = stringResource(R.string.check_update_btn),
-                                style = MaterialTheme.typography.labelMedium
-                            )
+                            Button(
+                                onClick = onCheckUpdate,
+                                shape = RoundedCornerShape(14.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Emerald700,
+                                    contentColor = Color.White
+                                ),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .minimumInteractiveComponentSize()
+                                    .testTag("check_update_btn")
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.SystemUpdate,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.size(6.dp))
+                                Text(
+                                    text = stringResource(R.string.check_update_btn),
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
+
+                            OutlinedButton(
+                                onClick = onOpenWebVersion,
+                                shape = RoundedCornerShape(14.dp),
+                                border = BorderStroke(1.dp, Emerald700),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .minimumInteractiveComponentSize()
+                                    .testTag("open_web_version_btn")
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                                    contentDescription = null,
+                                    tint = Emerald700,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.size(6.dp))
+                                Text(
+                                    text = "Versión Web",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Emerald700
+                                )
+                            }
                         }
                     }
                 }

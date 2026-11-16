@@ -250,8 +250,15 @@ private fun ActiveTabContent(
             onCheckUpdate = {
                 openExternalUrl(
                     context = context,
-                    url = "https://github.com/tsarmark/Plan-Diet-tico/releases/latest",
-                    onFailure = { viewModel.notifyMessage("No se pudo abrir el navegador") }
+                    url = "https://github.com/tsarmark/Plan-Diet-tico/releases/latest/download/PlanDietetico.apk",
+                    onFailure = { viewModel.notifyMessage("No se pudo iniciar la descarga del APK") }
+                )
+            },
+            onOpenWebVersion = {
+                openExternalUrl(
+                    context = context,
+                    url = "https://tsarmark.github.io/Plan-Diet-tico/",
+                    onFailure = { viewModel.notifyMessage("No se pudo abrir la versión web") }
                 )
             }
         )

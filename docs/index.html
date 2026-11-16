@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plan Dietético Clínico • Agora Plaza Vea</title>
+  <meta name="description" content="Plan Maestro Semanal (35 comidas) y Lista de Compras Real en Plaza Vea vía Agora — Lic. Isabel Ríos" />
+  <meta name="theme-color" content="#064e3b" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen pb-24 antialiased">
+  <!-- Cabecera Clínica Principal -->
+  <header class="bg-gradient-to-r from-slate-900 via-emerald-900 to-emerald-950 text-white shadow-md">
+    <div class="max-w-3xl mx-auto px-4 py-3.5 space-y-2.5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-lg">
+            💚
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 text-[10px] font-extrabold uppercase">
+                LIC. ISABEL RÍOS
+              </span>
+              <span id="hdr-weight-pill" class="px-2 py-0.5 rounded-full bg-white/15 text-white text-[10px] font-bold">
+                123 → 81 kg
+              </span>
+            </div>
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight">Plan Clínico • Agora Plaza Vea</h1>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Botón de Descarga Directa del APK Android -->
+          <a href="https://github.com/tsarmark/Plan-Diet-tico/releases/latest/download/PlanDietetico.apk"
+             class="px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs flex items-center gap-1.5 shadow-sm transition"
+             title="Descargar e instalar la última versión del APK en tu celular Android">
+            <span>📲</span>
+            <span>Descargar APK</span>
+          </a>
+
+          <div class="px-2.5 py-1 rounded-xl bg-slate-950/55 border border-white/15 text-right">
+            <div class="text-[9px] text-white/65 uppercase font-bold">SEMANA</div>
+            <div id="hdr-meals-done" class="text-xs font-extrabold text-emerald-400">0/35 listas</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-white/10 text-[11px] font-semibold">
+        <div class="px-2.5 py-1 rounded-lg bg-white/10 truncate">
+          💛 <span id="hdr-insulin">Insulina: 39.0</span>
+        </div>
+        <div class="px-2.5 py-1 rounded-lg bg-white/10 truncate">
+          🔥 <span id="hdr-uric-tgp">Úrico: 6.65 | TGP: 49.9</span>
+        </div>
+        <div class="px-2.5 py-1 rounded-lg bg-white/10 truncate">
+          🕒 <span>Ayuno: 19h–08h</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra de Navegación Superior / Inferior -->
+  <nav class="max-w-3xl mx-auto px-4 pt-3">
+    <div class="bg-white rounded-2xl border border-slate-200 p-1.5 flex gap-1.5 shadow-xs">
+      <button id="tab-btn-plan" onclick="APP.setTab('plan')">
+        <span>📅</span> <span>Hoy / Plan</span>
+      </button>
+      <button id="tab-btn-shop" onclick="APP.setTab('shop')">
+        <span>🛒</span> <span>Compras</span>
+        <span id="nav-shop-badge" class="px-1.5 py-0.5 rounded-full bg-emerald-900 text-white text-[10px] font-extrabold">35</span>
+      </button>
+      <button id="tab-btn-health" onclick="APP.setTab('health')">
+        <span>❤️</span> <span>Salud / Metas</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Contenido Dinámico -->
+  <main id="main-tab-container" class="max-w-3xl mx-auto px-4 py-4"></main>
+
+  <!-- Modal de Receta -->
+  <div id="recipe-modal-root"></div>
+
+  <!-- Toast de Notificación -->
+  <div id="toast-banner"
+    class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-slate-900 text-white text-xs font-bold shadow-lg opacity-0 pointer-events-none translate-y-4 transition-all duration-200">
+  </div>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
